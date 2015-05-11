@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.netease.qa.log.meta.dao.LogSourceDao">
+
+	<sql id="allColumn">
+		log_source_id as logSourceId,
+		project_id as projectId,
+		create_time as createTme,
+		modify_time as modifyTime,
+		hostname as hostname,
+		path as path,
+		file_pattern as filePattern,
+		line_start_regex as lineStartRegex,
+		line_filter_keyword as lineFilterKeyword,
+		line_type_regex as lineTypeRegex
+	</sql>
+
+	<insert id="insert" parameterType="com.netease.qa.log.meta.LogSource" useGeneratedKeys="true" keyProperty="logSourceId">
+		insert into log_source(project_id,create_time,modify_time, hostname, path, file_pattern, line_start_regex, line_filter_keyword, line_type_regex)
+		values(#{projectId}, now(), now(), #{hostname}, #{path}, #{filePattern}, #{lineStartRegex}, #{lineFilterKeyword}, #{lineTypeRegex})
+	</insert>
+
+	<update id="update" parameterType="com.netease.qa.log.meta.LogSource">
+		update log_source set 
+		project_id=#{projectId}, 
+		create_time=create_time,
+		modify_time=now(),
+		hostname=#{hostname},
+		path=#{path}, 
+		file_pattern=#{filePattern},
+		line_start_regex=#{lineStartRegex},
+		line_filter_keyword=#{lineFilterKeyword},
+		line_type_regex=#{lineTypeRegex} 
+		where log_source_id=#{logSourceId}
+	</update>
+
+	<delete id="delete" parameterType="java.lang.Integer">
+		delete from log_source where log_source_id=#{logSourceId}
+	</delete>
+
+	<select id="findByLogSourceId" parameterType="java.lang.Integer" resultType="com.netease.qa.log.meta.LogSource">
+		select
+		<include refid="allColumn" />
+		from log_source where log_source_id=#{logSourceId}
+	</select>
+
+	<select id="findByLocation" resultType="com.netease.qa.log.meta.LogSource">
+		select
+		<include refid="allColumn" />
+		from log_source where hostname=#{0} and path=#{1} and file_pattern=#{2} limit 1
+	</select>
+
+	<select id="selectAllByProjectId" parameterType="java.lang.Integer"
+		resultType="com.netease.qa.log.meta.LogSource">
+		select
+		<include refid="allColumn" />
+		from log_source where project_id=#{projectId}
+	</select>
+</mapper>
+
+
+
