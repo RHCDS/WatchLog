@@ -1,6 +1,7 @@
 package com.netease.qa.log.user.service;
 
-import com.netease.qa.log.meta.Project;
+import com.alibaba.fastjson.JSONObject;
+
 
 //项目配置API
 public interface ProjectService {
@@ -10,7 +11,7 @@ public interface ProjectService {
 	//修改项目
 	public int updateProject(int projectid,String name,String name_eng,int accuracy);
 	//查询项目
-	public Project findProject(int projectid);
+	public JSONObject findProject(int projectid);
 	//更改项目状态
 	public int updateProjectStatus(int projectid,int status);
 }

@@ -1,14 +1,12 @@
-package com.netease.qa.log.controller;
+package com.netease.qgq.controller;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.netease.qa.log.user.service.GetException;
+import com.netease.qgq.service.GetException;
 import com.netease.qa.log.meta.Exception;
 
 @Controller

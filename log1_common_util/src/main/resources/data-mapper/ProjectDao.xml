@@ -26,6 +26,7 @@
 		create_time=create_time,
 		modify_time=now(),
 		time_accuracy=#{timeAccuracy},
+		project_status=#{projectStatus}
 		where project_id=#{projectId}
 	</update>
 

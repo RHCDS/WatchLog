@@ -33,17 +33,17 @@ public class LogAnalyser implements IBasicBolt {
 		
 		String line = input.getString(0);
 		LogSource logSource = (LogSource) input.getValue(1);
-		//Project project = (Project) input.getValue(2); //TODO 鏀寔project璁剧疆涓嶅悓鐨勯噰鏍峰懆鏈焧ime_accuracy
+		//Project project = (Project) input.getValue(2); //TODO 支持project设置不同的采样周期time_accuracy
 		Long dsTime = Long.valueOf(input.getString(3));
 		 
-		//TODO 鏀寔澶氫釜姝ｅ垯琛ㄨ揪寮�
+		//TODO 支持多个正则表达式
 		int logSourceId = logSource.getLogSourceId();
 		String lineTypeRegex = logSource.getLineTypeRegex();
 		String exceptionType = null;
 		String exceptionTypeMD5 = null;
 		int exceptionId;
 
-		//TODO 鎬ц兘闂锛焭hichi 
+		//TODO 性能问题？zhichi 
 		Pattern p = Pattern.compile(lineTypeRegex); 
 		Matcher m = p.matcher(line);  
 		if(m.find()){
@@ -53,7 +53,7 @@ public class LogAnalyser implements IBasicBolt {
 			exceptionType = "unknown";
 		}
 		
-		//鏌ヨexception缂撳瓨锛屽鏋滀笉瀛樺湪鍒欐彃鍏xception琛�
+		//查询exception缓存，如果不存在则插入exception表
 		exceptionTypeMD5 = MD5Utils.getMD5(exceptionType);
 		Exception exception = MonitorDataService.getException(logSourceId, MD5Utils.getMD5(exceptionType));
 		if (exception != null) {
@@ -64,12 +64,12 @@ public class LogAnalyser implements IBasicBolt {
 			exceptionId = MonitorDataService.putException(logSourceId, exceptionTypeMD5, exceptionType, line);
 		}
 			
-		//鏈尮閰嶅埌寮傚父绫诲瀷锛�鎻掑叆unknown_exception_data琛�
+		//未匹配到异常类型， 插入unknown_exception_data表
 		if(exceptionType.equals("unknown")){
 			MonitorDataService.putUkExceptionData(logSourceId, dsTime/1000, line);
 		}
 		
-		//璁板綍寮傚父绫诲瀷鍜屾暟閲�
+		//记录异常类型和数量
 		MonitorDataService.putExceptionData(logSourceId, exceptionId);
 
 	}

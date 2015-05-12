@@ -1,4 +1,4 @@
-package com.netease.qa.log.user.serviceimp;
+package com.netease.qgq.serviceimp;
 
 import javax.annotation.Resource;
 
@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.netease.qa.log.meta.dao.ExceptionDao;
 import com.netease.qa.log.meta.Exception;
-import com.netease.qa.log.user.service.GetException;
+import com.netease.qgq.service.GetException;
 
 @Service("getException")
 public class GetExceptionEmp implements GetException{

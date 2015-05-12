@@ -1,4 +1,4 @@
-package com.netease.qa.log.user.service;
+package com.netease.qgq.service;
 
 import com.netease.qa.log.meta.Exception;
 public interface GetException {
