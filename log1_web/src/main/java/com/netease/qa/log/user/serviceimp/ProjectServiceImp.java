@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
@@ -24,6 +25,8 @@ import com.netease.qa.log.user.service.ProjectService;
 @Service
 public class ProjectServiceImp implements ProjectService {
 
+	private static final Logger logger = Logger.getLogger(ProjectServiceImp.class);
+	
 	@Resource
 	private ProjectDao projectDao;
 	@Resource
@@ -47,7 +50,8 @@ public class ProjectServiceImp implements ProjectService {
 			return newProject.getProjectId();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+//			e.printStackTrace();
+			logger.info(e);
 			//500,内部错误
 			return 0;
 		}
@@ -73,7 +77,8 @@ public class ProjectServiceImp implements ProjectService {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//最好返回一个500 内部错误状态码，但是不显示任何信息，封装错误信息，用户不可见
-			e.printStackTrace();
+//			e.printStackTrace();
+			logger.info(e);
 			return 0;
 		}
 	}
@@ -112,6 +117,7 @@ public class ProjectServiceImp implements ProjectService {
 		project.put("name_eng", oldProject.getProjectEngName());
 		project.put("accuracy", oldProject.getTimeAccuracy());
 		project.put("logsource", logsources);
+		logger.info("找到project项目");
 		return project;
 	}
 }

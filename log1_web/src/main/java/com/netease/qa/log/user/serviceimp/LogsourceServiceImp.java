@@ -64,7 +64,8 @@ public class LogsourceServiceImp implements LogsourceService{
 			return newLogSource.getLogSourceId();
 		} catch (Exception e) {
 			//返回500，内部执行失败，但是只显示空白，不显示具体错误信息，用户不可见
-			e.printStackTrace();
+//			e.printStackTrace();
+			logger.info(e);
 			return 0;
 		}	
 	}
@@ -97,7 +98,8 @@ public class LogsourceServiceImp implements LogsourceService{
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//返回500执行错误，显示空JSON
-			e.printStackTrace();
+//			e.printStackTrace();
+			logger.info(e);
 			//0表示参数错误
 			return 0;
 		}
@@ -133,6 +135,7 @@ public class LogsourceServiceImp implements LogsourceService{
 		logsource.put("typeregex", logSource.getLineTypeRegex());
 		logsource.put("creator", logSource.getLogSourceCreatorName());
 		logsource.put("logsourcestatus", logSource.getLogSourceStatus());
+		logger.info(logsource);
 		return logsource;
 	}
 
@@ -151,7 +154,8 @@ public class LogsourceServiceImp implements LogsourceService{
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//500,内部执行错误
-			e.printStackTrace();
+//			e.printStackTrace();
+			logger.info(e);
 			return 0;
 		}
 	}
@@ -171,7 +175,8 @@ public class LogsourceServiceImp implements LogsourceService{
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//400,执行错误
-			e.printStackTrace();
+//			e.printStackTrace();
+			logger.info(e);
 			return 0;
 		}
 	}
