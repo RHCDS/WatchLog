@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
@@ -24,75 +25,69 @@ import com.netease.qa.log.user.service.ProjectService;
 @Service
 public class ProjectServiceImp implements ProjectService {
 
+	private static final Logger logger = Logger.getLogger(ProjectServiceImp.class);
+
 	@Resource
 	private ProjectDao projectDao;
+	
 	@Resource
 	private LogSourceDao logSourceDao;
 	
 	@Override
 	public int addProject(String name, String name_eng, int accuracy) {
-		// TODO Auto-generated method stub
 		Project project = projectDao.findByName(name_eng);
 		if(project != null){
-//			System.out.println("该项目已经存在，不能创建！");
 			//409,Conflict，已存在
 			return -2;
 		}
-		Project newProject = new Project();
-		newProject.setProjectName(name);
-		newProject.setProjectEngName(name_eng);
-		newProject.setTimeAccuracy(accuracy);
+		project = new Project();
+		project.setProjectName(name);
+		project.setProjectEngName(name_eng);
+		project.setTimeAccuracy(accuracy);
 		try {
-			projectDao.insert(newProject);
-			return newProject.getProjectId();
+			projectDao.insert(project);
+			return project.getProjectId();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			//500,内部错误
+			logger.error(e);
 			return 0;
 		}
 	}
+	
 
 	@Override
 	public int updateProject(int projectid, String name, String name_eng,
 			int accuracy) {
-		// TODO Auto-generated method stub
-		Project oldProject = projectDao.findByProjectId(projectid);
-		if(oldProject == null){
-//			System.out.println("更改的项目不存在！");
-			//返回404  状态
+		Project project = projectDao.findByProjectId(projectid);
+		if(project == null){
 			return -1;
 		}
-		Project newProject = oldProject;
-		newProject.setProjectName(name);
-		newProject.setProjectEngName(name_eng);
-		newProject.setTimeAccuracy(accuracy);
+		project.setProjectName(name);
+		project.setProjectEngName(name_eng);
+		project.setTimeAccuracy(accuracy);
 		try {
-			projectDao.update(newProject);
+			projectDao.update(project);
 			return 1;
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			//最好返回一个500 内部错误状态码，但是不显示任何信息，封装错误信息，用户不可见
-			e.printStackTrace();
+			logger.error(e);
 			return 0;
 		}
 	}
+	
 
 	@Override
 	public JSONObject findProject(int projectid) {
-		// TODO Auto-generated method stub
 		Project oldProject = projectDao.findByProjectId(projectid);
 		List<LogSource> logSources = this.logSourceDao.selectAllByProjectId(projectid);
-		if(logSources.size() == 0 || oldProject == null)
+//		if(logSources.size() == 0 || oldProject == null) 
+		if(oldProject == null){ //logsource列表可以为空
 			return null;
-		
+		}
 		JSONObject project = new JSONObject();
 		JSONArray logsources = new JSONArray();
 		JSONObject logsource = new JSONObject();
 		
 		LogSource logSource = new LogSource();
-		
-		for(int i=0;i < logSources.size();i++){
+		for(int i = 0; i < logSources.size(); i++){
 			logSource = logSources.get(i);
 			logsource.put("logsourceid", logSource.getLogSourceId());
 			logsource.put("logsourcename", logSource.getLogSourceName());
@@ -114,4 +109,9 @@ public class ProjectServiceImp implements ProjectService {
 		project.put("logsource", logsources);
 		return project;
 	}
+	
 }
+
+
+
+
