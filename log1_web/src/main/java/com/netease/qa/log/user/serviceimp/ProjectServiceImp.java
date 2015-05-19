@@ -107,6 +107,7 @@ public class ProjectServiceImp implements ProjectService {
 		project.put("name_eng", oldProject.getProjectEngName());
 		project.put("accuracy", oldProject.getTimeAccuracy());
 		project.put("logsource", logsources);
+		logger.info("找到project项目");
 		return project;
 	}
 	

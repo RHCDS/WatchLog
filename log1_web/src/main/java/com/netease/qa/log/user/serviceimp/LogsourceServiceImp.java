@@ -90,7 +90,8 @@ public class LogsourceServiceImp implements LogsourceService{
 			return 1;
 		} catch (Exception e) {
 			//返回500执行错误，显示空JSON
-			logger.error(e);
+			logger.info(e);
+			//0表示参数错误
 			return 0;
 		}
 	}
@@ -122,6 +123,7 @@ public class LogsourceServiceImp implements LogsourceService{
 		logsource.put("typeregex", logSource.getLineTypeRegex());
 		logsource.put("creator", logSource.getLogSourceCreatorName());
 		logsource.put("logsourcestatus", logSource.getLogSourceStatus());
+		logger.info(logsource);
 		return logsource;
 	}
 	
