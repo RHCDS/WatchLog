@@ -15,6 +15,12 @@ import com.netease.qa.log.meta.dao.LogSourceDao;
 import com.netease.qa.log.meta.dao.ProjectDao;
 import com.netease.qa.log.user.service.ProjectService;
 
+/*
+ * return 1+ 表示成功，httpStatus:200
+ * return 0 表示内部错误,httpStatus:500
+ * return -1 表示不存在,httpStatus:404
+ * return -2 表示已存在，有冲突，httpStatus:409
+ */
 @Service
 public class ProjectServiceImp implements ProjectService {
 
@@ -28,15 +34,23 @@ public class ProjectServiceImp implements ProjectService {
 		// TODO Auto-generated method stub
 		Project project = projectDao.findByName(name_eng);
 		if(project != null){
-			System.out.println("该项目已经存在，不能创建！");
-			return project.getProjectId();
+//			System.out.println("该项目已经存在，不能创建！");
+			//409,Conflict，已存在
+			return -2;
 		}
 		Project newProject = new Project();
 		newProject.setProjectName(name);
 		newProject.setProjectEngName(name_eng);
 		newProject.setTimeAccuracy(accuracy);
-		projectDao.insert(newProject);
-		return newProject.getProjectId();
+		try {
+			projectDao.insert(newProject);
+			return newProject.getProjectId();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			//500,内部错误
+			return 0;
+		}
 	}
 
 	@Override
@@ -45,15 +59,23 @@ public class ProjectServiceImp implements ProjectService {
 		// TODO Auto-generated method stub
 		Project oldProject = projectDao.findByProjectId(projectid);
 		if(oldProject == null){
-			System.out.println("更改的项目不存在！");
-			return 0;
+//			System.out.println("更改的项目不存在！");
+			//返回404  状态
+			return -1;
 		}
 		Project newProject = oldProject;
 		newProject.setProjectName(name);
 		newProject.setProjectEngName(name_eng);
 		newProject.setTimeAccuracy(accuracy);
-		int updateSuccess = projectDao.update(newProject);
-		return updateSuccess;
+		try {
+			projectDao.update(newProject);
+			return 1;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			//最好返回一个500 内部错误状态码，但是不显示任何信息，封装错误信息，用户不可见
+			e.printStackTrace();
+			return 0;
+		}
 	}
 
 	@Override
@@ -62,7 +84,7 @@ public class ProjectServiceImp implements ProjectService {
 		Project oldProject = projectDao.findByProjectId(projectid);
 		List<LogSource> logSources = this.logSourceDao.selectAllByProjectId(projectid);
 		if(logSources.size() == 0 || oldProject == null)
-			return new JSONObject();
+			return null;
 		
 		JSONObject project = new JSONObject();
 		JSONArray logsources = new JSONArray();
@@ -73,34 +95,23 @@ public class ProjectServiceImp implements ProjectService {
 		for(int i=0;i < logSources.size();i++){
 			logSource = logSources.get(i);
 			logsource.put("logsourceid", logSource.getLogSourceId());
+			logsource.put("logsourcename", logSource.getLogSourceName());
+			logsource.put("logsourcemodifytime", logSource.getModifyTime().toString());
 			logsource.put("hostname", logSource.getHostname());
 			logsource.put("path", logSource.getPath());
 			logsource.put("filepattern", logSource.getFilePattern());
 			logsource.put("linestart", logSource.getLineStartRegex());
 			logsource.put("filterkeyword", logSource.getLineFilterKeyword());
 			logsource.put("typeregex", logSource.getLineTypeRegex());
+			logsource.put("logsourcecreator", logSource.getLogSourceCreatorName());
+			logsource.put("logsourcestatus", logSource.getLogSourceStatus());
 			logsources.add(logsource);
 		}
 		project.put("projectid", oldProject.getProjectId());
 		project.put("name", oldProject.getProjectName());
 		project.put("name_eng", oldProject.getProjectEngName());
 		project.put("accuracy", oldProject.getTimeAccuracy());
-		project.put("status", oldProject.getProjectStatus());
 		project.put("logsource", logsources);
 		return project;
 	}
-
-	@Override
-	public int updateProjectStatus(int projectid, int status) {
-		// TODO Auto-generated method stub
-		Project project = projectDao.findByProjectId(projectid);
-		if(project == null){
-			System.out.println("该项目不存在，不能修改状态！");
-			return 0;
-		}
-		project.setProjectStatus(status);
-		int updateStatus = projectDao.update(project);
-		return updateStatus;
-	}
-
 }

@@ -7,7 +7,6 @@ import java.util.List;
 import javax.annotation.Resource;
 
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
@@ -18,10 +17,6 @@ import com.netease.qa.log.meta.dao.ExceptionDao;
 import com.netease.qa.log.meta.dao.ExceptionDataDao;
 import com.netease.qa.log.meta.dao.LogSourceDao;
 import com.netease.qa.log.meta.dao.UkExceptionDataDao;
-import com.netease.qa.log.meta.service.ExceptionDataService;
-import com.netease.qa.log.meta.service.UkExceptionDataService;
-import com.netease.qa.log.service.ConfigDataService;
-//import com.netease.qa.log.service.MonitorDataService;
 import com.netease.qa.log.user.service.ReadService;
 
 @Service
@@ -44,13 +39,10 @@ public class ReadServiceImp implements ReadService{
 //   private   ExceptionDataService exceptionDataService ;
      @Resource
      private ExceptionDao exceptionDao;
-     
      @Resource
      private ExceptionDataDao exceptionDataDao;
-     
      @Resource
      private UkExceptionDataDao ukExceptionDataDao;
-     
      @Resource
      private LogSourceDao logSourceDao;
 
@@ -62,7 +54,8 @@ public class ReadServiceImp implements ReadService{
 		
 		List<ExceptionData> exceptionDatas = this.exceptionDataDao.
 				findByLogSourceIdAndTime(logSourceId, startTime, endTime, "sample_time", limit, offset);	
-		if(exceptionDatas.size() == 0) return new JSONObject();
+		if(exceptionDatas.size() == 0) 
+			return null;
 		//JSONArray存放的是JSONObject对象的数组
 		JSONArray records = new JSONArray();
 		JSONObject record = new JSONObject();
@@ -117,7 +110,8 @@ public class ReadServiceImp implements ReadService{
 		// TODO Auto-generated method stub
 		List<ExceptionData> exceptionDatas = exceptionDataDao.
 				findByLogSourceIdAndTime(logSourceId, startTime, endTime, "exception_id", limit, offset);
-		if(exceptionDatas.size() == 0) return new JSONObject();
+		if(exceptionDatas.size() == 0) 
+			return null;
 
 		JSONArray errors = new JSONArray();
 		JSONObject error = new JSONObject();
@@ -170,7 +164,8 @@ public class ReadServiceImp implements ReadService{
 		// TODO Auto-generated method stub
 		List<UkExceptionData> ukExceptionDatas =  ukExceptionDataDao.
 				findByLogSourceIdAndTime(logSourceId, startTime, endTime, limit, offset);
-		if(ukExceptionDatas.size() == 0) return new JSONObject();
+		if(ukExceptionDatas.size() == 0) 
+			return null;
 
 		JSONArray unknowns = new JSONArray();
 		

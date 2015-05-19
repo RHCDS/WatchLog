@@ -11,6 +11,8 @@
                         http://www.springframework.org/schema/mvc/spring-mvc-4.0.xsd">
 	<!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
 	<context:component-scan base-package="com.netease.qa.log.controller" />
+	<context:component-scan base-package="com.netease.qa.log.exception" />
+	<context:component-scan base-package="com.netease.qa.log.api" />
 	<context:component-scan base-package="com.netease.qa.log.user.serviceimp" />
 	<context:component-scan base-package="com.netease.qa.log.service" />
 	<context:component-scan base-package="com.netease.qa.log.meta.service" />

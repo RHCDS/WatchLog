@@ -8,15 +8,14 @@
 		project_name_eng as projectEngName,
 		create_time as createTime,
 		modify_time as modifyTime,
-		time_accuracy as timeAccuracy,
-		project_status as projectStatus
+		time_accuracy as timeAccuracy
 	</sql>
 
 
 	<insert id="insert" parameterType="com.netease.qa.log.meta.Project"
 		useGeneratedKeys="true" keyProperty="projectId">
-		insert into project(project_name, project_name_eng,create_time, modify_time, time_accuracy, project_status) 
-		  values(#{projectName}, #{projectEngName},now(), now(),  #{timeAccuracy}, 0)
+		insert into project(project_name, project_name_eng,create_time, modify_time, time_accuracy) 
+		  values(#{projectName}, #{projectEngName},now(), now(),  #{timeAccuracy})
 	</insert>
 
 	<update id="update" parameterType="com.netease.qa.log.meta.Project">
@@ -25,8 +24,7 @@
 		project_name_eng=#{projectEngName},
 		create_time=create_time,
 		modify_time=now(),
-		time_accuracy=#{timeAccuracy},
-		project_status=#{projectStatus}
+		time_accuracy=#{timeAccuracy}
 		where project_id=#{projectId}
 	</update>
 
@@ -44,7 +42,7 @@
 	<select id="findByName" resultType="com.netease.qa.log.meta.Project">
 	      select
 	       <include refid="allColumn"/>
-	      from project where project_name_eng=#{name_eng}
+	      from project where project_name_eng=#{name_eng} limit 1
 	</select>
 </mapper>
 

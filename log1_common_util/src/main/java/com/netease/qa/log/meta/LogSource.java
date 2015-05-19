@@ -1,18 +1,25 @@
 package com.netease.qa.log.meta;
 
+import java.sql.Timestamp;
+
 
 public class LogSource {
 	
 	private int logSourceId;
+	private String logSourceName;
 	private int projectId;
-	private Long createTime;
-	private Long modifyTime;
+	private Timestamp  createTime;
+	private Timestamp  modifyTime;
 	private String hostname;
 	private String path;
 	private String filePattern;
 	private String lineStartRegex;
 	private String lineFilterKeyword;
 	private String lineTypeRegex;
+	private int logSourceCreatorId;
+	private String logSourceCreatorName;
+	private int logSourceStatus;
+	
 	
 	public int getLogSourceId() {
 		return logSourceId;
@@ -22,6 +29,13 @@ public class LogSource {
 		this.logSourceId = logSourceId;
 	}
 	
+	public String getLogSourceName() {
+		return logSourceName;
+	}
+
+	public void setLogSourceName(String logSourceName) {
+		this.logSourceName = logSourceName;
+	}
 	public int getProjectId() {
 		return projectId;
 	}
@@ -30,19 +44,19 @@ public class LogSource {
 		this.projectId = projectId;
 	}
 	
-	public Long getCreateTime() {
+	public Timestamp getCreateTime() {
 		return createTime;
 	}
 	
-	public void setCreateTime(Long createTime) {
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 	
-	public Long getModifyTime() {
+	public Timestamp getModifyTime() {
 		return modifyTime;
 	}
 	
-	public void setModifyTime(Long modifyTime) {
+	public void setModifyTime(Timestamp modifyTime) {
 		this.modifyTime = modifyTime;
 	}
 	
@@ -94,9 +108,35 @@ public class LogSource {
 		this.lineTypeRegex = lineTypeRegex;
 	}
 	
+	public int getLogSourceStatus() {
+		return logSourceStatus;
+	}
+
+	public void setLogSourceStatus(int logSourceStatus) {
+		this.logSourceStatus = logSourceStatus;
+	}
+
+
+	public int getLogSourceCreatorId() {
+		return logSourceCreatorId;
+	}
+
+	public void setLogSourceCreatorId(int logSourceCreatorId) {
+		this.logSourceCreatorId = logSourceCreatorId;
+	}
+
+	public String getLogSourceCreatorName() {
+		return logSourceCreatorName;
+	}
+
+	public void setLogSourceCreatorName(String logSourceCreatorName) {
+		this.logSourceCreatorName = logSourceCreatorName;
+	}
+
 	public String toString(){
-		return "{logSourceId:" + logSourceId + ", projectId:" + projectId + ", hostname:" + hostname + 
+		return "{logSourceId:" + logSourceId + ",logSourceName:" + logSourceName + ", projectId:" + projectId + ", hostname:" + hostname + 
 				", path:" + path + ", file:" + filePattern + ", lineStartRegex:" + lineStartRegex + 
-				", FilterKeyword:" + lineFilterKeyword + ", TypeRegex:" + lineTypeRegex + "}";
+				", FilterKeyword:" + lineFilterKeyword + ", TypeRegex:" + lineTypeRegex + ",LogSourceCreatorId:" + logSourceCreatorId +
+				",logSourceCreatorName:" + logSourceCreatorName + ",logSourceStatus:" + logSourceStatus + "}";
 	}
 }

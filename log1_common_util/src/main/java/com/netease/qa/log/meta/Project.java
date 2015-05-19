@@ -1,15 +1,14 @@
 package com.netease.qa.log.meta;
-
+import java.sql.Timestamp;
 
 public class Project {
 	
 	private int projectId;
 	private String projectName;
 	private String projectEngName;
-	private Long createTime;
-	private Long modifyTime;
+	private Timestamp createTime;
+	private Timestamp modifyTime;
 	private int timeAccuracy;
-	private int projectStatus;
 	
 	public int getProjectId() {
 		return projectId;
@@ -35,19 +34,19 @@ public class Project {
 		this.projectEngName = projectEngName;
 	}
 	
-	public Long getCreateTime() {
+	public Timestamp getCreateTime() {
 		return createTime;
 	}
 	
-	public void setCreateTime(Long createTime) {
+	public void setCreateTime(Timestamp createTime) {
 		this.createTime = createTime;
 	}
 	
-	public Long getModifyTime() {
+	public Timestamp getModifyTime() {
 		return modifyTime;
 	}
 	
-	public void setModifyTime(Long modifyTime) {
+	public void setModifyTime(Timestamp modifyTime) {
 		this.modifyTime = modifyTime;
 	}
 	
@@ -60,18 +59,9 @@ public class Project {
 	}
 
 	
-	public int getProjectStatus() {
-		return projectStatus;
-	}
-
-	
-	public void setProjectStatus(int projectStatus) {
-		this.projectStatus = projectStatus;
-	}
-	
 	public String toString(){
 		return "{projectId:" + projectId + ", projectName:" + projectName + ", projectEngName:" + projectEngName + 
-				", timeAccuracy:" + timeAccuracy + ", status:" + projectStatus  + "}";
+				", timeAccuracy:" + timeAccuracy +"}";
 	}
 	
 	

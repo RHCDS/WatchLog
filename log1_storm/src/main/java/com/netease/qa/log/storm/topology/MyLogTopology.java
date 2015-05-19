@@ -17,7 +17,8 @@ import backtype.storm.topology.TopologyBuilder;
 
 public class MyLogTopology {
 
-	public static void main(String[] args) throws InterruptedException, AlreadyAliveException, InvalidTopologyException, TException, DRPCExecutionException {
+	public static void main(String[] args) throws InterruptedException, AlreadyAliveException, 
+	InvalidTopologyException, TException, DRPCExecutionException {
 
 		// Topology definition
 		TopologyBuilder builder = new TopologyBuilder();

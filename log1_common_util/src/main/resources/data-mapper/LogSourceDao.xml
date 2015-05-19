@@ -4,6 +4,7 @@
 
 	<sql id="allColumn">
 		log_source_id as logSourceId,
+		log_source_name as logSourceName,
 		project_id as projectId,
 		create_time as createTme,
 		modify_time as modifyTime,
@@ -12,16 +13,22 @@
 		file_pattern as filePattern,
 		line_start_regex as lineStartRegex,
 		line_filter_keyword as lineFilterKeyword,
-		line_type_regex as lineTypeRegex
+		line_type_regex as lineTypeRegex,
+		log_source_creator_id as logSourceCreatorId,
+		log_source_creator_name as logSourceCreatorName,
+		log_source_status as logSourceStatus
 	</sql>
 
 	<insert id="insert" parameterType="com.netease.qa.log.meta.LogSource" useGeneratedKeys="true" keyProperty="logSourceId">
-		insert into log_source(project_id,create_time,modify_time, hostname, path, file_pattern, line_start_regex, line_filter_keyword, line_type_regex)
-		values(#{projectId}, now(), now(), #{hostname}, #{path}, #{filePattern}, #{lineStartRegex}, #{lineFilterKeyword}, #{lineTypeRegex})
+		insert into log_source(log_source_name,project_id,create_time,modify_time, hostname, path, file_pattern, line_start_regex, 
+		line_filter_keyword, line_type_regex,log_source_creator_id,log_source_creator_name,log_source_status)
+		values(#{logSourceName},#{projectId}, now(), now(), #{hostname}, #{path}, #{filePattern}, #{lineStartRegex},
+		 #{lineFilterKeyword}, #{lineTypeRegex}, 1, #{logSourceCreatorName}, 0)
 	</insert>
 
 	<update id="update" parameterType="com.netease.qa.log.meta.LogSource">
 		update log_source set 
+		log_source_name=#{logSourceName},
 		project_id=#{projectId}, 
 		create_time=create_time,
 		modify_time=now(),
@@ -30,7 +37,8 @@
 		file_pattern=#{filePattern},
 		line_start_regex=#{lineStartRegex},
 		line_filter_keyword=#{lineFilterKeyword},
-		line_type_regex=#{lineTypeRegex} 
+		line_type_regex=#{lineTypeRegex},
+		log_source_status=#{logSourceStatus} 
 		where log_source_id=#{logSourceId}
 	</update>
 
@@ -38,6 +46,12 @@
 		delete from log_source where log_source_id=#{logSourceId}
 	</delete>
 
+    <select id="findByLogSourceName" resultType="com.netease.qa.log.meta.LogSource">
+        select
+          <include refid="allColumn"/>
+         from log_source where log_source_name=#{logSourceName}
+    </select>
+    
 	<select id="findByLogSourceId" parameterType="java.lang.Integer" resultType="com.netease.qa.log.meta.LogSource">
 		select
 		<include refid="allColumn" />
