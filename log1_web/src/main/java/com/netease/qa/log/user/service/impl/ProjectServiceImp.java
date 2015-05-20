@@ -1,4 +1,4 @@
-package com.netease.qa.log.user.serviceimp;
+package com.netease.qa.log.user.service.impl;
 
 
 import java.util.List;
