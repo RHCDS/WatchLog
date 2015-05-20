@@ -40,13 +40,13 @@ public class LogNormalizer implements IBasicBolt {
         logger.debug(logsource.getLineTypeRegex());
         
         //项目启动了监控
-        if(project.getProjectStatus() == 1){
-    		collector.emit(new Values(input.getString(0), logsource, project, dsTime));
-        }
-        else{
-        	//TODO?
-        }
-		logger.debug("project status: " + project.getProjectStatus() + ", TimeAccuracy: " + project.getTimeAccuracy());
+//        if(project.getProjectStatus() == 1){
+//    		collector.emit(new Values(input.getString(0), logsource, project, dsTime));
+//        }
+//        else{
+//        	//TODO?
+//        }
+//		logger.debug("project status: " + project.getProjectStatus() + ", TimeAccuracy: " + project.getTimeAccuracy());
 		logger.debug("logsource FilterKeyword: " + logsource.getLineFilterKeyword() + ", LineTypeRegex: " + logsource.getLineTypeRegex());
 	}
 	
