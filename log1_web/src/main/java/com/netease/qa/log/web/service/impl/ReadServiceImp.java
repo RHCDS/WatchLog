@@ -1,4 +1,4 @@
-package com.netease.qa.log.user.service.impl;
+package com.netease.qa.log.web.service.impl;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,7 +17,7 @@ import com.netease.qa.log.meta.dao.ExceptionDao;
 import com.netease.qa.log.meta.dao.ExceptionDataDao;
 import com.netease.qa.log.meta.dao.LogSourceDao;
 import com.netease.qa.log.meta.dao.UkExceptionDataDao;
-import com.netease.qa.log.user.service.ReadService;
+import com.netease.qa.log.web.service.ReadService;
 
 @Service
 public class ReadServiceImp implements ReadService {

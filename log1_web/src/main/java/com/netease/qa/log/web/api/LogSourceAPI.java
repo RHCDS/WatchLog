@@ -1,4 +1,4 @@
-package com.netease.qa.log.api;
+package com.netease.qa.log.web.api;
 
 import javax.annotation.Resource;
 
@@ -16,7 +16,7 @@ import com.netease.qa.log.exception.ApiExceptionHandler;
 import com.netease.qa.log.exception.ConflictRequestException;
 import com.netease.qa.log.exception.InvalidRequestException;
 import com.netease.qa.log.exception.NotFoundRequestException;
-import com.netease.qa.log.user.service.LogsourceService;
+import com.netease.qa.log.web.service.LogsourceService;
 import com.netease.qa.log.util.Const;
 import com.netease.qa.log.util.MathUtil;
 
@@ -47,7 +47,7 @@ public class LogSourceAPI {
 		int result = logsourceService.addLogsource(logsourceName, Integer.parseInt(projectid), hostname, path, filepattern, linestart,
 				filterkeyword, typeregex, creatorname);
 		// 409错误，有冲突 
-		if (result == -2) {
+		if (result == -2) { 
 			ConflictRequestException cr = new ConflictRequestException(Const.LOG_ALREADY_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleConflictRequestException(cr), HttpStatus.CONFLICT);
 		} 

@@ -1,4 +1,4 @@
-package com.netease.qa.log.api;
+package com.netease.qa.log.web.api;
 
 import java.text.ParseException;
 
@@ -19,7 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.netease.qa.log.exception.ApiExceptionHandler;
 import com.netease.qa.log.exception.InvalidRequestException;
 import com.netease.qa.log.exception.NotFoundRequestException;
-import com.netease.qa.log.user.service.ReadService;
+import com.netease.qa.log.web.service.ReadService;
 import com.netease.qa.log.util.Const;
 import com.netease.qa.log.util.MathUtil;
 

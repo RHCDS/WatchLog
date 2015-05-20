@@ -1,4 +1,4 @@
-package com.netease.qa.log.user.service.impl;
+package com.netease.qa.log.web.service.impl;
 
 import javax.annotation.Resource;
 
@@ -10,7 +10,7 @@ import com.netease.qa.log.meta.LogSource;
 import com.netease.qa.log.meta.Project;
 import com.netease.qa.log.meta.dao.LogSourceDao;
 import com.netease.qa.log.meta.dao.ProjectDao;
-import com.netease.qa.log.user.service.LogsourceService;
+import com.netease.qa.log.web.service.LogsourceService;
 
 
 /*

@@ -1,3 +1,4 @@
+package com.netease.qa.log.web.controller;
 //package com.netease.qa.log.controller;
 //
 //import javax.annotation.Resource;

@@ -1,4 +1,4 @@
-package com.netease.qa.log.api;
+package com.netease.qa.log.web.api;
 
 import javax.annotation.Resource;
 
@@ -16,7 +16,7 @@ import com.netease.qa.log.exception.ApiExceptionHandler;
 import com.netease.qa.log.exception.ConflictRequestException;
 import com.netease.qa.log.exception.InvalidRequestException;
 import com.netease.qa.log.exception.NotFoundRequestException;
-import com.netease.qa.log.user.service.ProjectService;
+import com.netease.qa.log.web.service.ProjectService;
 import com.netease.qa.log.util.Const;
 import com.netease.qa.log.util.MathUtil;
 

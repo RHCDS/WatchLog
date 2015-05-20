@@ -1,4 +1,4 @@
-package com.netease.qa.log.user.service.impl;
+package com.netease.qa.log.web.service.impl;
 
 
 import java.util.List;
@@ -14,7 +14,7 @@ import com.netease.qa.log.meta.LogSource;
 import com.netease.qa.log.meta.Project;
 import com.netease.qa.log.meta.dao.LogSourceDao;
 import com.netease.qa.log.meta.dao.ProjectDao;
-import com.netease.qa.log.user.service.ProjectService;
+import com.netease.qa.log.web.service.ProjectService;
 
 /*
  * return 1+ 表示成功，httpStatus:200

@@ -11,7 +11,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSONObject;
-import com.netease.qa.log.user.service.impl.ProjectServiceImp;
+import com.netease.qa.log.web.service.impl.ProjectServiceImp;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 // 一定要是applicationContext.xml,不能是其他的Spring 配置文件（spring-mvc.xml）
