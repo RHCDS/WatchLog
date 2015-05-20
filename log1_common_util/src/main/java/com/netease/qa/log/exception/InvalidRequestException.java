@@ -1,4 +1,4 @@
-package com.netease.qa.log.invaildrequest;
+package com.netease.qa.log.exception;
 
 
 public class InvalidRequestException extends RuntimeException  {

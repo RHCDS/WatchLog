@@ -10,9 +10,13 @@
             http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.5.xsd
             http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.5.xsd"> 
 
-
-
-	 
+      <!--配置数据源属性文件  -->  
+    <bean id="propertyConfigurer"  
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
+        <property name="location">  
+            <value>classpath:mysql.properties</value>
+        </property>  
+    </bean>
     
 	 <!--配置数据源  -->  
     <bean id="dataSource"  
@@ -30,20 +34,18 @@
             <value>${jdbc.password}</value> 
         </property>
 	</bean>
+	
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean"> 
 	    <!-- 获取mybatis的配置 -->    
         <property name="configLocation" value="classpath:mybatis-config.xml" />     
         <property name="dataSource" ref="dataSource" />     
     </bean>
 	
-	
-	
 	<!-- bean定义 -->
 	<bean id="exceptionDaoBean" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="mapperInterface" value="com.netease.qa.log.meta.dao.ExceptionDao"/>  
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" /> 
 	</bean>
-
 	
 	<bean id="exceptionDataDaoBean" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="mapperInterface" value="com.netease.qa.log.meta.dao.ExceptionDataDao"/>  
