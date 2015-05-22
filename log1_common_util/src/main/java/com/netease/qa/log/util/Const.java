@@ -6,7 +6,7 @@ public class Const {
     public static final String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
 
     public static final String ID_MUST_BE_NUM = "id must be a number";
-    public static final String STATUS_MUST_BE_NUM = "status must be 0 or 1";
+    public static final String STATUS_MUST_BE_NUM = "status must be 0,1,2";
     public static final String ACCURACY_MUST_BE_NUM = "accuracy must be a number";
     public static final String LIMIT_AND_OFFSET_MUST_BE_NUM = " limit or offset  must be a number";
     public static final String LOG_ALREADY_EXSIT = "logsource already exist";

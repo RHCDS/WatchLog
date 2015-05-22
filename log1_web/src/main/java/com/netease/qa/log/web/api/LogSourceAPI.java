@@ -145,7 +145,7 @@ public class LogSourceAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		if (!MathUtil.isInteger(status)) {
+		if (!status.equals("0") && !status.equals("1")  && !status.equals("2")) {
 			InvalidRequestException ex = new InvalidRequestException(Const.STATUS_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}

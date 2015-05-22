@@ -38,11 +38,8 @@ public class ProjectServiceImp implements ProjectService {
 		Project project = projectDao.findByName(name_eng);
 		if(project != null){
 			//409,Conflict，已存在
-			logger.info("conflict");
+			logger.debug("conflict");
 			return -2;
-		}
-		else{
-			logger.info("project is null");
 		}
 		project = new Project();
 		project.setProjectName(name);
