@@ -77,39 +77,36 @@ public class ProjectServiceImp implements ProjectService {
 
 	@Override
 	public JSONObject findProject(int projectid) {
-		Project oldProject = projectDao.findByProjectId(projectid);
+		Project project = projectDao.findByProjectId(projectid);
 		List<LogSource> logSources = this.logSourceDao.selectAllByProjectId(projectid);
-//		if(logSources.size() == 0 || oldProject == null) 
-		if(oldProject == null){ //logsource列表可以为空
+		if(project == null){ //logsource列表可以为空
 			return null;
 		}
-		JSONObject project = new JSONObject();
+		JSONObject result = new JSONObject();
 		JSONArray logsources = new JSONArray();
-		JSONObject logsource = new JSONObject();
 		
-		LogSource logSource = new LogSource();
 		for(int i = 0; i < logSources.size(); i++){
-			logSource = logSources.get(i);
-			logsource.put("logsourceid", logSource.getLogSourceId());
-			logsource.put("logsourcename", logSource.getLogSourceName());
-			logsource.put("logsourcemodifytime", logSource.getModifyTime().toString());
-			logsource.put("hostname", logSource.getHostname());
-			logsource.put("path", logSource.getPath());
-			logsource.put("filepattern", logSource.getFilePattern());
-			logsource.put("linestart", logSource.getLineStartRegex());
-			logsource.put("filterkeyword", logSource.getLineFilterKeyword());
-			logsource.put("typeregex", logSource.getLineTypeRegex());
-			logsource.put("logsourcecreator", logSource.getLogSourceCreatorName());
-			logsource.put("logsourcestatus", logSource.getLogSourceStatus());
+			LogSource tmp = logSources.get(i);
+			JSONObject logsource = new JSONObject();
+			logsource.put("logsourceid", tmp.getLogSourceId());
+			logsource.put("logsourcename", tmp.getLogSourceName());
+			logsource.put("modifytime", tmp.getModifyTime().toString());
+			logsource.put("hostname", tmp.getHostname());
+			logsource.put("path", tmp.getPath());
+			logsource.put("filepattern", tmp.getFilePattern());
+			logsource.put("linestart", tmp.getLineStartRegex());
+			logsource.put("filterkeyword", tmp.getLineFilterKeyword());
+			logsource.put("typeregex", tmp.getLineTypeRegex());
+			logsource.put("creator", tmp.getLogSourceCreatorName());
+			logsource.put("status", tmp.getLogSourceStatus());
 			logsources.add(logsource);
 		}
-		project.put("projectid", oldProject.getProjectId());
-		project.put("name", oldProject.getProjectName());
-		project.put("name_eng", oldProject.getProjectEngName());
-		project.put("accuracy", oldProject.getTimeAccuracy());
-		project.put("logsource", logsources);
-		logger.debug("找到project项目");
-		return project;
+		result.put("projectid", project.getProjectId());
+		result.put("name", project.getProjectName());
+		result.put("name_eng", project.getProjectEngName());
+		result.put("accuracy", project.getTimeAccuracy());
+		result.put("logsource", logsources);
+		return result;
 	}
 	
 }
