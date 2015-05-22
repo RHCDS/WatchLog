@@ -23,20 +23,7 @@ import com.netease.qa.log.web.service.ReadService;
 public class ReadServiceImp implements ReadService {
 
 	private static final Logger logger = Logger.getLogger(ReadServiceImp.class);
-	// @Resource
-	// private static ExceptionDataService exceptionDataService;
-	// private static UkExceptionDataService ukExceptionDataService;
-	//
-	// static{
-	// exceptionDataService = new ExceptionDataService();
-	// ukExceptionDataService = new UkExceptionDataService();
-	// }
-	// private MonitorDataService monitorDataService ;
-	// private UkExceptionDataService ukExceptionDataService;
-	// private ExceptionDataService exceptionDataService ;
-	// private UkExceptionDataService ukExceptionDataService = new
-	// UkExceptionDataService();
-	// private ExceptionDataService exceptionDataService ;
+
 	@Resource
 	private ExceptionDao exceptionDao;
 	@Resource
@@ -48,30 +35,35 @@ public class ReadServiceImp implements ReadService {
 
 	@Override
 	public JSONObject queryTimeRecords(int logSourceId, long startTime, long endTime, int limit, int offset) {
-		// TODO Auto-generated method stub
-
-		List<ExceptionData> exceptionDatas = this.exceptionDataDao.findByLogSourceIdAndTime(logSourceId, startTime,
-				endTime, "sample_time", limit, offset);
-		if (exceptionDatas.size() == 0)
+		List<ExceptionData> exceptionDatas = null;
+		try{
+			exceptionDatas = this.exceptionDataDao.findByLogSourceIdAndTime(logSourceId, startTime,
+					endTime, "sample_time", limit, offset);
+		}catch (Exception e) {
+			logger.error(e);
 			return null;
-		// JSONArray存放的是JSONObject对象的数组
+		}
+		
+		//组装数据
+		JSONObject result = new JSONObject();
+		result.put("projectid", logSourceDao.findByLogSourceId(logSourceId).getProjectId());
+		result.put("logsourceid", logSourceId);
+		//查询不到数据，返回的record部分为空
+		if (exceptionDatas.size() == 0){
+			result.put("record", new JSONArray()); 
+			return result;
+		}
+		//组装record部分数据
 		JSONArray records = new JSONArray();
 		JSONObject record = new JSONObject();
 		JSONArray details = new JSONArray();
 
-		// TODO size校验
 		ExceptionData first = exceptionDatas.get(0);
 		record.put("time", convert(first.getSampleTime()));
 		record.put("totalcount", first.getExceptionCount());
 
 		JSONObject detail = new JSONObject();
-		// detail.put(string,count),string是异常类型，count是该类型异常的数量
-		// 举例detail:java.net.ConnectException: this is a ConnectException" : "1"
-		// 前面是异常类型，后面是该类型的数量
-		// System.out.println("first.getExceptionId():" +
-		// first.getExceptionId());
-		detail.put(this.exceptionDao.findByExceptionId(first.getExceptionId()).getExceptionType(),
-				first.getExceptionCount());
+		detail.put(this.exceptionDao.findByExceptionId(first.getExceptionId()).getExceptionType(), first.getExceptionCount());
 		// details是包含detail的数组
 		details.add(detail);
 
@@ -99,14 +91,12 @@ public class ReadServiceImp implements ReadService {
 		}
 		record.put("detail", details);
 		records.add(record);
-		JSONObject result = new JSONObject();
-		result.put("projectid", logSourceDao.findByLogSourceId(logSourceId).getProjectId());
-		result.put("logsourceid", logSourceId);
 		result.put("record", records);
 		logger.info("queryTimeRecords excutes successful.");
 		return result;
 	}
 
+	
 	@Override
 	public JSONObject queryErrorRecords(int logSourceId, long startTime, long endTime, int limit, int offset) {
 		// TODO Auto-generated method stub

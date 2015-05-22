@@ -65,8 +65,8 @@ public class ReadServiceAPI {
 		JSONObject jsonObject = readService.queryTimeRecords(Integer.parseInt(id), startTime, endTime,
 				Integer.parseInt(limit), Integer.parseInt(offset));
 		if (jsonObject == null) {
-			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
-			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
+			NotFoundRequestException nr = new NotFoundRequestException(Const.INNER_ERROR);
+			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
 	}
