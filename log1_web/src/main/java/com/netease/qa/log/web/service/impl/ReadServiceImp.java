@@ -37,13 +37,11 @@ public class ReadServiceImp implements ReadService {
 	public JSONObject queryTimeRecords(int logSourceId, long startTime, long endTime, int limit, int offset) {
 		List<ExceptionData> exceptionDatas = null;
 		try{
-			exceptionDatas = this.exceptionDataDao.findByLogSourceIdAndTime(logSourceId, startTime,
-					endTime, "sample_time", limit, offset);
+			exceptionDatas = this.exceptionDataDao.findByLogSourceIdAndTime(logSourceId, startTime, endTime, "sample_time", limit, offset);
 		}catch (Exception e) {
 			logger.error(e);
 			return null;
 		}
-		
 		//组装数据
 		JSONObject result = new JSONObject();
 		result.put("projectid", logSourceDao.findByLogSourceId(logSourceId).getProjectId());
@@ -64,9 +62,7 @@ public class ReadServiceImp implements ReadService {
 
 		JSONObject detail = new JSONObject();
 		detail.put(this.exceptionDao.findByExceptionId(first.getExceptionId()).getExceptionType(), first.getExceptionCount());
-		// details是包含detail的数组
 		details.add(detail);
-
 		for (int i = 1; i < exceptionDatas.size(); i++) {
 			ExceptionData next = exceptionDatas.get(i);
 			// 若后续的异常数据的采样时间和第一个一样，那么就把他们的数量加起来

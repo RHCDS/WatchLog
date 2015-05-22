@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.netease.qa.log.exception.ApiExceptionHandler;
 import com.netease.qa.log.exception.InvalidRequestException;
 import com.netease.qa.log.exception.NotFoundRequestException;
+import com.netease.qa.log.web.service.LogsourceService;
 import com.netease.qa.log.web.service.ReadService;
 import com.netease.qa.log.util.Const;
 import com.netease.qa.log.util.MathUtil;
@@ -31,6 +32,9 @@ public class ReadServiceAPI {
 
 	@Resource
 	private ReadService readService;
+	
+	@Resource
+	private LogsourceService logsourceService;
 	
 	@Resource
 	private ApiExceptionHandler apiException;
@@ -50,6 +54,10 @@ public class ReadServiceAPI {
 		if (!MathUtil.isInteger(limit) || !MathUtil.isInteger(offset)) {
 			InvalidRequestException ex = new InvalidRequestException(Const.LIMIT_AND_OFFSET_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
+		}
+		if(logsourceService.findLogsource(Integer.valueOf(id)) == null){
+			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
+			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
 		}
 		Long startTime = null;
 		Long endTime = null;
