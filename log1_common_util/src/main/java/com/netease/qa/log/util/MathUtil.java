@@ -13,9 +13,16 @@ public class MathUtil {
 	}
 	 
 	
-	public static Long parseTime(String time) throws ParseException{
+	public static Long parse2Long(String time) throws ParseException{
 		SimpleDateFormat format = new SimpleDateFormat(Const.TIME_FORMAT);
 		Date date = format.parse(time);
 		return date.getTime()/1000;
 	}
+	
+	
+	public static String parse2Str(long time) {
+		SimpleDateFormat sdf = new SimpleDateFormat(Const.TIME_FORMAT);
+		return sdf.format(new Date(time * 1000));
+	}
+	
 }

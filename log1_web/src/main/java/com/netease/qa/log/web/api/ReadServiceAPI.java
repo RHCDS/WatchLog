@@ -62,8 +62,8 @@ public class ReadServiceAPI {
 		Long startTime = null;
 		Long endTime = null;
 		try {
-			startTime = MathUtil.parseTime(start);
-			endTime = MathUtil.parseTime(end);
+			startTime = MathUtil.parse2Long(start);
+			endTime = MathUtil.parse2Long(end);
 		} catch (ParseException e) {
 			logger.error(e); 
 			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_TIME_FORMAT);
@@ -96,11 +96,15 @@ public class ReadServiceAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.LIMIT_AND_OFFSET_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
+		if(logsourceService.findLogsource(Integer.valueOf(id)) == null){
+			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
+			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
+		}
 		Long startTime = null;
 		Long endTime = null;
 		try {
-			startTime = MathUtil.parseTime(start);
-			endTime = MathUtil.parseTime(end);
+			startTime = MathUtil.parse2Long(start);
+			endTime = MathUtil.parse2Long(end);
 		} catch (ParseException e) {
 			logger.error(e); 
 			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_TIME_FORMAT);
@@ -110,8 +114,8 @@ public class ReadServiceAPI {
 		JSONObject jsonObject = readService.queryErrorRecords(Integer.parseInt(id), startTime, endTime,
 				Integer.parseInt(limit), Integer.parseInt(offset));
 		if (jsonObject == null) {
-			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
-			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
+			NotFoundRequestException nr = new NotFoundRequestException(Const.INNER_ERROR);
+			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
 	}
@@ -133,11 +137,15 @@ public class ReadServiceAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.LIMIT_AND_OFFSET_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
+		if(logsourceService.findLogsource(Integer.valueOf(id)) == null){
+			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
+			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
+		}
 		Long startTime = null;
 		Long endTime = null;
 		try {
-			startTime = MathUtil.parseTime(start);
-			endTime = MathUtil.parseTime(end);
+			startTime = MathUtil.parse2Long(start);
+			endTime = MathUtil.parse2Long(end);
 		} catch (ParseException e) {
 			logger.error(e); 
 			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_TIME_FORMAT);
@@ -147,8 +155,8 @@ public class ReadServiceAPI {
 		JSONObject jsonObject = readService.queryUnknownExceptions(Integer.parseInt(id), startTime, endTime,
 				Integer.parseInt(limit), Integer.parseInt(offset));
 		if (jsonObject == null) {
-			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
-			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
+			NotFoundRequestException nr = new NotFoundRequestException(Const.INNER_ERROR);
+			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
 	}

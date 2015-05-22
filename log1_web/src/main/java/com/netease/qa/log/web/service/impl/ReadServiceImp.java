@@ -1,7 +1,5 @@
 package com.netease.qa.log.web.service.impl;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -17,6 +15,7 @@ import com.netease.qa.log.meta.dao.ExceptionDao;
 import com.netease.qa.log.meta.dao.ExceptionDataDao;
 import com.netease.qa.log.meta.dao.LogSourceDao;
 import com.netease.qa.log.meta.dao.UkExceptionDataDao;
+import com.netease.qa.log.util.MathUtil;
 import com.netease.qa.log.web.service.ReadService;
 
 @Service
@@ -57,7 +56,7 @@ public class ReadServiceImp implements ReadService {
 		JSONArray details = new JSONArray();
 
 		ExceptionData first = exceptionDatas.get(0);
-		record.put("time", convert(first.getSampleTime()));
+		record.put("time", MathUtil.parse2Str(first.getSampleTime()));
 		record.put("totalcount", first.getExceptionCount());
 
 		JSONObject detail = new JSONObject();
@@ -66,7 +65,7 @@ public class ReadServiceImp implements ReadService {
 		for (int i = 1; i < exceptionDatas.size(); i++) {
 			ExceptionData next = exceptionDatas.get(i);
 			// 若后续的异常数据的采样时间和第一个一样，那么就把他们的数量加起来
-			if (convert(next.getSampleTime()).equals(record.getString("time"))) {
+			if (MathUtil.parse2Str(next.getSampleTime()).equals(record.getString("time"))) {
 				record.put("totalcount", record.getInteger("totalcount") + next.getExceptionCount());
 				detail = new JSONObject();
 				detail.put(this.exceptionDao.findByExceptionId(next.getExceptionId()).getExceptionType(),
@@ -77,7 +76,7 @@ public class ReadServiceImp implements ReadService {
 				records.add(record);
 				record = new JSONObject();
 				details = new JSONArray();
-				record.put("time", convert(next.getSampleTime()));
+				record.put("time", MathUtil.parse2Str(next.getSampleTime()));
 				record.put("totalcount", next.getExceptionCount());
 				detail = new JSONObject();
 				detail.put(this.exceptionDao.findByExceptionId(next.getExceptionId()).getExceptionType(),
@@ -88,19 +87,29 @@ public class ReadServiceImp implements ReadService {
 		record.put("detail", details);
 		records.add(record);
 		result.put("record", records);
-		logger.info("queryTimeRecords excutes successful.");
 		return result;
 	}
 
 	
 	@Override
 	public JSONObject queryErrorRecords(int logSourceId, long startTime, long endTime, int limit, int offset) {
-		// TODO Auto-generated method stub
-		List<ExceptionData> exceptionDatas = exceptionDataDao.findByLogSourceIdAndTime(logSourceId, startTime, endTime,
-				"exception_id", limit, offset);
-		if (exceptionDatas.size() == 0)
+		List<ExceptionData> exceptionDatas = null;
+		try{
+			exceptionDatas = exceptionDataDao.findByLogSourceIdAndTime(logSourceId, startTime, endTime, "exception_id", limit, offset);
+		}catch (Exception e) {
+			logger.error(e);
 			return null;
-
+		}
+		//组装数据
+		JSONObject result = new JSONObject();
+		result.put("projectid", this.logSourceDao.findByLogSourceId(logSourceId).getProjectId());
+		result.put("logsourceid", logSourceId);
+		//查不到数据，error部分为空
+		if (exceptionDatas.size() == 0){
+			result.put("error", new JSONArray()); 
+			return result;
+		}
+		//组装error部分数据
 		JSONArray errors = new JSONArray();
 		JSONObject error = new JSONObject();
 		JSONArray details = new JSONArray();
@@ -111,7 +120,7 @@ public class ReadServiceImp implements ReadService {
 		error.put("demo", this.exceptionDao.findByExceptionId(first.getExceptionId()).getExceptionDemo());
 
 		JSONObject detail = new JSONObject();
-		detail.put(convert(first.getSampleTime()), first.getExceptionCount());
+		detail.put(MathUtil.parse2Str(first.getSampleTime()), first.getExceptionCount());
 		details.add(detail);
 
 		for (int i = 1; i < exceptionDatas.size(); i++) {
@@ -121,7 +130,7 @@ public class ReadServiceImp implements ReadService {
 					.equals(error.getString("type"))) {
 				error.put("totalcount", error.getInteger("totalcount") + next.getExceptionCount());
 				detail = new JSONObject();
-				detail.put(convert(next.getSampleTime()), next.getExceptionCount());
+				detail.put(MathUtil.parse2Str(next.getSampleTime()), next.getExceptionCount());
 				details.add(detail);
 			} else {
 				error.put("detail", details);
@@ -132,48 +141,44 @@ public class ReadServiceImp implements ReadService {
 				error.put("totalcount", next.getExceptionCount());
 				error.put("demo", this.exceptionDao.findByExceptionId(next.getExceptionId()).getExceptionDemo());
 				detail = new JSONObject();
-				detail.put(convert(next.getSampleTime()), next.getExceptionCount());
+				detail.put(MathUtil.parse2Str(next.getSampleTime()), next.getExceptionCount());
 				details.add(detail);
 			}
 		}
 		error.put("detail", details);
 		errors.add(error);
-
-		JSONObject result = new JSONObject();
-		result.put("projectid", this.logSourceDao.findByLogSourceId(logSourceId).getProjectId());
-		result.put("logsourceid", logSourceId);
 		result.put("error", errors);
-		logger.info("queryErrorRecords excutes successful.");
 		return result;
 	}
+	
 
 	@Override
 	public JSONObject queryUnknownExceptions(int logSourceId, long startTime, long endTime, int limit, int offset) {
-		// TODO Auto-generated method stub
-		List<UkExceptionData> ukExceptionDatas = ukExceptionDataDao.findByLogSourceIdAndTime(logSourceId, startTime,
-				endTime, limit, offset);
-		if (ukExceptionDatas.size() == 0)
+		List<UkExceptionData> ukExceptionDatas = null;
+		try{
+			ukExceptionDatas = ukExceptionDataDao.findByLogSourceIdAndTime(logSourceId, startTime, endTime, limit, offset);
+		}catch (Exception e) {
+			logger.error(e);
 			return null;
-
-		JSONArray unknowns = new JSONArray();
-
-		for (UkExceptionData uk : ukExceptionDatas) {
-			JSONObject unknown = new JSONObject();
-			unknown.put(convert(uk.getOriginLogTime()), uk.getOriginLog());
-			unknowns.add(unknown);
 		}
-
+		//组装数据
 		JSONObject result = new JSONObject();
 		result.put("projectid", this.logSourceDao.findByLogSourceId(logSourceId).getProjectId());
 		result.put("logsourceid", logSourceId);
+		//查不到数据，unknown部分为空
+		if (ukExceptionDatas.size() == 0){
+			result.put("unknowns", new JSONArray());
+			return result;
+		}
+		JSONArray unknowns = new JSONArray();
+		for (UkExceptionData uk : ukExceptionDatas) {
+			JSONObject unknown = new JSONObject();
+			unknown.put(MathUtil.parse2Str(uk.getOriginLogTime()), uk.getOriginLog());
+			unknowns.add(unknown);
+		}
 		result.put("unknowns", unknowns);
-		logger.info("queryUnknownExceptions excutes successful.");
 		return result;
 	}
-
-	private static String convert(long time) {
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		return sdf.format(new Date(time * 1000));
-	}
+	
 
 }
