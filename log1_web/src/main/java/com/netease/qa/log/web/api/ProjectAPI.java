@@ -16,6 +16,7 @@ import com.netease.qa.log.exception.ApiExceptionHandler;
 import com.netease.qa.log.exception.ConflictRequestException;
 import com.netease.qa.log.exception.InvalidRequestException;
 import com.netease.qa.log.exception.NotFoundRequestException;
+import com.netease.qa.log.exception.NullParamException;
 import com.netease.qa.log.web.service.ProjectService;
 import com.netease.qa.log.util.Const;
 import com.netease.qa.log.util.MathUtil;
@@ -30,62 +31,66 @@ public class ProjectAPI {
 	private ApiExceptionHandler apiException;
 
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> addProject(@RequestParam("name") String name, @RequestParam("name_eng") String name_eng,
-			@RequestParam("accuracy") String accuracy, Model model) {
-		if (!MathUtil.isInteger(accuracy)) {
+	public ResponseEntity<JSONObject> addProject(@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "name_eng", required = false) String name_eng,
+			@RequestParam(value = "accuracy", required = false, defaultValue = "30") String accuracy, Model model) {
+		if (name == null || name_eng == null) {
+			NullParamException ne = new NullParamException(Const.NULL_PARAM);
+			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+		} else if (!MathUtil.isInteger(accuracy)) {
 			InvalidRequestException ex = new InvalidRequestException(Const.ACCURACY_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
-		}
-		else if(!MathUtil.isEng(name_eng)){
+		} else if (!MathUtil.isEng(name_eng)) {
 			InvalidRequestException ex = new InvalidRequestException(Const.NAME_ENG_PROJECT);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		
 		int addResult = projectService.addProject(name, name_eng, Integer.parseInt(accuracy));
 		if (addResult == -2) {
 			ConflictRequestException cr = new ConflictRequestException(Const.PROJECT_ALREADY_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleConflictRequestException(cr), HttpStatus.CONFLICT);
-		} 
-		else if (addResult == 0) {
+		} else if (addResult == 0) {
 			InvalidRequestException ex = new InvalidRequestException(Const.INNER_ERROR);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex),
 					HttpStatus.INTERNAL_SERVER_ERROR);
-		} 
-		else {
+		} else {
 			JSONObject json = new JSONObject();
 			json.put("projectid", addResult);
 			return new ResponseEntity<JSONObject>(json, HttpStatus.OK);
 		}
 	}
 
-	
 	@RequestMapping(value = "{projectid}", method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> updateProject(@PathVariable String projectid, @RequestParam("name") String name,
-			@RequestParam("name_eng") String name_eng, @RequestParam("accuracy") String accuracy, Model model) {
-		if (!MathUtil.isInteger(projectid)) {
+	public ResponseEntity<JSONObject> updateProject(@PathVariable String projectid,
+			@RequestParam(value = "name", required = false) String name,
+			@RequestParam(value = "name_eng", required = false) String name_eng,
+			@RequestParam(value = "accuracy", required = false) String accuracy, Model model) {
+		if (name == null || name_eng == null || accuracy == null) {
+			NullParamException ne = new NullParamException(Const.NULL_PARAM);
+			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+		} else if (!MathUtil.isInteger(projectid)) {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
+			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
+		} else if (!MathUtil.isEng(name_eng)) {
+			InvalidRequestException ex = new InvalidRequestException(Const.NAME_ENG_PROJECT);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
 		if (!MathUtil.isInteger(accuracy)) {
 			InvalidRequestException ex = new InvalidRequestException(Const.ACCURACY_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		
-		int updateResult = projectService.updateProject(Integer.parseInt(projectid), name, name_eng, Integer.parseInt(accuracy));
+		int updateResult = projectService.updateProject(Integer.parseInt(projectid), name, name_eng,
+				Integer.parseInt(accuracy));
 		if (updateResult == -1) {
 			NotFoundRequestException nr = new NotFoundRequestException(Const.PROJECT_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
-		} 
-		else if (updateResult == 0) {
+		} else if (updateResult == 0) {
 			InvalidRequestException ex = new InvalidRequestException(Const.INNER_ERROR);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex),
 					HttpStatus.INTERNAL_SERVER_ERROR);
-		} 
-		else {
+		} else {
 			return new ResponseEntity<JSONObject>(new JSONObject(), HttpStatus.OK);
 		}
 	}
-	
 
 	@RequestMapping(value = "{projectid}", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> findProject(@PathVariable String projectid, Model model) {
@@ -93,7 +98,7 @@ public class ProjectAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		
+
 		JSONObject project = projectService.findProject(Integer.parseInt(projectid));
 		if (project == null) {
 			NotFoundRequestException nr = new NotFoundRequestException(Const.PROJECT_NOT_EXSIT);
@@ -101,6 +106,5 @@ public class ProjectAPI {
 		}
 		return new ResponseEntity<JSONObject>(project, HttpStatus.OK);
 	}
-	
-}
 
+}

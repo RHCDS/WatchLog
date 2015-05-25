@@ -9,6 +9,7 @@ import backtype.storm.topology.IRichBolt;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Tuple;
 
+@SuppressWarnings("serial")
 public class WordCounter implements IRichBolt {
 
 	private OutputCollector collector;

@@ -19,6 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.netease.qa.log.exception.ApiExceptionHandler;
 import com.netease.qa.log.exception.InvalidRequestException;
 import com.netease.qa.log.exception.NotFoundRequestException;
+import com.netease.qa.log.exception.NullParamException;
 import com.netease.qa.log.web.service.ReadService;
 import com.netease.qa.log.util.Const;
 import com.netease.qa.log.util.MathUtil;
@@ -31,18 +32,23 @@ public class ReadServiceAPI {
 
 	@Resource
 	private ReadService readService;
-	
+
 	@Resource
 	private ApiExceptionHandler apiException;
 
-	
 	/**
 	 * 按时间聚合
 	 */
 	@RequestMapping(value = "/time/{id}", method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> readByTime(@PathVariable String id, @RequestParam("start") String start,
-			@RequestParam("end") String end, @RequestParam("limit") String limit,
-			@RequestParam("offset") String offset, Model model) {
+	public ResponseEntity<JSONObject> readByTime(@PathVariable String id,
+			@RequestParam(value = "start", required = false) String start,
+			@RequestParam(value = "end", required = false) String end,
+			@RequestParam(value = "limit", required = false) String limit,
+			@RequestParam(value = "offset", required = false) String offset, Model model) {
+		if (start == null || end == null || limit == null || offset == null) {
+			NullParamException ne = new NullParamException(Const.NULL_PARAM);
+			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+		}
 		if (!MathUtil.isInteger(id)) {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
@@ -57,7 +63,7 @@ public class ReadServiceAPI {
 			startTime = MathUtil.parseTime(start);
 			endTime = MathUtil.parseTime(end);
 		} catch (ParseException e) {
-			logger.error(e); 
+			logger.error(e);
 			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_TIME_FORMAT);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
@@ -71,15 +77,18 @@ public class ReadServiceAPI {
 		return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
 	}
 
-	
 	/**
 	 * 按异常类型聚合
 	 */
 	@RequestMapping(value = "/error/{id}", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JSONObject> readByError(@PathVariable String id, @RequestParam("start") String start,
-			@RequestParam("end") String end, @RequestParam("limit") String limit,
-			@RequestParam("offset") String offset, Model model) {
+	public ResponseEntity<JSONObject> readByError(@PathVariable String id, @RequestParam(value = "start",required = false) String start,
+			@RequestParam(value = "end", required = false) String end, @RequestParam(value = "limit", required = false) String limit,
+			@RequestParam(value = "offset", required = false) String offset, Model model) {
+		if (start == null || end == null || limit == null || offset == null) {
+			NullParamException ne = new NullParamException(Const.NULL_PARAM);
+			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+		}
 		if (!MathUtil.isInteger(id)) {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
@@ -94,7 +103,7 @@ public class ReadServiceAPI {
 			startTime = MathUtil.parseTime(start);
 			endTime = MathUtil.parseTime(end);
 		} catch (ParseException e) {
-			logger.error(e); 
+			logger.error(e);
 			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_TIME_FORMAT);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
@@ -107,16 +116,19 @@ public class ReadServiceAPI {
 		}
 		return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
 	}
-	
 
 	/**
 	 * 获取unknown类型异常
 	 */
 	@RequestMapping(value = "/unknown/{id}", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JSONObject> readByUnknow(@PathVariable String id, @RequestParam("start") String start,
-			@RequestParam("end") String end, @RequestParam("limit") String limit,
-			@RequestParam("offset") String offset, Model model) {
+	public ResponseEntity<JSONObject> readByUnknow(@PathVariable String id, @RequestParam(value = "start",required = false) String start,
+			@RequestParam(value = "end", required = false) String end, @RequestParam(value = "limit", required = false) String limit,
+			@RequestParam(value = "offset", required = false) String offset, Model model) {
+		if (start == null || end == null || limit == null || offset == null) {
+			NullParamException ne = new NullParamException(Const.NULL_PARAM);
+			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+		}
 		if (!MathUtil.isInteger(id)) {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
@@ -131,7 +143,7 @@ public class ReadServiceAPI {
 			startTime = MathUtil.parseTime(start);
 			endTime = MathUtil.parseTime(end);
 		} catch (ParseException e) {
-			logger.error(e); 
+			logger.error(e);
 			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_TIME_FORMAT);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}

@@ -34,5 +34,12 @@ public class ApiExceptionHandler {
 	public JSONObject handleUnexception(RuntimeException ex){
 		return new JSONObject();
 	}
+	
+	@ExceptionHandler(NullParamException.class)
+	public JSONObject handleNullParamException(NullParamException ne){
+		JSONObject json = new JSONObject();
+		json.put("message", ne.getMessage());
+		return json;
+	}
 
 }
