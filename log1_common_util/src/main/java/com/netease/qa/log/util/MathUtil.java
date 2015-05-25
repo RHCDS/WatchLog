@@ -11,7 +11,12 @@ public class MathUtil {
 		boolean isNum = str.matches("[0-9]+");   
 	    return isNum;
 	}
-	 
+   
+	public static final boolean isEng(String str){
+		//只含有数字、字母、下划线,并且不能以下划线开头和结尾
+		boolean isEng = str.matches("^(?!_)(?!.*?_$)[0-9a-zA-Z_]+$");
+		return isEng;
+	}
 	
 	public static Long parseTime(String time) throws ParseException{
 		SimpleDateFormat format = new SimpleDateFormat(Const.TIME_FORMAT);

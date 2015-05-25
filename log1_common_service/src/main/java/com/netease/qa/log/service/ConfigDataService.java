@@ -12,7 +12,7 @@ import com.netease.qa.log.meta.service.ProjectService;
 
 
 /**
- * 配置信息
+ * read配置信息 from database
  * @author hzzhangweijie
  *
  */
@@ -62,12 +62,10 @@ public class ConfigDataService {
 			return logSourceIdCache.get(logSourceId);
 		}
 		else{
-			//为什么取数据库里的日资源到logSourceCache中？？？
 			LogSource logSource = logSourceService.findByLogSourceId(logSourceId);
 			logSourceCache.put(logSource.getHostname() + "_" + logSource.getPath() + "_" + logSource.getFilePattern(), logSource);
 			logSourceIdCache.put(logSourceId, logSource);
 			
-			//为什么要把project加入到projectCache中？
 			int projectId = logSource.getProjectId();
 			if(!projectCache.contains(projectId)){
 				Project project = projectService.findByProjectId(projectId);
@@ -77,13 +75,12 @@ public class ConfigDataService {
 		}
 	}
 	
-	//依赖上面的函数，先把有日资源的项目添加到projectCache中，极大地提高速度。
+
 	public static Project getProject(int projectId){
 		if(projectCache.contains(projectId)){
 			return projectCache.get(projectId);
 		}
 		else{
-	//Cache不到时，才会去数据中找，这个效率就低得多
 			Project project = projectService.findByProjectId(projectId);
 			projectCache.put(projectId, project); 
 			return project;
@@ -98,6 +95,7 @@ public class ConfigDataService {
 		logger.info("start to load logSource!");
 		for(Entry<Integer, LogSource> l: logSourceIdCache.entrySet()){
 			LogSource logSource = logSourceService.findByLogSourceId(l.getKey());
+			//没有变化也put，是不是效率不高？
 			logSourceIdCache.put(l.getKey(), logSource);
 			logger.info(logSource); 
 		}

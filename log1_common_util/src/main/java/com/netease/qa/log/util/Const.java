@@ -15,5 +15,6 @@ public class Const {
     public static final String PROJECT_NOT_EXSIT = "project not exist";
     public static final String INNER_ERROR = "internal server error";
     public static final String INVALID_TIME_FORMAT = "invalid time format, please use: " + TIME_FORMAT;
+    public static final String NAME_ENG_PROJECT ="project name_eng is invalid";
     
 }

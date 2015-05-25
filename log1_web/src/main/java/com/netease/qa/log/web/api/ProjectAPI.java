@@ -36,6 +36,10 @@ public class ProjectAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.ACCURACY_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
+		else if(!MathUtil.isEng(name_eng)){
+			InvalidRequestException ex = new InvalidRequestException(Const.NAME_ENG_PROJECT);
+			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
+		}
 		
 		int addResult = projectService.addProject(name, name_eng, Integer.parseInt(accuracy));
 		if (addResult == -2) {

@@ -95,12 +95,17 @@ public class MQConsumer extends BaseRichSpout {
 			}
 			return;
 		}
+		/*
+		 * 从公司内部拿到数据
+		 * 数据放在队列中，storm及时消费
+		 */
 
 		QueueingConsumer consumer = new QueueingConsumer(channel);
 		try {
 			channel.basicConsume(queueName, true, consumer);
 			while (true) {   
-	            QueueingConsumer.Delivery delivery = consumer.nextDelivery();  
+	            QueueingConsumer.Delivery delivery = consumer.nextDelivery(); 
+	            //message是一条具体的日志信息
 	            String message = new String(delivery.getBody());  
 	            
 	            Map<String, Object> headers = delivery.getProperties().getHeaders();

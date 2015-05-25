@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.alibaba.fastjson.JSONObject;
+import com.esotericsoftware.kryo.NotNull;
 import com.netease.qa.log.exception.ApiExceptionHandler;
 import com.netease.qa.log.exception.ConflictRequestException;
 import com.netease.qa.log.exception.InvalidRequestException;
@@ -32,7 +33,7 @@ public class LogSourceAPI {
 
 	
 	@RequestMapping(method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> addLogsource(@RequestParam("logsourcename") String logsourceName,
+	public ResponseEntity<JSONObject> addLogsource(@RequestParam("logsourcename")  String  logsourceName ,
 			@RequestParam("projectid") String projectid, @RequestParam("hostname") String hostname,
 			@RequestParam("path") String path, @RequestParam("filepattern") String filepattern,
 			@RequestParam("linestart") String linestart, @RequestParam("filterkeyword") String filterkeyword,

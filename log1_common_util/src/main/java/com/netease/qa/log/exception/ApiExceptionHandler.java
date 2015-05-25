@@ -16,14 +16,14 @@ public class ApiExceptionHandler {
 		return json;
 	}
 	
-	@ExceptionHandler(InvalidRequestException.class)
+	@ExceptionHandler(ConflictRequestException.class)
 	public JSONObject handleConflictRequestException(ConflictRequestException cr){
 		JSONObject json = new JSONObject();
 		json.put("message", cr.getMessage());
 		return json;
 	}
 	
-	@ExceptionHandler(InvalidRequestException.class)
+	@ExceptionHandler(NotFoundRequestException.class)
 	public JSONObject handleNotFoundRequestException(NotFoundRequestException nr){
 		JSONObject json = new JSONObject();
 		json.put("message", nr.getMessage());
