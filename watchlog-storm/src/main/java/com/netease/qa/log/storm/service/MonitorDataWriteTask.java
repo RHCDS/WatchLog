@@ -1,13 +1,14 @@
 package com.netease.qa.log.storm.service;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
 public class MonitorDataWriteTask implements Runnable{
 
 	private static final int time_accuracy = 15000; 
-	private static final Logger logger = Logger.getLogger(MonitorDataWriteTask.class);
+	private static final Logger logger = LoggerFactory.getLogger(MonitorDataWriteTask.class);
 
 	@Override
 	public void run() {
@@ -19,7 +20,7 @@ public class MonitorDataWriteTask implements Runnable{
 				Thread.sleep(time_accuracy);
 			}
 			catch (InterruptedException e) {
-				logger.error(e);
+	        	logger.error("error", e);
 			}
 		}
 	}

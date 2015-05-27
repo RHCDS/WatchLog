@@ -4,7 +4,8 @@ import java.text.ParseException;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -14,6 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+
+
 
 import com.alibaba.fastjson.JSONObject;
 import com.netease.qa.log.exception.ApiExceptionHandler;
@@ -28,7 +32,7 @@ import com.netease.qa.log.util.MathUtil;
 @RequestMapping("/api/report")
 public class ReadServiceAPI {
 
-	private static final Logger logger = Logger.getLogger(ReadServiceAPI.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReadServiceAPI.class);
 
 	@Resource
 	private ReadService readService;
@@ -65,7 +69,7 @@ public class ReadServiceAPI {
 			startTime = MathUtil.parse2Long(start);
 			endTime = MathUtil.parse2Long(end);
 		} catch (ParseException e) {
-			logger.error(e); 
+			logger.error("error", e);
 			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_TIME_FORMAT);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
@@ -106,7 +110,7 @@ public class ReadServiceAPI {
 			startTime = MathUtil.parse2Long(start);
 			endTime = MathUtil.parse2Long(end);
 		} catch (ParseException e) {
-			logger.error(e); 
+			logger.error("error", e); 
 			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_TIME_FORMAT);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
@@ -147,7 +151,7 @@ public class ReadServiceAPI {
 			startTime = MathUtil.parse2Long(start);
 			endTime = MathUtil.parse2Long(end);
 		} catch (ParseException e) {
-			logger.error(e); 
+			logger.error("error", e);
 			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_TIME_FORMAT);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}

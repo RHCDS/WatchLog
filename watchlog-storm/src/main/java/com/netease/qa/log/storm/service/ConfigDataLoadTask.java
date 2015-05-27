@@ -1,11 +1,14 @@
 package com.netease.qa.log.storm.service;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 
 public class ConfigDataLoadTask implements Runnable{
 
-	private static final Logger logger = Logger.getLogger(ConfigDataLoadTask.class);
+	private static final Logger logger = LoggerFactory.getLogger(ConfigDataLoadTask.class);
+
 	private static final int config_load_inteval = 15000;
 
 	@Override
@@ -16,7 +19,7 @@ public class ConfigDataLoadTask implements Runnable{
 				Thread.sleep(config_load_inteval);
 			}
 			catch (InterruptedException e) {
-				logger.error(e);
+	        	logger.error("error", e);
 			}
 		}
 	}

@@ -5,13 +5,15 @@ import java.io.Reader;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
 public class MybatisUtil {
 	
-	private static final Logger logger = Logger.getLogger(MybatisUtil.class);
+	private static final Logger logger = LoggerFactory.getLogger(MybatisUtil.class);
+
     private final static SqlSessionFactory sqlSessionFactory;
     
     static {
@@ -20,7 +22,7 @@ public class MybatisUtil {
         try {
             reader = Resources.getResourceAsReader(resource);
         } catch (Exception e) {
-        	logger.error(e);
+        	logger.error("error", e);
         }
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
 		logger.info("---init sqlSession factory---");

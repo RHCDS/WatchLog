@@ -5,7 +5,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.netease.qa.log.meta.LogSource;
 import com.netease.qa.log.meta.Project;
@@ -21,7 +22,7 @@ import com.netease.qa.log.storm.util.MybatisUtil;
  */
 public class ConfigDataService {
 	
-	private static final Logger logger = Logger.getLogger(ConfigDataService.class);
+	private static final Logger logger = LoggerFactory.getLogger(ConfigDataService.class);
 
 	private static ConcurrentHashMap<String, LogSource> logSourceCache;
 	private static ConcurrentHashMap<Integer, LogSource> logSourceIdCache;

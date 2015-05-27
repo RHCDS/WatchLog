@@ -2,7 +2,8 @@ package com.netease.qa.log.service.impl;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONObject;
@@ -15,7 +16,7 @@ import com.netease.qa.log.service.LogSourceService;
 @Service
 public class LogsourceServiceImpl implements LogSourceService{
 
-	private static final Logger logger = Logger.getLogger(LogsourceServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(LogsourceServiceImpl.class);
 	
 	@Resource
 	private LogSourceDao logSourceDao;
@@ -30,7 +31,7 @@ public class LogsourceServiceImpl implements LogSourceService{
 			logSourceDao.insert(logSource);
 			return logSource.getLogSourceId();
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error("error", e);
 			return 0;
 		}	
 	}
@@ -42,7 +43,7 @@ public class LogsourceServiceImpl implements LogSourceService{
 			logSourceDao.update(logSource);
 			return 1;
 		} catch (Exception e) {
-			logger.info(e);
+			logger.error("error", e);
 			return 0;
 		}
 	}
@@ -67,7 +68,7 @@ public class LogsourceServiceImpl implements LogSourceService{
 		result.put("typeregex", logSource.getLineTypeRegex());
 		result.put("creator", logSource.getLogSourceCreatorName());
 		result.put("status", logSource.getLogSourceStatus());
-		logger.debug(result);
+		logger.debug(result.toJSONString());
 		return result;
 	}
 	
@@ -90,7 +91,7 @@ public class LogsourceServiceImpl implements LogSourceService{
 			logSourceDao.delete(logsourceid);
 			return 1;
 		} catch (Exception e) {
-			logger.error(e);
+			logger.error("error", e);
 			return 0;
 		}
 	}

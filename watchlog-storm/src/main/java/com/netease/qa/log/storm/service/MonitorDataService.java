@@ -5,7 +5,8 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.netease.qa.log.meta.Exception;
 import com.netease.qa.log.meta.ExceptionData;
@@ -24,8 +25,8 @@ import com.netease.qa.log.storm.util.MybatisUtil;
 
 public class MonitorDataService {
 	
-	private static final Logger logger = Logger.getLogger(MonitorDataService.class);
-	
+	private static final Logger logger = LoggerFactory.getLogger(MonitorDataService.class);
+
 	private static ConcurrentHashMap<String, Exception> exceptionCache;
 	private static ConcurrentHashMap<Integer, Exception> exceptionIdCache;
 	private static ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>> exceptionCountCache;
@@ -137,7 +138,7 @@ public class MonitorDataService {
 				exceptionData.setSampleTime(sampleTime);
 				exceptionData.setExceptionCount(count);
 				exceptionDataDao.insert(exceptionData);
-				logger.info(exceptionData);
+				logger.info(exceptionData.toString());
 			}
 		}
 		exceptionCountCache.clear();

@@ -2,7 +2,8 @@ package com.netease.qa.log.storm.bolts;
 
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.BasicOutputCollector;
@@ -14,7 +15,7 @@ public class ResultWriter implements IBasicBolt {
 
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger.getLogger(ResultWriter.class);
+	private static final Logger logger = LoggerFactory.getLogger(ResultWriter.class);
 
 	
 	@Override

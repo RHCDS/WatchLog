@@ -104,10 +104,16 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 		</dependency>
 
 		<dependency>
-           <groupId>org.codehaus.jackson</groupId>
-           <artifactId>jackson-mapper-asl</artifactId>
-           <version>1.9.4</version>
-     </dependency>
+           		<groupId>org.codehaus.jackson</groupId>
+          		 <artifactId>jackson-mapper-asl</artifactId>
+           		<version>1.9.4</version>
+     		</dependency>
+
+		<dependency>  
+       			<groupId>ch.qos.logback</groupId>  
+       			<artifactId>logback-classic</artifactId>  
+    			<version>1.0.13</version>  
+		</dependency>  
 		
 	</dependencies>
 </project>

@@ -4,7 +4,8 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.BasicOutputCollector;
@@ -22,7 +23,7 @@ import com.netease.qa.log.storm.service.ConfigDataLoadTask;
 public class LogNormalizer implements IBasicBolt {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger.getLogger(LogNormalizer.class);
+	private static final Logger logger = LoggerFactory.getLogger(LogNormalizer.class);
 
 
 	@SuppressWarnings("unchecked")

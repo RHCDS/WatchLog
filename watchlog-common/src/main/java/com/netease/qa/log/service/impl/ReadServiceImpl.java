@@ -4,7 +4,8 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
@@ -21,7 +22,7 @@ import com.netease.qa.log.util.MathUtil;
 @Service
 public class ReadServiceImpl implements ReadService {
 
-	private static final Logger logger = Logger.getLogger(ReadServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReadServiceImpl.class);
 
 	@Resource
 	private ExceptionDao exceptionDao;
@@ -38,7 +39,7 @@ public class ReadServiceImpl implements ReadService {
 		try{
 			exceptionDatas = this.exceptionDataDao.findByLogSourceIdAndTime(logSourceId, startTime, endTime, "sample_time", limit, offset);
 		}catch (Exception e) {
-			logger.error(e);
+			logger.error("error", e);
 			return null;
 		}
 		//组装数据
@@ -97,7 +98,7 @@ public class ReadServiceImpl implements ReadService {
 		try{
 			exceptionDatas = exceptionDataDao.findByLogSourceIdAndTime(logSourceId, startTime, endTime, "exception_id", limit, offset);
 		}catch (Exception e) {
-			logger.error(e);
+			logger.error("error", e);
 			return null;
 		}
 		//组装数据
@@ -159,7 +160,7 @@ public class ReadServiceImpl implements ReadService {
 		try{
 			ukExceptionDatas = ukExceptionDataDao.findByLogSourceIdAndTime(logSourceId, startTime, endTime, limit, offset);
 		}catch (Exception e) {
-			logger.error(e);
+			logger.error("error", e);
 			return null;
 		}
 		//组装数据

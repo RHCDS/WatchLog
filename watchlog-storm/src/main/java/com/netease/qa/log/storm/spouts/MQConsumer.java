@@ -12,7 +12,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
@@ -31,7 +32,7 @@ import com.rabbitmq.client.ShutdownSignalException;
 public class MQConsumer extends BaseRichSpout {
 
 	private static final long serialVersionUID = 1L;
-	private static final Logger logger = Logger.getLogger(MQConsumer.class);
+	private static final Logger logger = LoggerFactory.getLogger(MQConsumer.class);
 
 	private SpoutOutputCollector collector;
 	private boolean completed = false;
@@ -76,8 +77,8 @@ public class MQConsumer extends BaseRichSpout {
             QueueingConsumer.Delivery delivery = consumer.nextDelivery();  
             message = new String(delivery.getBody());  
             logger.info("Consume: " + message);  
-            logger.info(delivery.getProperties().getHeaders().get("__DS_.fields.tag"));  
-            logger.info(delivery.getProperties().getHeaders().get("__DS_.timestamp"));  
+            logger.info(delivery.getProperties().getHeaders().get("__DS_.fields.tag").toString());  
+            logger.info(delivery.getProperties().getHeaders().get("__DS_.timestamp").toString());  
         }  
 		
 	}
@@ -99,10 +100,10 @@ public class MQConsumer extends BaseRichSpout {
 				connection.close(); 
 			}
 			catch (InterruptedException e) {
-				logger.error(e); 
+	        	logger.error("error", e);
 			}
 			catch (IOException e) {
-				logger.error(e); 
+	        	logger.error("error", e);
 			}
 			return;
 		}
@@ -120,16 +121,16 @@ public class MQConsumer extends BaseRichSpout {
 	        }  
 		}
 		catch (IOException e) {
-			logger.error(e);
+        	logger.error("error", e);
 		}
 		catch (ShutdownSignalException e) { 
-			logger.error(e);
+        	logger.error("error", e);
 		}
 		catch (ConsumerCancelledException e) {
-			logger.error(e);
+        	logger.error("error", e);
 		}
 		catch (InterruptedException e) {
-			logger.error(e);
+        	logger.error("error", e);
 		}
 		finally{
 			logger.error("ERROR: SET COMPLETED" );
@@ -155,7 +156,7 @@ public class MQConsumer extends BaseRichSpout {
 			channel.queueDeclare(queueName, false, false, false, null); 
 		}
 		catch (IOException e) { 
-			logger.error(e);
+        	logger.error("error", e);
 		}
 		this.collector = collector;
 	}
@@ -173,13 +174,13 @@ public class MQConsumer extends BaseRichSpout {
 			properties.load(reader);
 		}
 		catch (FileNotFoundException e) {
-			logger.error(e);
+        	logger.error("error", e);
 		}
 		catch (UnsupportedEncodingException e) {
-			logger.error(e);
+        	logger.error("error", e);
 		}
 		catch (IOException e) {
-			logger.error(e);
+        	logger.error("error", e);
 		}
 
 		host = properties.getProperty("mq.host");
