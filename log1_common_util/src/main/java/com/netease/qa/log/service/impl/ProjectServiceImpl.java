@@ -1,4 +1,4 @@
-package com.netease.qa.log.web.service.impl;
+package com.netease.qa.log.service.impl;
 
 
 import java.util.List;
@@ -14,18 +14,12 @@ import com.netease.qa.log.meta.LogSource;
 import com.netease.qa.log.meta.Project;
 import com.netease.qa.log.meta.dao.LogSourceDao;
 import com.netease.qa.log.meta.dao.ProjectDao;
-import com.netease.qa.log.web.service.ProjectService;
+import com.netease.qa.log.service.ProjectService;
 
-/*
- * return 1+ 表示成功，httpStatus:200
- * return 0 表示内部错误,httpStatus:500
- * return -1 表示不存在,httpStatus:404
- * return -2 表示已存在，有冲突，httpStatus:409
- */
 @Service
-public class ProjectServiceImp implements ProjectService {
+public class ProjectServiceImpl implements ProjectService {
 
-	private static final Logger logger = Logger.getLogger(ProjectServiceImp.class);
+	private static final Logger logger = Logger.getLogger(ProjectServiceImpl.class);
 
 	@Resource
 	private ProjectDao projectDao;
@@ -34,17 +28,7 @@ public class ProjectServiceImp implements ProjectService {
 	private LogSourceDao logSourceDao;
 	
 	@Override
-	public int addProject(String name, String name_eng, int accuracy) {
-		Project project = projectDao.findByName(name_eng);
-		if(project != null){
-			//409,Conflict，已存在
-			logger.debug("conflict");
-			return -2;
-		}
-		project = new Project();
-		project.setProjectName(name);
-		project.setProjectEngName(name_eng);
-		project.setTimeAccuracy(accuracy);
+	public int createProject(Project project) {
 		try {
 			projectDao.insert(project);
 			return project.getProjectId();
@@ -56,15 +40,7 @@ public class ProjectServiceImp implements ProjectService {
 	
 
 	@Override
-	public int updateProject(int projectid, String name, String name_eng,
-			int accuracy) {
-		Project project = projectDao.findByProjectId(projectid);
-		if(project == null){
-			return -1;
-		}
-		project.setProjectName(name);
-		project.setProjectEngName(name_eng);
-		project.setTimeAccuracy(accuracy);
+	public int updateProject(Project project) {
 		try {
 			projectDao.update(project);
 			return 1;
@@ -76,17 +52,19 @@ public class ProjectServiceImp implements ProjectService {
 	
 
 	@Override
-	public JSONObject findProject(int projectid) {
+	public JSONObject getDetailByProjectId(int projectid) {
 		Project project = projectDao.findByProjectId(projectid);
-		List<LogSource> logSources = this.logSourceDao.selectAllByProjectId(projectid);
-		if(project == null){ //logsource列表可以为空
-			return null;
-		}
 		JSONObject result = new JSONObject();
+		result.put("projectid", project.getProjectId());
+		result.put("name", project.getProjectName());
+		result.put("name_eng", project.getProjectEngName());
+		result.put("accuracy", project.getTimeAccuracy());
+		
+		List<LogSource> list = this.logSourceDao.selectAllByProjectId(projectid);
 		JSONArray logsources = new JSONArray();
 		
-		for(int i = 0; i < logSources.size(); i++){
-			LogSource tmp = logSources.get(i);
+		for(int i = 0; i < list.size(); i++){
+			LogSource tmp = list.get(i);
 			JSONObject logsource = new JSONObject();
 			logsource.put("logsourceid", tmp.getLogSourceId());
 			logsource.put("logsourcename", tmp.getLogSourceName());
@@ -101,12 +79,30 @@ public class ProjectServiceImp implements ProjectService {
 			logsource.put("status", tmp.getLogSourceStatus());
 			logsources.add(logsource);
 		}
-		result.put("projectid", project.getProjectId());
-		result.put("name", project.getProjectName());
-		result.put("name_eng", project.getProjectEngName());
-		result.put("accuracy", project.getTimeAccuracy());
-		result.put("logsource", logsources);
+		result.put("logsources", logsources);
 		return result;
+	}
+	
+	
+	@Override
+	public Project getByProjectId(int projectid) {
+		Project project = projectDao.findByProjectId(projectid);
+		return project;
+	}
+	
+
+	@Override
+	public boolean checkProjectExsit(int projectid) {
+		Project project = projectDao.findByProjectId(projectid);
+		return project != null;
+
+	}
+
+
+	@Override
+	public boolean checkProjectExsit(String name) {
+		Project project = projectDao.findByName(name);
+		return project != null;
 	}
 	
 }

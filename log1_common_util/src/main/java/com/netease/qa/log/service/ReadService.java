@@ -1,4 +1,4 @@
-package com.netease.qa.log.web.service;
+package com.netease.qa.log.service;
 
 import com.alibaba.fastjson.JSONObject;
 

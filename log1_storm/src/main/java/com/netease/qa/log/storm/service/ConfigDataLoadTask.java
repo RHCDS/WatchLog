@@ -1,11 +1,11 @@
-package com.netease.qa.log.service;
+package com.netease.qa.log.storm.service;
 
 import org.apache.log4j.Logger;
 
 
-public class ConfigLoadTask implements Runnable{
+public class ConfigDataLoadTask implements Runnable{
 
-	private static final Logger logger = Logger.getLogger(ConfigLoadTask.class);
+	private static final Logger logger = Logger.getLogger(ConfigDataLoadTask.class);
 	private static final int config_load_inteval = 15000;
 
 	@Override

@@ -1,4 +1,4 @@
-package com.netease.qa.log.service;
+package com.netease.qa.log.storm.service;
 
 import org.apache.log4j.Logger;
 
@@ -6,7 +6,7 @@ import org.apache.log4j.Logger;
 
 public class MonitorDataWriteTask implements Runnable{
 
-	private static final int time_accuracy = 30000; 
+	private static final int time_accuracy = 15000; 
 	private static final Logger logger = Logger.getLogger(MonitorDataWriteTask.class);
 
 	@Override

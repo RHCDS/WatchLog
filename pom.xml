@@ -8,7 +8,6 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
   <modules>
   	<module>log1_web</module>
   	<module>log1_storm</module>
-  	<module>log1_common_service</module>
   	<module>log1_common_util</module>
   </modules>
   
@@ -32,9 +31,9 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/ma
 					<source>1.6</source>
 					<target>1.6</target>
 					<compilerVersion>1.6</compilerVersion>
+                                        <encoding>UTF-8</encoding>
 				</configuration>
 			</plugin>
-
 			<!--
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>

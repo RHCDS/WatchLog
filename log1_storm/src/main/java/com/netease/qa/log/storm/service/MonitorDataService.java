@@ -1,11 +1,11 @@
-package com.netease.qa.log.service;
+package com.netease.qa.log.storm.service;
 
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.apache.ibatis.session.SqlSession;
+import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
 import com.netease.qa.log.meta.Exception;
 import com.netease.qa.log.meta.ExceptionData;
@@ -13,9 +13,7 @@ import com.netease.qa.log.meta.UkExceptionData;
 import com.netease.qa.log.meta.dao.ExceptionDao;
 import com.netease.qa.log.meta.dao.ExceptionDataDao;
 import com.netease.qa.log.meta.dao.UkExceptionDataDao;
-import com.netease.qa.log.meta.service.ExceptionDataService;
-import com.netease.qa.log.meta.service.ExceptionService;
-import com.netease.qa.log.meta.service.UkExceptionDataService;
+import com.netease.qa.log.storm.util.MybatisUtil;
 
 
 /**
@@ -28,32 +26,28 @@ public class MonitorDataService {
 	
 	private static final Logger logger = Logger.getLogger(MonitorDataService.class);
 	
-	//ConcurrentHashMap 同步的线程安全的，支持高并发
-	private static ConcurrentHashMap<String, Exception> exceptionCache;//高并发的异常缓存
-	private static ConcurrentHashMap<Integer, Exception> exceptionIdCache;//异常id缓存
-	//???
+	private static ConcurrentHashMap<String, Exception> exceptionCache;
+	private static ConcurrentHashMap<Integer, Exception> exceptionIdCache;
 	private static ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>> exceptionCountCache;
-//	private static ExceptionService exceptionService;
 	
-	@Autowired
 	private static ExceptionDao exceptionDao;
-//	private static ExceptionDataService exceptionDataService;
 	private static ExceptionDataDao exceptionDataDao;
-//	private static UkExceptionDataService ukExceptionDataService;
 	private static UkExceptionDataDao ukExceptionDataDao;
-
+	
 	static{
 		exceptionCache = new ConcurrentHashMap<String, Exception>();
 		exceptionIdCache = new ConcurrentHashMap<Integer, Exception>();
 		exceptionCountCache = new ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>();
-//		exceptionService = new ExceptionService();
-//		exceptionDataService = new ExceptionDataService();
-//		ukExceptionDataService = new UkExceptionDataService();
+
+		SqlSessionFactory sqlSessionFactory = MybatisUtil.getSqlSessionFactory();
+		SqlSession sqlSession = sqlSessionFactory.openSession(true);
+		exceptionDao = sqlSession.getMapper(ExceptionDao.class);
+		exceptionDataDao = sqlSession.getMapper(ExceptionDataDao.class);
+		ukExceptionDataDao = sqlSession.getMapper(UkExceptionDataDao.class);
 	}
 	
 	
 	public static Exception getException(int logSourceId, String exceptionTypeMD5){
-		//日志源+异常MD5是一个主键（唯一确定）或异常id
 		String key = logSourceId + "_" + exceptionTypeMD5;
 		if(exceptionCache.containsKey(key)){
 			return exceptionCache.get(key);
@@ -62,7 +56,6 @@ public class MonitorDataService {
 			Exception exception = exceptionDao.findByTwoKey(logSourceId, exceptionTypeMD5);
 			if(exception != null){
 				exceptionCache.put(key, exception);
-				//就是为了下一个函数getException(int exceptionId)的方便使用
 				exceptionIdCache.put(exception.getExceptionId(), exception);
 			}
 			return exception;
@@ -75,7 +68,6 @@ public class MonitorDataService {
 			return exceptionIdCache.get(exceptionId);
 		}
 		else{
-			System.out.println("!!!!!!!!!!!:" + exceptionId);
 			Exception exception = exceptionDao.findByExceptionId(exceptionId);
 			if(exception != null){
 				exceptionIdCache.put(exception.getExceptionId(), exception);
@@ -92,9 +84,9 @@ public class MonitorDataService {
 		exception.setExceptionType(exceptionType);
 		exception.setExceptionDemo(exceptionDemo);
 		
-		int exceptionId = exceptionDao.insert(exception);
+		exceptionDao.insert(exception);
 		exceptionCache.put(logSourceId + "_" + exceptionTypeMD5, exception);
-		return exceptionId;
+		return exception.getExceptionId();
 	}
 	
 	
@@ -107,7 +99,6 @@ public class MonitorDataService {
 	}
 	
 	
-	//统计在一个采样时间段内，所有的异常数量
 	public static void putExceptionData(int logSourceId, int exceptionId){
 		if(!exceptionCountCache.containsKey(logSourceId)){ 
 			ConcurrentHashMap<Integer, Integer> tmp = new ConcurrentHashMap<Integer, Integer>();
@@ -130,13 +121,9 @@ public class MonitorDataService {
 	 * 写入数据库 exception_data表
 	 * @param sampleTime
 	 */
-	
-	//等把异常数量统计完成后，才能写入数据库中
 	public static void writeExceptionData(Long sampleTime){
-		
-		//for循环的这种用法，注意！.entrySet()方法返回一个set集合，集合的对象是Entry<..>
+		logger.info("---write exception data into DB---");
 		for(Entry<Integer, ConcurrentHashMap<Integer, Integer>> e1: exceptionCountCache.entrySet()){
-			
 			int logSourceId = e1.getKey();
 			ConcurrentHashMap<Integer, Integer> tmp = e1.getValue();
 			

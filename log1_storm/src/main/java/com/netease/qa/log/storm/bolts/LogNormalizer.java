@@ -16,8 +16,8 @@ import backtype.storm.tuple.Values;
 
 import com.netease.qa.log.meta.LogSource;
 import com.netease.qa.log.meta.Project;
-import com.netease.qa.log.service.ConfigDataService;
-import com.netease.qa.log.service.ConfigLoadTask;
+import com.netease.qa.log.storm.service.ConfigDataService;
+import com.netease.qa.log.storm.service.ConfigDataLoadTask;
 
 public class LogNormalizer implements IBasicBolt {
 
@@ -35,19 +35,20 @@ public class LogNormalizer implements IBasicBolt {
         String filePattern =  headers.get("__DS_.fields._ds_file_pattern").toString();  
         String dsTime =  headers.get("__DS_.timestamp").toString();   
 		
-        LogSource logsource = ConfigDataService.getLogSource(hostname, path, filePattern);
-        Project project = ConfigDataService.getProject(logsource.getProjectId());
-        logger.debug(logsource.getLineTypeRegex());
-        
-        //日志源启动了监控
-        if(logsource.getLogSourceStatus() == 1){
-    		collector.emit(new Values(input.getString(0), logsource, project, dsTime));
-        }
-        else{
-        	;
-        }
-//		logger.debug("project status: " + project.getProjectStatus() + ", TimeAccuracy: " + project.getTimeAccuracy());
-		logger.debug("logsource FilterKeyword: " + logsource.getLineFilterKeyword() + ", LineTypeRegex: " + logsource.getLineTypeRegex());
+		LogSource logsource = ConfigDataService.getLogSource(hostname, path, filePattern);
+		if(logsource == null) return;
+		
+		Project project = ConfigDataService.getProject(logsource.getProjectId());
+		if(project == null) return;
+		
+		logger.debug("logsource======"  + logsource);
+		logger.debug("project======"  + project);
+		
+		// 日志源启动了监控
+		if (logsource.getLogSourceStatus() == 1) {
+			collector.emit(new Values(input.getString(0), logsource, project, dsTime));
+		}
+
 	}
 	
 	
@@ -65,7 +66,7 @@ public class LogNormalizer implements IBasicBolt {
 	@Override
 	public void prepare(@SuppressWarnings("rawtypes") Map paramMap, TopologyContext paramTopologyContext) {
 		ExecutorService POOL = Executors.newFixedThreadPool(1);
-		POOL.submit(new ConfigLoadTask());
+		POOL.submit(new ConfigDataLoadTask());
 	}
 
  

@@ -16,7 +16,9 @@ import com.netease.qa.log.exception.ApiExceptionHandler;
 import com.netease.qa.log.exception.ConflictRequestException;
 import com.netease.qa.log.exception.InvalidRequestException;
 import com.netease.qa.log.exception.NotFoundRequestException;
-import com.netease.qa.log.web.service.LogsourceService;
+import com.netease.qa.log.meta.LogSource;
+import com.netease.qa.log.service.LogSourceService;
+import com.netease.qa.log.service.ProjectService;
 import com.netease.qa.log.util.Const;
 import com.netease.qa.log.util.MathUtil;
 
@@ -25,7 +27,10 @@ import com.netease.qa.log.util.MathUtil;
 public class LogSourceAPI {
 	
 	@Resource
-	private LogsourceService logsourceService;
+	private LogSourceService logsourceService;
+	
+	@Resource
+	private ProjectService projectService;
 	
 	@Resource
 	private ApiExceptionHandler apiException;
@@ -38,25 +43,30 @@ public class LogSourceAPI {
 			@RequestParam("linestart") String linestart, @RequestParam("filterkeyword") String filterkeyword,
 			@RequestParam("typeregex") String typeregex, @RequestParam("logsourcecreatorname") String creatorname, Model model) {
 		if (!MathUtil.isInteger(projectid)) {
-			// projectid 不是num
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
-			// 400错误，参数错误
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		// 获取post提交的数据
-		int result = logsourceService.addLogsource(logsourceName, Integer.parseInt(projectid), hostname, path, filepattern, linestart,
-				filterkeyword, typeregex, creatorname);
-		// 409错误，有冲突 
-		if (result == -2) { 
-			ConflictRequestException cr = new ConflictRequestException(Const.LOG_ALREADY_EXSIT);
-			return new ResponseEntity<JSONObject>(apiException.handleConflictRequestException(cr), HttpStatus.CONFLICT);
-		} 
-		else if (result == -1) {
+		if(!projectService.checkProjectExsit(Integer.parseInt(projectid))){ 
 			NotFoundRequestException nr = new NotFoundRequestException(Const.PROJECT_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
-		} 
-		// 内部错误，500,基本很少出现这种错误
-		else if (result == 0) { 
+		}
+		if(logsourceService.checkLogSourceExist(hostname, path, filepattern)){
+			ConflictRequestException cr = new ConflictRequestException(Const.LOG_ALREADY_EXSIT);
+			return new ResponseEntity<JSONObject>(apiException.handleConflictRequestException(cr), HttpStatus.CONFLICT);
+		}
+		
+		LogSource logSource = new LogSource();
+		logSource.setLogSourceName(logsourceName);
+		logSource.setProjectId(Integer.parseInt(projectid));
+		logSource.setHostname(hostname);
+		logSource.setPath(path);
+		logSource.setFilePattern(filepattern);
+		logSource.setLineStartRegex(linestart);
+		logSource.setLineFilterKeyword(filterkeyword);
+		logSource.setLineTypeRegex(typeregex);
+		logSource.setLogSourceCreatorName(creatorname);
+		int result = logsourceService.createLogSource(logSource);
+		if (result == 0) { 
 			InvalidRequestException ex = new InvalidRequestException(Const.INNER_ERROR);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex),
 					HttpStatus.INTERNAL_SERVER_ERROR);
@@ -76,19 +86,23 @@ public class LogSourceAPI {
 			@RequestParam("linestart") String linestart, @RequestParam("filterkeyword") String filterkeyword,
 			@RequestParam("typeregex") String typeregex, Model model) {
 		if (!MathUtil.isInteger(logsourceid)) {
-			// logsourceid 不是数字
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
-			// 400错误，参数错误
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		
-		int result = logsourceService.updateLogsource(Integer.parseInt(logsourceid), logsourcename, hostname, path, filepattern,
-				linestart, filterkeyword, typeregex);
-		if (result == -1) {
+		LogSource logSource = logsourceService.getByLogSourceId(Integer.parseInt(logsourceid));
+		if (logSource == null){
 			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
-		} 
-		else if (result == 0) {
+		}
+		logSource.setLogSourceName(logsourcename);
+		logSource.setHostname(hostname);
+		logSource.setPath(path);
+		logSource.setFilePattern(filepattern);
+		logSource.setLineStartRegex(linestart); 
+		logSource.setLineFilterKeyword(filterkeyword);
+		logSource.setLineTypeRegex(typeregex);
+		int result = logsourceService.updateLogSource(logSource);
+		if (result == 0) {
 			InvalidRequestException ex = new InvalidRequestException(Const.INNER_ERROR);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex),
 					HttpStatus.INTERNAL_SERVER_ERROR);
@@ -106,12 +120,14 @@ public class LogSourceAPI {
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
 		
-		JSONObject logSource = logsourceService.findLogsource(Integer.parseInt(logsourceid));
-		if (logSource == null) {
+		JSONObject logSource = logsourceService.getDetailByLogSourceId(Integer.parseInt(logsourceid));
+		if(logSource == null){
 			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
 		}
-		return new ResponseEntity<JSONObject>(logSource, HttpStatus.OK);
+		else{
+			return new ResponseEntity<JSONObject>(logSource, HttpStatus.OK);
+		}
 	}
 	
 	
@@ -121,16 +137,15 @@ public class LogSourceAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		
-		int result = logsourceService.deleteLogsource(Integer.parseInt(logsourceid));
-		if (result == -1) {
+		if(!logsourceService.checkLogSourceExist(Integer.parseInt(logsourceid))){
 			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
-		} 
-		else if (result == 0) {
+		}
+		
+		int result = logsourceService.deleteLogSource(Integer.parseInt(logsourceid));
+		if (result == 0) {
 			InvalidRequestException ex = new InvalidRequestException(Const.INNER_ERROR);
-			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.INTERNAL_SERVER_ERROR);
 		} 
 		else {
 			return new ResponseEntity<JSONObject>(new JSONObject(), HttpStatus.OK);
@@ -149,16 +164,17 @@ public class LogSourceAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.STATUS_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		
-		int result = logsourceService.changeLogsourceStatus(Integer.parseInt(logsourceid), Integer.parseInt(status));
-		if (result == -1) {
+		LogSource logSource = logsourceService.getByLogSourceId(Integer.parseInt(logsourceid));
+		if (logSource == null){
 			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
-		} else if (result == 0) {
+		}
+		
+		logSource.setLogSourceStatus(Integer.parseInt(status));
+		int result = logsourceService.updateLogSource(logSource);
+		if (result == 0) {
 			InvalidRequestException ex = new InvalidRequestException(Const.INNER_ERROR);
-			// 内部错误，500,基本很少出现这种错误
-			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.INTERNAL_SERVER_ERROR);
 		} else {
 			return new ResponseEntity<JSONObject>(new JSONObject(), HttpStatus.OK);
 		}

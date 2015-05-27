@@ -1,6 +1,5 @@
-package com.netease.qa.log.util;
+package com.netease.qa.log.storm.util;
 
-import java.io.IOException;
 import java.io.Reader;
 
 import org.apache.ibatis.io.Resources;
@@ -20,10 +19,11 @@ public class MybatisUtil {
         Reader reader = null;
         try {
             reader = Resources.getResourceAsReader(resource);
-        } catch (IOException e) {
-        	logger.error(e.getMessage());
+        } catch (Exception e) {
+        	logger.error(e);
         }
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+		logger.info("---init sqlSession factory---");
     }
 
     public static SqlSessionFactory getSqlSessionFactory() {

@@ -1,4 +1,4 @@
-package com.netease.qa.log.web.service.impl;
+package com.netease.qa.log.service.impl;
 
 import java.util.List;
 
@@ -15,13 +15,13 @@ import com.netease.qa.log.meta.dao.ExceptionDao;
 import com.netease.qa.log.meta.dao.ExceptionDataDao;
 import com.netease.qa.log.meta.dao.LogSourceDao;
 import com.netease.qa.log.meta.dao.UkExceptionDataDao;
+import com.netease.qa.log.service.ReadService;
 import com.netease.qa.log.util.MathUtil;
-import com.netease.qa.log.web.service.ReadService;
 
 @Service
-public class ReadServiceImp implements ReadService {
+public class ReadServiceImpl implements ReadService {
 
-	private static final Logger logger = Logger.getLogger(ReadServiceImp.class);
+	private static final Logger logger = Logger.getLogger(ReadServiceImpl.class);
 
 	@Resource
 	private ExceptionDao exceptionDao;
@@ -115,6 +115,7 @@ public class ReadServiceImp implements ReadService {
 		JSONArray details = new JSONArray();
 
 		ExceptionData first = exceptionDatas.get(0);
+		logger.info("first------" + first);
 		error.put("type", this.exceptionDao.findByExceptionId(first.getExceptionId()).getExceptionType());
 		error.put("totalcount", first.getExceptionCount());
 		error.put("demo", this.exceptionDao.findByExceptionId(first.getExceptionId()).getExceptionDemo());
