@@ -1,10 +1,24 @@
-<div><h1>
-    <ul>  
-         <li>Menu item 1</li>  
-         <li>Menu item 2</li>  
-         <li>Menu item 3</li>  
-         <li>Menu item 4</li>  
-         <li>Menu item 5</li>  
-         <li>Menu item 6</li>
-       </ul>
-</h1></div>
+<nav class="navbar navbar-default">
+  <div class="container">
+    <!-- Brand and toggle get grouped for better mobile display -->
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+        <span class="sr-only">Toggle navigation</span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+     </div>
+
+    <!-- Collect the nav links, forms, and other content for toggling -->
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">日志源管理</a></li>
+        <li><a href="#">实时分析</a></li>
+  		<li><a href="#">日志聚合分析</a></li>        
+  		<li><a href="#">报警管理</a></li>        
+      </ul>
+      </div><!-- /.navbar-collapse -->
+      
+  </div><!-- /.container-fluid -->
+</nav>
