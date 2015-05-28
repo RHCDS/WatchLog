@@ -21,6 +21,13 @@
 			<version>${project.version}</version>
 		</dependency>
 		
+		<!-- apache httpclient -->
+		<dependency>
+	        <groupId>org.apache.httpcomponents</groupId>
+	        <artifactId>httpclient</artifactId>
+	         <version>4.3.1</version>
+        </dependency>
+
         <!-- freemark -->
         <dependency>
             <groupId>org.freemarker</groupId>
