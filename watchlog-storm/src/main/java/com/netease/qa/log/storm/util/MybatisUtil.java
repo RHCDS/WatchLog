@@ -24,11 +24,12 @@ public class MybatisUtil {
         } catch (Exception e) {
         	logger.error("error", e);
         }
-        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader);
+        sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, ConfigReader.MYBATIS_ENV);
 		logger.info("---init sqlSession factory---");
     }
 
     public static SqlSessionFactory getSqlSessionFactory() {
         return sqlSessionFactory;
     }
+
 }

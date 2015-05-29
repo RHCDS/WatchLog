@@ -91,7 +91,12 @@ public class LogAnalyser implements IBasicBolt {
 
 	@Override
 	public void prepare(@SuppressWarnings("rawtypes") Map paramMap, TopologyContext paramTopologyContext) {
-		
+		try {
+			Thread.sleep(1000);
+		}
+		catch (InterruptedException e) {
+			logger.error("error", e);
+		} 
 		ExecutorService POOL = Executors.newFixedThreadPool(1);
 		POOL.submit(new MonitorDataWriteTask());
 	}

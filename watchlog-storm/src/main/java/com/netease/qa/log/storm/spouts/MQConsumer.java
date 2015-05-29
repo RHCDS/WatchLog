@@ -1,16 +1,8 @@
 package com.netease.qa.log.storm.spouts;
 
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
-import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +14,7 @@ import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 
+import com.netease.qa.log.storm.util.ConfigReader;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -39,10 +32,9 @@ public class MQConsumer extends BaseRichSpout {
 
 	private static Channel channel;
 	private static Connection connection;
-	private static final String CONF_FILE = "storm.conf";
-	private static String queueName;
-	private static String host;
-	private static int port;
+	private static String queueName = ConfigReader.MQ_QUEUE;
+	private static String host = ConfigReader.MQ_HOST;
+	private static int port = ConfigReader.MQ_PORT;
 	
 
 	public void ack(Object msgId) {
@@ -61,7 +53,6 @@ public class MQConsumer extends BaseRichSpout {
 	
 	public static void main(String []args) throws IOException, ShutdownSignalException, 
 	                ConsumerCancelledException, InterruptedException{ 
-		loadConfig();
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(host);
 		factory.setPort(port);
@@ -107,11 +98,7 @@ public class MQConsumer extends BaseRichSpout {
 			}
 			return;
 		}
-		/*
-		 * 从公司内部拿到数据
-		 * 数据放在队列中，storm及时消费
-		 */
-
+		
 		QueueingConsumer consumer = new QueueingConsumer(channel);
 		try {
 			channel.basicConsume(queueName, true, consumer);
@@ -121,7 +108,7 @@ public class MQConsumer extends BaseRichSpout {
 	            
 	            Map<String, Object> headers = delivery.getProperties().getHeaders();
 	            this.collector.emit(new Values(message, headers), message);
-//	            logger.info("Consume: " + message);  
+	            logger.debug("Consume: " + message);  
 	        }  
 		}
 		catch (IOException e) {
@@ -148,7 +135,6 @@ public class MQConsumer extends BaseRichSpout {
 	 */
 	@SuppressWarnings("rawtypes")
 	public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
-		loadConfig();
 		try {
 			logger.info("==============================");
 			ConnectionFactory factory = new ConnectionFactory();
@@ -165,34 +151,6 @@ public class MQConsumer extends BaseRichSpout {
 		this.collector = collector;
 	}
 
-	
-
-	private static void loadConfig(){
-		File configFile = new File(CONF_FILE);
-		Properties properties = new Properties();
-		InputStream is = null;
-		Reader reader = null;
-		try {
-			is = new FileInputStream(configFile);
-			reader = new InputStreamReader(is, "UTF-8");
-			properties.load(reader);
-		}
-		catch (FileNotFoundException e) {
-        	logger.error("error", e);
-		}
-		catch (UnsupportedEncodingException e) {
-        	logger.error("error", e);
-		}
-		catch (IOException e) {
-        	logger.error("error", e);
-		}
-
-		host = properties.getProperty("mq.host");
-		port = Integer.valueOf(properties.getProperty("mq.port"));
-		queueName = properties.getProperty("mq.queue");
-	}
-	
-	
 
 	/**
 	 * Declare the output field "word"

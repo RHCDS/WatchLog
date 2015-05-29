@@ -4,7 +4,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,20 +30,10 @@ public class MonitorDataService {
 	private static ConcurrentHashMap<Integer, Exception> exceptionIdCache;
 	private static ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>> exceptionCountCache;
 	
-	private static ExceptionDao exceptionDao;
-	private static ExceptionDataDao exceptionDataDao;
-	private static UkExceptionDataDao ukExceptionDataDao;
-	
 	static{
 		exceptionCache = new ConcurrentHashMap<String, Exception>();
 		exceptionIdCache = new ConcurrentHashMap<Integer, Exception>();
 		exceptionCountCache = new ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>();
-
-		SqlSessionFactory sqlSessionFactory = MybatisUtil.getSqlSessionFactory();
-		SqlSession sqlSession = sqlSessionFactory.openSession(true);
-		exceptionDao = sqlSession.getMapper(ExceptionDao.class);
-		exceptionDataDao = sqlSession.getMapper(ExceptionDataDao.class);
-		ukExceptionDataDao = sqlSession.getMapper(UkExceptionDataDao.class);
 	}
 	
 	
@@ -54,12 +43,19 @@ public class MonitorDataService {
 			return exceptionCache.get(key);
 		}
 		else{
-			Exception exception = exceptionDao.findByTwoKey(logSourceId, exceptionTypeMD5);
-			if(exception != null){
-				exceptionCache.put(key, exception);
-				exceptionIdCache.put(exception.getExceptionId(), exception);
+			SqlSession sqlSession = MybatisUtil.getSqlSessionFactory().openSession(true);
+			try{
+				ExceptionDao exceptionDao = sqlSession.getMapper(ExceptionDao.class); 
+				Exception exception = exceptionDao.findByTwoKey(logSourceId, exceptionTypeMD5);
+				if(exception != null){
+					exceptionCache.put(key, exception);
+					exceptionIdCache.put(exception.getExceptionId(), exception);
+				}
+				return exception;
 			}
-			return exception;
+			finally{
+				sqlSession.close();
+			}
 		}
 	}
 	
@@ -69,11 +65,18 @@ public class MonitorDataService {
 			return exceptionIdCache.get(exceptionId);
 		}
 		else{
-			Exception exception = exceptionDao.findByExceptionId(exceptionId);
-			if(exception != null){
-				exceptionIdCache.put(exception.getExceptionId(), exception);
+			SqlSession sqlSession = MybatisUtil.getSqlSessionFactory().openSession(true);
+			try{
+				ExceptionDao exceptionDao = sqlSession.getMapper(ExceptionDao.class); 
+				Exception exception = exceptionDao.findByExceptionId(exceptionId);
+				if(exception != null){
+					exceptionIdCache.put(exception.getExceptionId(), exception);
+				}
+				return exception;
 			}
-			return exception;
+			finally{
+				sqlSession.close();
+			}
 		}
 	}
 	
@@ -85,9 +88,16 @@ public class MonitorDataService {
 		exception.setExceptionType(exceptionType);
 		exception.setExceptionDemo(exceptionDemo);
 		
-		exceptionDao.insert(exception);
-		exceptionCache.put(logSourceId + "_" + exceptionTypeMD5, exception);
-		return exception.getExceptionId();
+		SqlSession sqlSession = MybatisUtil.getSqlSessionFactory().openSession(true);
+		try{
+			ExceptionDao exceptionDao = sqlSession.getMapper(ExceptionDao.class); 
+			exceptionDao.insert(exception);
+			exceptionCache.put(logSourceId + "_" + exceptionTypeMD5, exception);
+			return exception.getExceptionId();
+		}
+		finally{
+			sqlSession.close();
+		}
 	}
 	
 	
@@ -96,7 +106,15 @@ public class MonitorDataService {
 		ukExceptionData.setLogSourceId(logSourceId);
 		ukExceptionData.setOriginLogTime(originLogTime);
 		ukExceptionData.setOriginLog(originLog);
-		ukExceptionDataDao.insert(ukExceptionData);
+		
+		SqlSession sqlSession = MybatisUtil.getSqlSessionFactory().openSession(true);
+		try{
+			UkExceptionDataDao ukExceptionDataDao = sqlSession.getMapper(UkExceptionDataDao.class);
+			ukExceptionDataDao.insert(ukExceptionData);
+		}
+		finally{
+			sqlSession.close();
+		}
 	}
 	
 	
@@ -124,24 +142,31 @@ public class MonitorDataService {
 	 */
 	public static void writeExceptionData(Long sampleTime){
 		logger.info("---write exception data into DB---");
-		for(Entry<Integer, ConcurrentHashMap<Integer, Integer>> e1: exceptionCountCache.entrySet()){
-			int logSourceId = e1.getKey();
-			ConcurrentHashMap<Integer, Integer> tmp = e1.getValue();
-			
-			for(Entry<Integer, Integer> e2: tmp.entrySet()){
-				int exceptionId = e2.getKey();
-				int count = e2.getValue();
+		SqlSession sqlSession = MybatisUtil.getSqlSessionFactory().openSession(true);
+		try{
+			ExceptionDataDao exceptionDataDao = sqlSession.getMapper(ExceptionDataDao.class);
+			for(Entry<Integer, ConcurrentHashMap<Integer, Integer>> e1: exceptionCountCache.entrySet()){
+				int logSourceId = e1.getKey();
+				ConcurrentHashMap<Integer, Integer> tmp = e1.getValue();
 				
-				ExceptionData exceptionData = new ExceptionData();
-				exceptionData.setLogSourceId(logSourceId);
-				exceptionData.setExceptionId(exceptionId);
-				exceptionData.setSampleTime(sampleTime);
-				exceptionData.setExceptionCount(count);
-				exceptionDataDao.insert(exceptionData);
-				logger.info(exceptionData.toString());
+				for(Entry<Integer, Integer> e2: tmp.entrySet()){
+					int exceptionId = e2.getKey();
+					int count = e2.getValue();
+					
+					ExceptionData exceptionData = new ExceptionData();
+					exceptionData.setLogSourceId(logSourceId);
+					exceptionData.setExceptionId(exceptionId);
+					exceptionData.setSampleTime(sampleTime);
+					exceptionData.setExceptionCount(count);
+					exceptionDataDao.insert(exceptionData);
+					logger.info(exceptionData.toString());
+				}
 			}
+			exceptionCountCache.clear();
 		}
-		exceptionCountCache.clear();
+		finally{
+			sqlSession.close();
+		}
 	}
 
 	
