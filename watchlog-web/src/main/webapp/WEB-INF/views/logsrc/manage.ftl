@@ -1,6 +1,6 @@
-<#import "layout/defaultLayout.ftl" as layout>
+<#import "../layout/defaultLayout.ftl" as layout>
 <@layout.myLayout>
-   <div>
+  <div>
           controller:  ${controller}<br/>
           action: ${action}<br/>
 		
@@ -8,5 +8,4 @@
 		    ${key} = ${RequestParameters[key]}<br/>
 		</#list>    
 </div>
- 
 </@layout.myLayout>
