@@ -30,7 +30,7 @@
       
       <div class="pull-right  col-md-2">
           		<select   id="project_select"  style="width:100%" onchange="window.location.href=this.options[selectedIndex].value" >
-          			<#list ['0','1','2','3'] as pid>
+          			<#list ['1','2','5','6'] as pid>
       					<#if proj==pid>
 	      					<option value="/logsrc/manage?proj=${pid}" selected="true">项目${pid}
 		      			<#else>

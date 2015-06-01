@@ -27,8 +27,7 @@
  }
  
  /* not required for sticky footer; just pushes hero down a bit */
- .wrapper > .container {
+ /*.wrapper > .container {
      padding-top: 60px;
- }
- 
+ }*/
          
