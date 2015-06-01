@@ -47,6 +47,7 @@ public class ConfigDataService {
 				LogSource logSource = logSourceDao.findByLocation(hostname, path, filePattern);
 				if(logSource == null) return null; // CACHE 、DB中都没有数据，但是datastream有—— ds agent可能未及时更新，数据应该丢弃，等待内存数据定时更新 
 				// TODO 存在性能隐患 
+				logSource.convertParams();
 				logSourceCache.put(key, logSource);
 				logSourceIdCache.put(logSource.getLogSourceId(), logSource);
 
@@ -79,6 +80,7 @@ public class ConfigDataService {
 				LogSource logSource = logSourceDao.findByLogSourceId(logSourceId);
 				if(logSource == null) return null;
 				
+				logSource.convertParams();
 				logSourceCache.put(logSource.getHostname() + "_" + logSource.getPath() + "_" + logSource.getFilePattern(), logSource);
 				logSourceIdCache.put(logSourceId, logSource);
 				
@@ -132,6 +134,7 @@ public class ConfigDataService {
 				logSourceIdCache.remove(l.getKey());
 				LogSource logSource = logSourceDao.findByLogSourceId(l.getKey());
 				if(logSource != null){
+					logSource.convertParams();
 					logSourceIdCache.put(l.getKey(), logSource);
 				}
 			}
@@ -141,6 +144,7 @@ public class ConfigDataService {
 				String [] keys = l.getKey().split("_");
 				LogSource logSource = logSourceDao.findByLocation(keys[0], keys[1], keys[2]);
 				if(logSource != null){
+					logSource.convertParams();
 					logSourceCache.put(l.getKey(), logSource);
 				}
 			}

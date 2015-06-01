@@ -116,7 +116,7 @@ public class ReadServiceImpl implements ReadService {
 		JSONArray details = new JSONArray();
 
 		ExceptionData first = exceptionDatas.get(0);
-		logger.info("first------" + first);
+		logger.debug("first------" + first);
 		error.put("type", this.exceptionDao.findByExceptionId(first.getExceptionId()).getExceptionType());
 		error.put("totalcount", first.getExceptionCount());
 		error.put("demo", this.exceptionDao.findByExceptionId(first.getExceptionId()).getExceptionDemo());

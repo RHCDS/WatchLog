@@ -30,4 +30,14 @@ public class MathUtil {
 		return sdf.format(new Date(time * 1000));
 	}
 	
+	
+	public static boolean isEmpty(String... params){
+		for(String param : params){
+			if(param == null || param.trim().equals("")){
+				return true; 
+			}
+		}
+		return false;
+	}
+	
 }
