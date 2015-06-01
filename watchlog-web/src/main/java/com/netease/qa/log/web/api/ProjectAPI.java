@@ -36,7 +36,7 @@ public class ProjectAPI {
 			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "name_eng", required = false) String name_eng,
 			@RequestParam(value = "accuracy", required = false) String accuracy, Model model) {
-		if (name == null || name_eng == null || accuracy == null) {
+		if (MathUtil.isEmpty(name, name_eng, accuracy)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
@@ -75,7 +75,7 @@ public class ProjectAPI {
 			@RequestParam(value = "name", required = false) String name,
 			@RequestParam(value = "name_eng", required = false) String name_eng,
 			@RequestParam(value = "accuracy", required = false) String accuracy, Model model) {
-		if (name == null || name_eng == null || accuracy == null) {
+		if (MathUtil.isEmpty(name, name_eng, accuracy)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}

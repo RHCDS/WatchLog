@@ -4,6 +4,13 @@ package com.netease.qa.log.util;
 public class Const {
 
     public static final String TIME_FORMAT = "yyyy-MM-dd HH:mm:ss";
+    public static final String FILTER_KEYWORD_AND = "_AND_";
+    public static final String FILTER_KEYWORD_OR = "_OR_";
+    public static final String FILTER_KEYWORD_NONE = "NONE";
+    public static final String TYPE_REGEX_CON = "__";
+    
+	public static final String UNKNOWN_TYPE = "unknown";
+
 
     public static final String ID_MUST_BE_NUM = "id must be a number";
     public static final String STATUS_MUST_BE_NUM = "status must be 0,1,2";

@@ -47,8 +47,7 @@ public class LogSourceAPI {
 			@RequestParam(value = "filterkeyword", required = false) String filterkeyword,
 			@RequestParam(value = "typeregex", required = false) String typeregex,
 			@RequestParam(value = "logsourcecreatorname", required = false) String creatorname, Model model){
-		if (logsourceName == null || projectid == null || hostname == null || path == null || filepattern == null
-				|| linestart == null || filterkeyword == null || typeregex == null || creatorname == null) {
+		if (MathUtil.isEmpty(logsourceName, projectid, hostname, path, filepattern, linestart, filterkeyword, typeregex, creatorname)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
@@ -97,8 +96,7 @@ public class LogSourceAPI {
 			@RequestParam(value = "linestart", required = false) String linestart,
 			@RequestParam(value = "filterkeyword", required = false) String filterkeyword,
 			@RequestParam(value = "typeregex", required = false) String typeregex, Model model) {		
-		if (logsourcename == null || hostname == null || hostname == null || path == null || filepattern == null
-				|| linestart == null || filterkeyword == null || typeregex == null) {
+		if (MathUtil.isEmpty(logsourceid, logsourcename, hostname, path, filepattern, linestart, filterkeyword, typeregex)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
@@ -173,7 +171,7 @@ public class LogSourceAPI {
 	@RequestMapping(value = "/changestatus/{logsourceid}", method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> changeStatus(@PathVariable String logsourceid,
 			@RequestParam(value = "status", required = false) String status, Model model) {
-		if(status == null){
+		if (MathUtil.isEmpty(status)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
