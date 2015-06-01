@@ -19,7 +19,7 @@ public interface LogSourceDao {
     
     public List<LogSource> selectAllByProjectId(int projectId);
     
-    public int countAllByProjectId(int projectId);
+    public int getTotalCountByProjectId(int projectId);
     
     public List<LogSource> findByProjectId(int projectId, int limit, int offset);
     

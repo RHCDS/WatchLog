@@ -1,5 +1,6 @@
 package com.netease.qa.log.util;
 
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,6 +29,12 @@ public class MathUtil {
 	public static String parse2Str(long time) {
 		SimpleDateFormat sdf = new SimpleDateFormat(Const.TIME_FORMAT);
 		return sdf.format(new Date(time * 1000));
+	}
+	
+	
+	public static String parse2Str(Timestamp time){
+		SimpleDateFormat sdf = new SimpleDateFormat(Const.TIME_FORMAT);
+	    return sdf.format(time);
 	}
 	
 	

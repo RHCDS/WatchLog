@@ -22,7 +22,7 @@ public interface LogSourceService {
 	
 	public boolean checkLogSourceExist(int logSourceid);
 	
-	public int getAllLogSource(int projectid);
+	public int getTotalCountByProjectId(int projectid);
 	
 	public JSONArray getLogSourceByProjectid(int project, int limit, int offset);
 
