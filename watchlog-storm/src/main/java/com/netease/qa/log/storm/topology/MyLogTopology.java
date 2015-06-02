@@ -10,6 +10,7 @@ import com.netease.qa.log.storm.spouts.MQConsumer;
 
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
+import backtype.storm.StormSubmitter;
 import backtype.storm.generated.AlreadyAliveException;
 import backtype.storm.generated.DRPCExecutionException;
 import backtype.storm.generated.InvalidTopologyException;
@@ -42,6 +43,9 @@ public class MyLogTopology {
 		cluster.submitTopology("log-test", conf, builder.createTopology());
 		Thread.sleep(10000000);
 		cluster.shutdown();
+		
+//		StormSubmitter.submitTopology("perf_watchlog_test", conf, builder.createTopology());
+
 		
 	}
 	
