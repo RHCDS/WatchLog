@@ -13,10 +13,11 @@
 <div id="result">empty</div>
 </br-->
 
+<!-- select   id="result"  style="width:100%" onchange="window.location.href=this.options[selectedIndex].value" ></select-->
+   
 
-    
-    
-<div class="container">
+  <#if RequestParameters.proj?exists >
+    <div class="container">
 
     <div id="toolbar">
        <button id="create" class="btn btn-primary"  onclick="createLogsrc()" >  创建日志源 </button>
@@ -49,5 +50,10 @@
         </table>
     </div>
     
+<#else>
+   <div class="container"> 请选择项目，亲:)</div>
+</#if>
+    
+
     
 </@layout.myLayout>

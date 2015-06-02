@@ -22,7 +22,8 @@
 
      <!--  self defined  -->    
 	 <link rel="stylesheet" href="/res/css/self/layout.css" />
-	 
+	 <script src="/res/js/self/layout.js" ></script>
+	 	 
 	 <#if controller == "WlogManage">
 	 <script src="/res/js/self/manage.js"></script>
      <link href="/res/css/plugin/table/bootstrap-table.min.css" rel="stylesheet" />
@@ -30,11 +31,6 @@
 	 </#if>
 	 
 
-	<script type="text/javascript">
-		$(document).ready(function() {
-		  	$('#project_select').select2();
-		});
-	</script>
   </head>
   
   <body>
