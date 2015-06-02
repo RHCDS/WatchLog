@@ -70,4 +70,12 @@ public class MathUtil {
 			return "modify_time";
 	}
 	
+	public static int[] parse2IntArray(String str){
+		String[] strs = str.split(",");
+		int[] nums = new int[strs.length];
+		for(int i=0;i<strs.length;i++){
+			nums[i] = Integer.parseInt(strs[i].trim());
+		}
+		return nums;
+	}
 }

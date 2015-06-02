@@ -99,8 +99,22 @@ public class LogsourceServiceImpl implements LogSourceService{
 			return 0;
 		}
 	}
-	
 
+	
+	@Override
+	public int deleteLogSources(int[] ids) {
+		for(int i=0; i < ids.length; i++){
+			try {
+				logSourceDao.delete(ids[i]);
+			} catch (Exception e) {
+				logger.error("error", e);
+				return 0;
+			}
+		}
+		return 1;
+	}
+
+	
 	@Override
 	public boolean checkLogSourceExist(String hostname, String path, String filePattern) {
 		LogSource logsource = logSourceDao.findByLocation(hostname, path, filePattern);
@@ -193,5 +207,7 @@ public class LogsourceServiceImpl implements LogSourceService{
 		}
 		return records;
 	}
+
+
 
 }

@@ -5,6 +5,7 @@ import javax.annotation.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,9 +54,11 @@ public class WlogSrcController {
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
 		}
 		int recordsTotal = logSourceService.getTotalCountByProjectId(Integer.parseInt(projectid));
-		String message = "select successful";
+		String message = Const.RESPONSE_SUCCESSFUL;
 		JSONArray data = logSourceService.getLogSourcesListByProjectid(Integer.parseInt(projectid), Integer.parseInt(limit),
 				Integer.parseInt(offset));
+		if(data == null)
+			message = Const.RESPONSE_NOTSUCCESSFUL;
 		JSONObject result = new JSONObject();
 		result.put("message", message);
 		result.put("recordsTotal", recordsTotal);
@@ -88,16 +91,31 @@ public class WlogSrcController {
 		}
 		String field = MathUtil.getSortField(sort);
 		int recordsTotal = logSourceService.getTotalCountByProjectId(Integer.parseInt(projectid));
-		String message = "select successful";
+		String message = Const.RESPONSE_SUCCESSFUL;
 		JSONArray data = logSourceService.getLogSourcesListSortedByProjectid(Integer.parseInt(projectid), field, order, Integer.parseInt(limit), Integer.parseInt(offset));
 		JSONObject result = new JSONObject();
 		if(data == null)
-			message = "select not successfully";
+			message = Const.RESPONSE_NOTSUCCESSFUL;
 		result.put("message", message);
 		result.put("total", recordsTotal);
 		result.put("rows", data);
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 	
-	
+	@RequestMapping(value = "/***", method = RequestMethod.DELETE)
+	public ResponseEntity<JSONObject> deleteLogSources(@RequestParam(value = "ids") String ids, Model model) {
+		if(MathUtil.isEmpty(ids)){
+			NullParamException ne = new NullParamException(Const.NULL_PARAM);
+			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+		}
+		int[] logsource_ids = MathUtil.parse2IntArray(ids);
+		int result = logSourceService.deleteLogSources(logsource_ids);
+		if (result == 0) {
+			InvalidRequestException ex = new InvalidRequestException(Const.INNER_ERROR);
+			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.INTERNAL_SERVER_ERROR);
+		} 
+		else {
+			return new ResponseEntity<JSONObject>(new JSONObject(), HttpStatus.OK);
+		}
+	}
 }

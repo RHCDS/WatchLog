@@ -25,4 +25,6 @@ public class Const {
     public static final String INVALID_NAME ="invalid name format";
     public static final String NULL_PARAM = "lose some paramater";
     
+    public static final String RESPONSE_SUCCESSFUL = "response successfully";
+    public static final String RESPONSE_NOTSUCCESSFUL = "response not successfully";
 }
