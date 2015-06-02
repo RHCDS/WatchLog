@@ -25,6 +25,8 @@
 	 
 	 <#if controller == "WlogManage">
 	 <script src="/res/js/self/manage.js"></script>
+     <link href="/res/css/plugin/table/bootstrap-table.min.css" rel="stylesheet" />
+	<script src="/res/js/plugin/table/bootstrap-table.min.js"></script>	 
 	 </#if>
 	 
 

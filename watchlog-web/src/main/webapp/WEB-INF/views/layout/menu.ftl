@@ -42,14 +42,14 @@
     			
       </div><!-- /.navbar-collapse -->
       
+      <!-- p>
           controller:  ${controller}
           action: ${action}
 		
 		<#list RequestParameters?keys as key>
 		    ${key} = ${RequestParameters[key]}
 		</#list>    
-		      
-
+	</p-->
       
   </div><!-- /.container-fluid -->
 </nav>

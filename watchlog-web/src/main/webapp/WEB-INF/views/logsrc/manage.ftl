@@ -1,6 +1,6 @@
 <#import "../layout/defaultLayout.ftl" as layout>
 <@layout.myLayout>
-  <div>
+  <!--div>
           controller:  ${controller}<br/>
           action: ${action}<br/>
 		
@@ -11,24 +11,43 @@
 
 <button id="test" class="btn btn-primary"  onclick="test()">test</button>
 <div id="result">empty</div>
-</br>
+</br-->
 
-<div class="content">
-	<table id="logsrc_table"  width="100%">
-	        <thead>
-	            <tr>
-	                <th>日志源名称</th>
-	                <th>服务器地址</th>
-	                <th>日志路径</th>
-	                <th>日志文件名称</th>
-	                <th>监控状态</th>
-	                <th>更新时间</th>
-	                 <th>创建人</th>
-	            </tr>
 
-	        </thead>
-	 
+    
+    
+<div class="container">
 
-	    </table>
-</div>
+    <div id="toolbar">
+       <button id="create" class="btn btn-primary"  onclick="createLogsrc()" >  创建日志源 </button>
+        <button id="remove" class="btn btn-primary"  onclick="destroyLogsrc()" > 删除日志源 </button>
+    </div>
+    </br>
+    
+        <table id="logtable"
+               data-toggle="toolbar"
+               data-height="500"
+               data-side-pagination="server"
+               data-pagination="true"
+               data-search="false">
+               
+            <thead>
+            <tr>
+                <th data-field="state" data-checkbox="true" ></th>
+                <th data-field="id"  data-sortable="true"  data-visible="false">ID</th>
+                <th data-field="logsrc_name"   data-sortable="true"   data-formatter="logsrcnameFormatter"  >日志源名称</th>
+                <th data-field="host_name" data-sortable="true" >服务器地址</th>
+                 <th data-field="logsrc_path" data-sortable="true" >日志源地址 </th>
+                 <th data-field="logsrc_file" data-sortable="true" >日志文件名称</th>
+                 <th data-field="status"   data-formatter="statusFormatter"  data-sortable="true" >监控状态</th>
+                 <th data-field="update_time" data-sortable="true" >更新时间</th>
+                 <th data-field="creator" data-sortable="true" >创建人</th>
+                  <th data-field="operate"    data-formatter="operateFormatter" ">操作</th>
+                
+            </tr>
+            </thead>
+        </table>
+    </div>
+    
+    
 </@layout.myLayout>
