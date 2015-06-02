@@ -5,6 +5,8 @@ import javax.annotation.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,7 +65,7 @@ public class WlogSrcController {
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/logtable", method = RequestMethod.POST)
+	@RequestMapping(value = "/logtable", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> findLogSourceSortedByProjectid(
 			@RequestParam(value = "proj", required = false) String projectid,
 			@RequestParam(value = "sort", required = false, defaultValue = "update_time") String sort,
@@ -99,5 +101,16 @@ public class WlogSrcController {
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 	
-	
+	@RequestMapping(value = "/***", method = RequestMethod.DELETE)
+	public ResponseEntity<JSONObject> deleteLogSources(@RequestParam(value = "ids") String ids, Model model) {
+		int[] logsource_ids = MathUtil.parse2IntArray(ids);
+		int result = logSourceService.deleteLogSources(logsource_ids);
+		if (result == 0) {
+			InvalidRequestException ex = new InvalidRequestException(Const.INNER_ERROR);
+			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.INTERNAL_SERVER_ERROR);
+		} 
+		else {
+			return new ResponseEntity<JSONObject>(new JSONObject(), HttpStatus.OK);
+		}
+	}
 }

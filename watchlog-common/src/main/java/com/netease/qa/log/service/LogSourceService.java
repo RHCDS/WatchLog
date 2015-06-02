@@ -18,6 +18,8 @@ public interface LogSourceService {
 	
 	public int deleteLogSource(int logSourceid);
 	
+	public int deleteLogSources(int[] ids);
+	
 	public boolean checkLogSourceExist(String hostname, String path, String filePattern);
 	
 	public boolean checkLogSourceExist(int logSourceid);
