@@ -63,7 +63,7 @@ public class WlogSrcController {
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/logtable", method = RequestMethod.POST)
+	@RequestMapping(value = "/logtable", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> findLogSourceSortedByProjectid(
 			@RequestParam(value = "proj", required = false) String projectid,
 			@RequestParam(value = "sort", required = false, defaultValue = "update_time") String sort,
