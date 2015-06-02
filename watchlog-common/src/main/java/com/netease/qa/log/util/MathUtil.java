@@ -47,4 +47,27 @@ public class MathUtil {
 		return false;
 	}
 	
+	
+	public static String getSortField(String string){
+		String str = string.trim();
+		if(str.equals("update_time"))
+			return "modify_time";
+		if(str.equals("id"))
+			return "log_source_id";
+		if(str.equals("logsrc_name"))
+			return "log_source_name";
+		if(str.equals("host_name"))
+			return "hostname";
+		if(str.equals("logsrc_path"))
+			return "path";
+		if(str.equals("logsrc_file"))
+			return "";
+		if(str.equals("status"))
+			return "log_source_status";
+		if(str.equals("creator"))
+			return "log_source_creator_name";
+		else
+			return "modify_time";
+	}
+	
 }

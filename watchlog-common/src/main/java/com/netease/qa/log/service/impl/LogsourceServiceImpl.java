@@ -123,7 +123,7 @@ public class LogsourceServiceImpl implements LogSourceService{
 
 
 	@Override
-	public JSONArray getLogSourceByProjectid(int projectid, int limit, int offset) {
+	public JSONArray getLogSourcesListByProjectid(int projectid, int limit, int offset) {
 		List<LogSource> logSources = null;
 		try {
 			logSources = logSourceDao.findByProjectId(projectid, limit, offset);
@@ -155,7 +155,42 @@ public class LogsourceServiceImpl implements LogSourceService{
 			records.add(record);
 			i++;
 		}
-		
+		return records;
+	}
+
+
+	@Override
+	public JSONArray getLogSourcesListSortedByProjectid(int project, String field, String order, int limit, int offset) {
+		List<LogSource> logSources = null;
+		try {
+			logSources = logSourceDao.getSortedByProjectId(project, field, order, limit, offset);
+		} catch (Exception e) {
+			logger.error("error", e);
+			return null;
+		}
+		JSONArray result = new JSONArray();
+		if(logSources.size() == 0){
+		  result.add(new JSONObject());
+		  return result;
+		}
+		JSONObject record = null;
+		JSONArray records = new JSONArray();
+		LogSource logSource = new LogSource();
+		int i = 0;
+		while(i < logSources.size()){
+			record = new JSONObject();
+			logSource = logSources.get(i);
+			record.put("id", logSource.getLogSourceId());
+			record.put("logsrc_name", logSource.getLogSourceName());
+			record.put("host_name", logSource.getHostname());
+			record.put("logsrc_path", logSource.getPath());
+			record.put("logsrc_file", logSource.getFilePattern());
+			record.put("status", logSource.getLogSourceStatus());
+			record.put("update_time", MathUtil.parse2Str(logSource.getModifyTime()));
+			record.put("creator", logSource.getLogSourceCreatorName());
+			records.add(record);
+			i++;
+		}
 		return records;
 	}
 

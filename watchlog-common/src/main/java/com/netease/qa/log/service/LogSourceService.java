@@ -24,6 +24,8 @@ public interface LogSourceService {
 	
 	public int getTotalCountByProjectId(int projectid);
 	
-	public JSONArray getLogSourceByProjectid(int project, int limit, int offset);
+	public JSONArray getLogSourcesListByProjectid(int project, int limit, int offset);
+	
+	public JSONArray getLogSourcesListSortedByProjectid(int project, String field, String order, int limit, int offset);
 
 }
