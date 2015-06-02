@@ -60,9 +60,11 @@ public class Project {
 
 	
 	public String toString(){
-		return "{projectId:" + projectId + ", projectName:" + projectName + ", projectEngName:" + projectEngName + 
-				", timeAccuracy:" + timeAccuracy +"}";
+		
+		StringBuilder sb = new StringBuilder();
+		sb.append("{projectId:").append(projectId).append(",projectName:").append(projectName)
+			.append("{projectEngName:").append(projectEngName).append(",timeAccuracy:").append(timeAccuracy);
+		return sb.toString();
 	}
-	
 	
 }
