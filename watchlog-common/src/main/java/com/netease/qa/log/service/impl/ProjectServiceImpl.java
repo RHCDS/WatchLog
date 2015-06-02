@@ -91,6 +91,27 @@ public class ProjectServiceImpl implements ProjectService {
 		return project;
 	}
 	
+	
+	@Override
+	public JSONArray getAllProjects() {
+		List<Project> projects = projectDao.getAllProjects();
+		if(projects.size() == 0){
+			return new JSONArray();
+		}
+		JSONArray records = new JSONArray();
+		Project project = null;
+		JSONObject record;
+		int i = 0;
+		while(i < projects.size()){
+			project = projects.get(i);
+			record = new JSONObject();
+			record.put("id", project.getProjectId());
+			record.put("name", project.getProjectEngName());
+			records.add(record);
+			i++;
+		}
+		return records;
+	}
 
 	@Override
 	public boolean checkProjectExsit(int projectid) {
@@ -105,7 +126,7 @@ public class ProjectServiceImpl implements ProjectService {
 		Project project = projectDao.findByName(name);
 		return project != null;
 	}
-	
+
 }
 
 
