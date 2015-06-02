@@ -47,4 +47,36 @@ public class MathUtil {
 		return false;
 	}
 	
+	
+	public static String getSortField(String str){
+		String sortField = "";
+		switch(str.charAt(0)){
+		case 't':
+			sortField = "modify_time";
+			break;
+		case 'n':
+			sortField = "log_source_name";
+			break;
+		case 'h':
+			sortField = "hostname";
+			break;
+		case 'p':
+			sortField = "path";
+			break;
+		case 'f':
+			sortField = "file_pattern";
+		    break;
+		case 's':
+			sortField = "log_source_status";
+		    break;
+		case 'c':
+			sortField = "log_source_creator_name";
+			break;
+		default:
+			sortField = "modify_time";
+			break;
+		}
+		return sortField;
+	}
+	
 }

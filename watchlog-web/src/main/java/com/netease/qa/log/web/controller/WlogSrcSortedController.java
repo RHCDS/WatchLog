@@ -22,7 +22,7 @@ import com.netease.qa.log.util.MathUtil;
 
 @Controller
 @RequestMapping(value = "/logsrc")
-public class WlogSrcController {
+public class WlogSrcSortedController {
 
 	@Resource
 	private ApiExceptionHandler apiException;
@@ -31,9 +31,11 @@ public class WlogSrcController {
 	@Resource
 	private LogSourceService logSourceService;
 
-	@RequestMapping(value = "/manage/tabledata", method = RequestMethod.GET)
-	public ResponseEntity<JSONObject> findLogSourceByProjectid(
+	@RequestMapping(value = "/manage/logtable", method = RequestMethod.POST)
+	public ResponseEntity<JSONObject> findLogSourceSortedByProjectid(
 			@RequestParam(value = "proj", required = false) String projectid,
+			@RequestParam(value = "sort", required = false, defaultValue = "time") String sort,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "length", required = false) String limit,
 			@RequestParam(value = "start", required = false) String offset) {
 		if (MathUtil.isEmpty(projectid, limit, offset)) {
@@ -52,11 +54,13 @@ public class WlogSrcController {
 			NotFoundRequestException nr = new NotFoundRequestException(Const.PROJECT_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
 		}
+		String field = MathUtil.getSortField(sort);
 		int recordsTotal = logSourceService.getTotalCountByProjectId(Integer.parseInt(projectid));
 		String message = "select successful";
-		JSONArray data = logSourceService.getLogSourcesListByProjectid(Integer.parseInt(projectid), Integer.parseInt(limit),
-				Integer.parseInt(offset));
+		JSONArray data = logSourceService.getLogSourcesListSortedByProjectid(Integer.parseInt(projectid), field, order, Integer.parseInt(limit), Integer.parseInt(offset));
 		JSONObject result = new JSONObject();
+		if(data == null)
+			message = "select not successfully";
 		result.put("message", message);
 		result.put("recordsTotal", recordsTotal);
 		result.put("data", data);

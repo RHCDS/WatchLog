@@ -23,4 +23,5 @@ public interface LogSourceDao {
     
     public List<LogSource> findByProjectId(int projectId, int limit, int offset);
     
+    public List<LogSource> getSortedByProjectId(int projectId, String field, String order, int limit, int offset);
 }
