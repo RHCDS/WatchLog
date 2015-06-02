@@ -48,35 +48,26 @@ public class MathUtil {
 	}
 	
 	
-	public static String getSortField(String str){
-		String sortField = "";
-		switch(str.charAt(0)){
-		case 't':
-			sortField = "modify_time";
-			break;
-		case 'n':
-			sortField = "log_source_name";
-			break;
-		case 'h':
-			sortField = "hostname";
-			break;
-		case 'p':
-			sortField = "path";
-			break;
-		case 'f':
-			sortField = "file_pattern";
-		    break;
-		case 's':
-			sortField = "log_source_status";
-		    break;
-		case 'c':
-			sortField = "log_source_creator_name";
-			break;
-		default:
-			sortField = "modify_time";
-			break;
-		}
-		return sortField;
+	public static String getSortField(String string){
+		String str = string.trim();
+		if(str.equals("update_time"))
+			return "modify_time";
+		if(str.equals("id"))
+			return "log_source_id";
+		if(str.equals("logsrc_name"))
+			return "log_source_name";
+		if(str.equals("host_name"))
+			return "hostname";
+		if(str.equals("logsrc_path"))
+			return "path";
+		if(str.equals("logsrc_file"))
+			return "";
+		if(str.equals("status"))
+			return "log_source_status";
+		if(str.equals("creator"))
+			return "log_source_creator_name";
+		else
+			return "modify_time";
 	}
 	
 }
