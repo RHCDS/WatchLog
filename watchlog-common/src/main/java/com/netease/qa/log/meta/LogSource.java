@@ -231,10 +231,10 @@ public class LogSource {
 	}
 
 	public String toString(){
-		return "{logSourceId:" + logSourceId + ",logSourceName:" + logSourceName + ", projectId:" + projectId + ", hostname:" + hostname + 
-				", path:" + path + ", file:" + filePattern + ", lineStartRegex:" + lineStartRegex + 
-				", FilterKeyword:" + lineFilterKeyword + ", TypeRegex:" + lineTypeRegex + ",LogSourceCreatorId:" + logSourceCreatorId +
-				",logSourceCreatorName:" + logSourceCreatorName + ",logSourceStatus:" + logSourceStatus + "}";
+		StringBuilder sb = new StringBuilder();
+		sb.append("{logSourceId:").append(logSourceId).append("{projectId:").append(projectId).append(",hostname:")
+			.append(hostname).append("{path:").append(path).append(",filePattern:").append(filePattern);
+		return sb.toString();
 	}
 	
 

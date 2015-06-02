@@ -1,6 +1,7 @@
 package com.netease.qa.log.storm.bolts;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -39,43 +40,28 @@ public class LogAnalyser implements IBasicBolt {
 		 
 		int logSourceId = logSource.getLogSourceId();
 		ArrayList<String> lineTypeRegexs = logSource.getLineTypeRegexs();
-		String exceptionType = null;
-		String exceptionTypeMD5 = null;
-		int exceptionId;
 
 		//TODO 观察性能问题
-		boolean findType = false;
+		HashSet<String> exceptionTypes = new HashSet<String>(); //支持一条日志属于多个type
 		for(String lineTypeRegex : lineTypeRegexs){
 			Pattern p = Pattern.compile(lineTypeRegex); 
 			Matcher m = p.matcher(line);  
 			if(m.find()){
-				findType = true;
-				exceptionType = m.group();
-				logger.debug("match! " + exceptionType);
-				
-				//查询exception缓存，如果不存在则插入exception表
-				exceptionTypeMD5 = MD5Utils.getMD5(exceptionType);
-				Exception exception = MonitorDataService.getException(logSourceId, exceptionTypeMD5);
-				if (exception != null) {
-					logger.debug("get exception " + exception);
-					exceptionId = exception.getExceptionId();
-				}
-				else {
-					logger.debug("first get! exceptionType: " + exceptionType + ", logSourceId: " + logSourceId);
-					exceptionId = MonitorDataService.putException(logSourceId, exceptionTypeMD5, exceptionType, line);
-				}
-				//记录异常类型和数量 
-				MonitorDataService.putExceptionData(logSourceId, exceptionId);
+				logger.debug("match! " + m.group());
+				exceptionTypes.add(m.group());
 			}
 		}
 		//日志没有匹配到任何异常类型，设置为unknown类型
-		if(!findType){
-			exceptionType = Const.UNKNOWN_TYPE;
+		if(exceptionTypes.size() == 0){
+			exceptionTypes.add(Const.UNKNOWN_TYPE);
 			logger.debug("cant match! set as unknown");
+		}
 			
-			//查询exception缓存，如果不存在则插入exception表
-			exceptionTypeMD5 = MD5Utils.getMD5(exceptionType);
+		// 查询exception缓存，如果不存在则插入exception表
+		for(String exceptionType : exceptionTypes){
+			String exceptionTypeMD5 = MD5Utils.getMD5(exceptionType);
 			Exception exception = MonitorDataService.getException(logSourceId, exceptionTypeMD5);
+			int exceptionId;
 			if (exception != null) {
 				logger.debug("get exception " + exception);
 				exceptionId = exception.getExceptionId();
@@ -84,11 +70,16 @@ public class LogAnalyser implements IBasicBolt {
 				logger.debug("first get! exceptionType: " + exceptionType + ", logSourceId: " + logSourceId);
 				exceptionId = MonitorDataService.putException(logSourceId, exceptionTypeMD5, exceptionType, line);
 			}
-			//记录异常类型和数量 
+			// unknown类型异常记录原始日志
+			if(exceptionType.equals(Const.UNKNOWN_TYPE)){
+				MonitorDataService.putUkExceptionData(logSourceId, dsTime / 1000, line);
+			}
+			
+			
+			// 记录异常类型和数量
 			MonitorDataService.putExceptionData(logSourceId, exceptionId);
-			//unknown类型异常记录原始日志
-			MonitorDataService.putUkExceptionData(logSourceId, dsTime/1000, line);
 		}
+	
 	}
 	
 	
