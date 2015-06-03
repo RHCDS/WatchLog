@@ -17,10 +17,11 @@
    
 
   <#if RequestParameters.proj?exists >
+  	<#assign pid = RequestParameters.proj>
     <div class="container">
 
     <div id="toolbar">
-       <button id="create" class="btn btn-primary"  onclick="createLogsrc()" >  创建日志源 </button>
+	    <a class="btn btn-primary" href="/logsrc/new?proj=${pid}" role="button">创建日志源</a>
         <button id="remove" class="btn btn-primary"  onclick="destroyLogsrc()" > 删除日志源 </button>
     </div>
     </br>
