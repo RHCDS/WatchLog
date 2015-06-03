@@ -17,12 +17,12 @@
       <!-- 获取project.id -->
       <#if RequestParameters.proj?exists >
       	<#assign proj=RequestParameters.proj>
-	      	<li <#if controller == "WlogManage">class="active"</#if>  ><a href="/logsrc/manage?proj=${proj}">日志源管理11</a></li>
+	      	<li <#if controller == "WlogManage">class="active"</#if>  ><a href="/logsrc/manage?proj=${proj}">日志源管理</a></li>
 	        <li <#if controller == "WlogRT">class="active"</#if>  ><a href="/logsrc/rt_analyse?proj=${proj}">实时分析</a></li>
 	  		<li <#if controller == "WlogPM">class="active"</#if>  ><a href="/logsrc/pm_analyse?proj=${proj}">日志聚合分析</a></li>        
 	  		<li><a href="#">报警管理</a></li>        
       	<#else>
-	      	<li <#if controller == "WlogManage">class="active"</#if>  ><a href="/logsrc/manage">日志源管理11</a></li>
+	      	<li <#if controller == "WlogManage">class="active"</#if>  ><a href="/logsrc/manage">日志源管理</a></li>
 	        <li <#if controller == "WlogRT">class="active"</#if>  ><a href="/logsrc/rt_analyse">实时分析</a></li>
 	  		<li <#if controller == "WlogPM">class="active"</#if>  ><a href="/logsrc/pm_analyse">日志聚合分析</a></li>        
 	  		<li><a href="#">报警管理</a></li>              	

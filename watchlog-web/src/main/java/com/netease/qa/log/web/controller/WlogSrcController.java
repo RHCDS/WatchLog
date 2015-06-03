@@ -147,6 +147,6 @@ public class WlogSrcController {
 		model.addAttribute("filter_keyword", logSource.getLineFilterKeyword());
 		model.addAttribute("reg_regex", logSource.getLineTypeRegex());
 		}
-		return "logSource";
+		return "logsrc/show";
 	}
 }
