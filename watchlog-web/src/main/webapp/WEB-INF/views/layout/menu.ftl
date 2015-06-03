@@ -15,28 +15,26 @@
       <ul class="nav navbar-nav">
       
       <!-- 获取project.id -->
-      <#if  RequestParameters.proj??>
+      <#if RequestParameters.proj?exists >
       	<#assign proj=RequestParameters.proj>
+	      	<li <#if controller == "WlogManage">class="active"</#if>  ><a href="/logsrc/manage?proj=${proj}">日志源管理11</a></li>
+	        <li <#if controller == "WlogRT">class="active"</#if>  ><a href="/logsrc/rt_analyse?proj=${proj}">实时分析</a></li>
+	  		<li <#if controller == "WlogPM">class="active"</#if>  ><a href="/logsrc/pm_analyse?proj=${proj}">日志聚合分析</a></li>        
+	  		<li><a href="#">报警管理</a></li>        
       	<#else>
-      	 <#assign proj = '0'>
+	      	<li <#if controller == "WlogManage">class="active"</#if>  ><a href="/logsrc/manage">日志源管理11</a></li>
+	        <li <#if controller == "WlogRT">class="active"</#if>  ><a href="/logsrc/rt_analyse">实时分析</a></li>
+	  		<li <#if controller == "WlogPM">class="active"</#if>  ><a href="/logsrc/pm_analyse">日志聚合分析</a></li>        
+	  		<li><a href="#">报警管理</a></li>              	
       	</#if>
       	
-        <li <#if controller == "WlogManage">class="active"</#if>  ><a href="/logsrc/manage?proj=${proj}">日志源管理</a></li>
-        <li <#if controller == "WlogRT">class="active"</#if>  ><a href="/logsrc/rt_analyse?proj=${proj}">实时分析</a></li>
-  		<li <#if controller == "WlogPM">class="active"</#if>  ><a href="/logsrc/pm_analyse?proj=${proj}">日志聚合分析</a></li>        
-  		<li><a href="#">报警管理</a></li>        
+
       </ul>
 
       
       <div class="pull-right  col-md-2">
           		<select   id="project_select"  style="width:100%" onchange="window.location.href=this.options[selectedIndex].value" >
-          			<#list ['1','2','5','6'] as pid>
-      					<#if proj==pid>
-	      					<option value="/logsrc/manage?proj=${pid}" selected="true">项目${pid}
-		      			<#else>
-							<option value="/logsrc/manage?proj=${pid}" >项目${pid}      	
-		      			</#if>		
-          			</#list>
+          			
     		</select>
     	</div>
     			

@@ -1,6 +1,6 @@
-	var $table = $('#logtable'), $remove = $('#remove'),  selections = [];
+//	var $table = $('#logtable'), $remove = $('#remove'),  selections = [];
 
-  var pid = getParam( 'proj' );
+//  var pid = getParam( 'proj' );
   //console.log(pid); //tmp log
   
   
@@ -116,18 +116,18 @@
 
   
   
-  function getParam( name )
-  {
-	   name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-	   var regexS = "[\\?&]"+name+"=([^&#]*)";
-	   var regex = new RegExp( regexS );
-	   var results = regex.exec( window.location.href );
-	   if( results == null )
-	    return "";
-	  else
-	   return results[1];
-  }
-  
+//  function getParam( name )
+//  {
+//	   name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
+//	   var regexS = "[\\?&]"+name+"=([^&#]*)";
+//	   var regex = new RegExp( regexS );
+//	   var results = regex.exec( window.location.href );
+//	   if( results == null )
+//	    return "";
+//	  else
+//	   return results[1];
+//  }
+//  
 function test(){
 	$.ajax({
 		url: '/api/logsource/1',

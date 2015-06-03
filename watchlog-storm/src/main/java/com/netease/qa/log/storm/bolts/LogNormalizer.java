@@ -35,7 +35,7 @@ public class LogNormalizer implements IBasicBolt {
         String path =  headers.get("__DS_.fields._ds_target_dir").toString();  
         String filePattern =  headers.get("__DS_.fields._ds_file_pattern").toString();  
         String dsTime =  headers.get("__DS_.timestamp").toString();   
-		
+
 		LogSource logsource = ConfigDataService.getLogSource(hostname, path, filePattern);
 		if(logsource == null) return;
 		

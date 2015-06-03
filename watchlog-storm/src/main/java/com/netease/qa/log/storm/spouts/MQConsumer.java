@@ -62,14 +62,20 @@ public class MQConsumer extends BaseRichSpout {
 		channel.queueDeclare(queueName, false, false, false, null); 
 		
 		QueueingConsumer consumer = new QueueingConsumer(channel); 
-		channel.basicConsume(queueName, true, consumer);
+//		channel.basicConsume(queueName, true, consumer);
+		channel.basicConsume(queueName, false, consumer);
+		channel.basicQos(2);
+		
 		String message = "";
+		QueueingConsumer.Delivery delivery = null;
 		while (true) {  
-            QueueingConsumer.Delivery delivery = consumer.nextDelivery();  
+            delivery = consumer.nextDelivery();  
             message = new String(delivery.getBody());  
             logger.info("Consume: " + message);  
             logger.info(delivery.getProperties().getHeaders().get("__DS_.fields.tag").toString());  
             logger.info(delivery.getProperties().getHeaders().get("__DS_.timestamp").toString());  
+            
+            channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
         }  
 		
 	}
@@ -101,7 +107,9 @@ public class MQConsumer extends BaseRichSpout {
 		
 		QueueingConsumer consumer = new QueueingConsumer(channel);
 		try {
-			channel.basicConsume(queueName, true, consumer);
+//			channel.basicConsume(queueName, true, consumer);
+			channel.basicConsume(queueName, false, consumer);
+			channel.basicQos(2);
 			while (true) {   
 	            QueueingConsumer.Delivery delivery = consumer.nextDelivery();  
 	            String message = new String(delivery.getBody()); 
@@ -109,7 +117,9 @@ public class MQConsumer extends BaseRichSpout {
 	            Map<String, Object> headers = delivery.getProperties().getHeaders();
 	            this.collector.emit(new Values(message, headers), message);
 	            logger.debug("Consume: " + message);  
-	        }  
+	            
+	            channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+	        }   
 		}
 		catch (IOException e) {
         	logger.error("error", e);
