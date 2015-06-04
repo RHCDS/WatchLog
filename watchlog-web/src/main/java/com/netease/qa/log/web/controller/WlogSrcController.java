@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.netease.qa.log.exception.ApiExceptionHandler;
+import com.netease.qa.log.exception.ConflictRequestException;
 import com.netease.qa.log.exception.InvalidRequestException;
 import com.netease.qa.log.exception.NotFoundRequestException;
 import com.netease.qa.log.exception.NullParamException;
@@ -57,9 +58,9 @@ public class WlogSrcController {
 		}
 		int recordsTotal = logSourceService.getTotalCountByProjectId(Integer.parseInt(projectid));
 		String message = Const.RESPONSE_SUCCESSFUL;
-		JSONArray data = logSourceService.getLogSourcesListByProjectid(Integer.parseInt(projectid), Integer.parseInt(limit),
-				Integer.parseInt(offset));
-		if(data == null)
+		JSONArray data = logSourceService.getLogSourcesListByProjectid(Integer.parseInt(projectid),
+				Integer.parseInt(limit), Integer.parseInt(offset));
+		if (data == null)
 			message = Const.RESPONSE_NOTSUCCESSFUL;
 		JSONObject result = new JSONObject();
 		result.put("message", message);
@@ -67,7 +68,7 @@ public class WlogSrcController {
 		result.put("data", data);
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "manage/logtable", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> findLogSourceSortedByProjectid(
 			@RequestParam(value = "proj", required = false) String projectid,
@@ -94,38 +95,40 @@ public class WlogSrcController {
 		String field = MathUtil.getSortField(sort);
 		int recordsTotal = logSourceService.getTotalCountByProjectId(Integer.parseInt(projectid));
 		String message = Const.RESPONSE_SUCCESSFUL;
-		JSONArray data = logSourceService.getLogSourcesListSortedByProjectid(Integer.parseInt(projectid), field, order, Integer.parseInt(limit), Integer.parseInt(offset));
+		JSONArray data = logSourceService.getLogSourcesListSortedByProjectid(Integer.parseInt(projectid), field, order,
+				Integer.parseInt(limit), Integer.parseInt(offset));
 		JSONObject result = new JSONObject();
-		if(data == null)
+		if (data == null)
 			message = Const.RESPONSE_NOTSUCCESSFUL;
 		result.put("message", message);
 		result.put("total", recordsTotal);
 		result.put("rows", data);
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/destroy", method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> deleteLogSources(@RequestParam(value = "ids") String ids, Model model) {
-		if(MathUtil.isEmpty(ids)){
+		if (MathUtil.isEmpty(ids)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
-		//选中删除，可以日志必存在，不需要进行日志检查
+		// 选中删除，所以日志必存在，不需要进行日志检查
 		int[] logsource_ids = MathUtil.parse2IntArray(ids);
 		int result = logSourceService.deleteLogSources(logsource_ids);
 		if (result == 0) {
 			InvalidRequestException ex = new InvalidRequestException(Const.INNER_ERROR);
-			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.INTERNAL_SERVER_ERROR);
-		} 
+			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex),
+					HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 		JSONObject resultJson = new JSONObject();
 		resultJson.put("message", Const.RESPONSE_SUCCESSFUL);
-		return new ResponseEntity<JSONObject>(resultJson, HttpStatus.OK);	
+		return new ResponseEntity<JSONObject>(resultJson, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public String getDetailLogsource(@PathVariable String id, Model model){
+	public String getDetailLogsource(@PathVariable String id, Model model) {
 		LogSource logSource = logSourceService.getByLogSourceId(Integer.parseInt(id));
-		if(logSource == null){
+		if (logSource == null) {
 			model.addAttribute("controller", "WlogManage");
 			model.addAttribute("action", "show");
 			model.addAttribute("logsrc_name", "NONE");
@@ -134,19 +137,77 @@ public class WlogSrcController {
 			model.addAttribute("logsrc_file", "NONE");
 			model.addAttribute("start_regex", "NONE");
 			model.addAttribute("filter_keyword", "NONE");
-			model.addAttribute("reg_regex", "NONE");	
+			model.addAttribute("reg_regex", "NONE");
+		} else {
+			model.addAttribute("controller", "WlogManage");
+			model.addAttribute("action", "show");
+			model.addAttribute("logsrc_name", logSource.getLogSourceName());
+			model.addAttribute("host_name", logSource.getHostname());
+			model.addAttribute("logsrc_path", logSource.getPath());
+			model.addAttribute("logsrc_file", logSource.getFilePattern());
+			model.addAttribute("start_regex", logSource.getLineStartRegex());
+			model.addAttribute("filter_keyword", logSource.getLineFilterKeyword());
+			model.addAttribute("reg_regex", logSource.getLineTypeRegex());
 		}
-		else{
-		model.addAttribute("controller", "WlogManage");
-		model.addAttribute("action", "show");
-		model.addAttribute("logsrc_name", logSource.getLogSourceName());
-		model.addAttribute("host_name", logSource.getHostname());
-		model.addAttribute("logsrc_path", logSource.getPath());
-		model.addAttribute("logsrc_file", logSource.getFilePattern());
-		model.addAttribute("start_regex", logSource.getLineStartRegex());
-		model.addAttribute("filter_keyword", logSource.getLineFilterKeyword());
-		model.addAttribute("reg_regex", logSource.getLineTypeRegex());
-		}
-		return "logSource";
+		return "logsrc/show";
 	}
+	
+	@RequestMapping(value = "/create", method = RequestMethod.POST)
+	public String addLogsource(
+			@RequestParam(value = "logsrc_name", required = false) String logsourceName,
+			@RequestParam(value = "proj", required = false) String projectid,
+			@RequestParam(value = "host_name", required = false) String hostname,
+			@RequestParam(value = "logsrc_path", required = false) String path,
+			@RequestParam(value = "logsrc_file", required = false) String filepattern,
+			@RequestParam(value = "start_regex", required = false) String linestart,
+			@RequestParam(value = "filter_keyword_arr", required = false) String[] filterkeywords,
+			@RequestParam(value = "reg_regex_arr", required = false) String[] typeregexs,
+			@RequestParam(value = "filter_keyword_con", required = false)String filter_keyword_con,
+			@RequestParam(value = "filter_regex_con", required = false)String filter_regex_con,
+			@RequestParam(value = "logsourcecreatorname", required = false, defaultValue = "none") String creatorname, Model model) {
+		String ret = "redirect:/logsrc/manage?proj=" + projectid;
+		if (MathUtil.isEmpty(logsourceName, projectid, hostname, path, filepattern, linestart, filter_keyword_con,
+				filter_regex_con, creatorname)) {
+			model.addAttribute("message", Const.NULL_PARAM);
+			System.out.println("message:" + Const.NULL_PARAM);
+		}
+		if(filterkeywords==null || typeregexs == null){
+			model.addAttribute("message", Const.NULL_PARAM);
+			System.out.println("message:" + Const.NULL_PARAM);
+		}
+		if (!MathUtil.isInteger(projectid)) {
+			model.addAttribute("message", Const.ID_MUST_BE_NUM);
+			System.out.println("message:" + Const.ID_MUST_BE_NUM);
+		}
+		if (!projectService.checkProjectExsit(Integer.parseInt(projectid))) {
+			model.addAttribute("message", Const.PROJECT_NOT_EXSIT);
+			System.out.println("message:" + Const.PROJECT_NOT_EXSIT);
+		}
+		if (logSourceService.checkLogSourceExist(hostname, path, filepattern)) {
+			model.addAttribute("message", Const.LOG_ALREADY_EXSIT);
+			System.out.println("message:" + Const.LOG_ALREADY_EXSIT);
+		}
+		
+		System.out.println("keywords0:" + filterkeywords);
+		System.out.println("keywords1:" + filterkeywords);
+		LogSource logSource = new LogSource();
+		logSource.setLogSourceName(logsourceName);
+		logSource.setProjectId(Integer.parseInt(projectid));
+		logSource.setHostname(hostname);
+		logSource.setPath(path);
+		logSource.setFilePattern(filepattern);
+		logSource.setLineStartRegex(linestart);
+		logSource.setLineFilterKeyword(MathUtil.parse2Str(filterkeywords, filter_keyword_con));
+		logSource.setLineTypeRegex(MathUtil.parse2Str(typeregexs, filter_regex_con));
+		logSource.setLogSourceCreatorName(creatorname);
+		int result = logSourceService.createLogSource(logSource);
+		if (result == 0) {
+			model.addAttribute("message", Const.INNER_ERROR);
+			return ret; 
+		} else {
+			model.addAttribute("message", Const.RESPONSE_SUCCESSFUL); 
+			return ret;
+		}
+	}
+	
 }
