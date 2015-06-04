@@ -160,36 +160,34 @@ public class WlogSrcController {
 			@RequestParam(value = "logsrc_path", required = false) String path,
 			@RequestParam(value = "logsrc_file", required = false) String filepattern,
 			@RequestParam(value = "start_regex", required = false) String linestart,
-			@RequestParam(value = "filter_keyword_arr", required = false) String[] filterkeywords,
-			@RequestParam(value = "reg_regex_arr", required = false) String[] typeregexs,
+			@RequestParam(value = "filter_keyword_arr[]", required = false) String[] filterkeywords,
+			@RequestParam(value = "reg_regex_arr[]", required = false) String[] typeregexs,
 			@RequestParam(value = "filter_keyword_con", required = false)String filter_keyword_con,
-			@RequestParam(value = "filter_regex_con", required = false)String filter_regex_con,
+			@RequestParam(value = "reg_regex_con", required = false)String reg_regex_con,
 			@RequestParam(value = "logsourcecreatorname", required = false, defaultValue = "none") String creatorname, Model model) {
 		String ret = "redirect:/logsrc/manage?proj=" + projectid;
 		if (MathUtil.isEmpty(logsourceName, projectid, hostname, path, filepattern, linestart, filter_keyword_con,
-				filter_regex_con, creatorname)) {
+				reg_regex_con, creatorname)) {
 			model.addAttribute("message", Const.NULL_PARAM);
-			System.out.println("message:" + Const.NULL_PARAM);
+			return ret;
 		}
 		if(filterkeywords==null || typeregexs == null){
 			model.addAttribute("message", Const.NULL_PARAM);
-			System.out.println("message:" + Const.NULL_PARAM);
+			return ret;
 		}
 		if (!MathUtil.isInteger(projectid)) {
 			model.addAttribute("message", Const.ID_MUST_BE_NUM);
-			System.out.println("message:" + Const.ID_MUST_BE_NUM);
+			return ret;
 		}
 		if (!projectService.checkProjectExsit(Integer.parseInt(projectid))) {
 			model.addAttribute("message", Const.PROJECT_NOT_EXSIT);
-			System.out.println("message:" + Const.PROJECT_NOT_EXSIT);
+			return ret;
 		}
 		if (logSourceService.checkLogSourceExist(hostname, path, filepattern)) {
 			model.addAttribute("message", Const.LOG_ALREADY_EXSIT);
-			System.out.println("message:" + Const.LOG_ALREADY_EXSIT);
+			return ret;
 		}
 		
-		System.out.println("keywords0:" + filterkeywords);
-		System.out.println("keywords1:" + filterkeywords);
 		LogSource logSource = new LogSource();
 		logSource.setLogSourceName(logsourceName);
 		logSource.setProjectId(Integer.parseInt(projectid));
@@ -198,7 +196,7 @@ public class WlogSrcController {
 		logSource.setFilePattern(filepattern);
 		logSource.setLineStartRegex(linestart);
 		logSource.setLineFilterKeyword(MathUtil.parse2Str(filterkeywords, filter_keyword_con));
-		logSource.setLineTypeRegex(MathUtil.parse2Str(typeregexs, filter_regex_con));
+		logSource.setLineTypeRegex(MathUtil.parse2Str(typeregexs, "OR"));
 		logSource.setLogSourceCreatorName(creatorname);
 		int result = logSourceService.createLogSource(logSource);
 		if (result == 0) {

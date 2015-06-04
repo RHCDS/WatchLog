@@ -3,6 +3,7 @@ package com.netease.qa.log.util;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class MathUtil {
@@ -76,14 +77,27 @@ public class MathUtil {
 	}
 
 	public static String parse2Str(String[] strs, String con) {
-		StringBuffer sb = new StringBuffer();
-		for (int i = 0; i < strs.length - 1; i++) {
-			if(con.trim().toLowerCase().equals("and"))
-			sb.append(strs[i]).append(Const.FILTER_KEYWORD_AND);
-			else
-				sb.append(strs[i]).append(Const.FILTER_KEYWORD_OR);
+		ArrayList<String> newStrs =  new ArrayList<String>();
+		for(int i = 0; i < strs.length; i++){
+			if(!strs[i].trim().isEmpty())
+			newStrs.add(strs[i].trim());
 		}
-		sb.append(strs[strs.length - 1]);
+		if(newStrs.size() == 0)
+			return "NONE";
+		
+		StringBuffer sb = new StringBuffer();
+		if (con.trim().toLowerCase().equals("and")) {
+			for (int i = 0; i < newStrs.size() - 1; i++) {
+					sb.append(newStrs.get(i)).append(Const.FILTER_KEYWORD_AND);
+			}
+		} else {
+			for (int i = 0; i < newStrs.size() - 1; i++) {
+					sb.append(newStrs.get(i)).append(Const.FILTER_KEYWORD_OR);
+			}
+			
+		}
+		sb.append(newStrs.get(newStrs.size()-1));
 		return sb.toString();
 	}
+
 }

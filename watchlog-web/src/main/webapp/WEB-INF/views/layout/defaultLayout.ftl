@@ -25,10 +25,13 @@
 	 <script src="/res/js/self/layout.js" ></script>
 	 	 
 	 <#if controller == "WlogManage">
-	 <script src="/res/js/self/manage.js"></script>
-     <link href="/res/css/plugin/table/bootstrap-table.min.css" rel="stylesheet" />
-	<script src="/res/js/plugin/table/bootstrap-table.min.js"></script>	 
+		 <script src="/res/js/self/logsrc_manage.js"></script>
+		  <script src="/res/js/self/logsrc_new.js"></script>
+	     <link href="/res/css/plugin/table/bootstrap-table.min.css" rel="stylesheet" />
+		<script src="/res/js/plugin/table/bootstrap-table.min.js"></script>	 
 	 </#if>
+	 
+	 
 	 
 
   </head>
