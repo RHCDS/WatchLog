@@ -20,6 +20,7 @@ import backtype.storm.tuple.Tuple;
 
 import com.netease.qa.log.meta.Exception;
 import com.netease.qa.log.meta.LogSource;
+import com.netease.qa.log.storm.service.ConfigDataService;
 import com.netease.qa.log.storm.service.MonitorDataService;
 import com.netease.qa.log.storm.service.MonitorDataWriteTask;
 import com.netease.qa.log.util.Const;
@@ -35,7 +36,7 @@ public class LogAnalyser implements IBasicBolt {
 	public void execute(Tuple input, BasicOutputCollector collector) {
 		
 		String line = input.getString(0);
-		LogSource logSource = (LogSource) input.getValue(1);
+		LogSource logSource = ConfigDataService.getLogSource(input.getInteger(1));
 		Long dsTime = Long.valueOf(input.getString(3));
 		 
 		int logSourceId = logSource.getLogSourceId();

@@ -48,9 +48,10 @@
               values: ids
           });
       	$.ajax({
-      		type: 'DELETE',
-    		url: '/api/logsource/1',
-    		data:{ ids: ids.toString()},
+      		type: 'POST',
+    		url: '/logsrc/destroy',
+    		data:{ ids: ids.toString(),
+    					proj: pid},
     		success :function(data){
     			$('#result').html(data);
     		}
@@ -68,7 +69,7 @@
 		return "-";	  
 	  }
 	  
-	  return  '<a class="like" href="' + row.id + '?proj=' + pid + '" >' + value + '</a>';
+	  return  '<a class="like" href="/logsrc/' + row.id + '?proj=' + pid + '" >' + value + '</a>';
 		  
 	  //return   '<a class="like" href="1?‘’proj='+pid + '" >' + value + '</a>';
   }

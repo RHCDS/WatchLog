@@ -21,7 +21,7 @@ var pid = getParam( 'proj' );
 		function getProjects(){
 	      	$.ajax({
 	      		type: 'GET',
-	    		url: 'projects',
+	    		url: '/projects',
 	    		success :function(e){
 	    			//console.log(e);
     				//console.log(typeof(e));

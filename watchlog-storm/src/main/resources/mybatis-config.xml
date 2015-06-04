@@ -33,9 +33,9 @@
 			<transactionManager type="jdbc" />
 			<dataSource type="POOLED">
 				<property name="driver" value="com.mysql.jdbc.Driver" />
-				<property name="url" value="jdbc:mysql://10.120.153.127:3306/loganalystic" />
-				<property name="username" value="test" />
-				<property name="password" value="xTZtJBS0cCZnJZeu" />
+				<property name="url" value="jdbc:mysql://10.164.160.77:3306/ptponline" />
+				<property name="username" value="ptponline" />
+				<property name="password" value="AWIpshzJFGJp" />
 			</dataSource>
 		</environment>
 	</environments>
