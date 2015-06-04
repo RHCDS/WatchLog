@@ -1,4 +1,4 @@
-package com.netease.qa.log.web.api;
+package com.netease.qa.log.web.controller;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -15,24 +15,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * Handles requests for the application home page.
  */
 @Controller
-public class HomeController {
+public class WlogHomeController {
 	
-	private static final Logger logger = LoggerFactory.getLogger(HomeController.class);
+	private static final Logger logger = LoggerFactory.getLogger(WlogHomeController.class);
 	
 	/**
 	 * Simply selects the home view to render by returning its name.
 	 */
-	@RequestMapping(value = "/home", method = RequestMethod.GET)
+	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String home(Locale locale, Model model) {
 		logger.info("Welcome home! The client locale is {}.", locale);
 		logger.info("Welcome home! The client locale is {}.", "正常");
 		
-		Date date = new Date();
-		DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.LONG, DateFormat.LONG, locale);
-		
-		String formattedDate = dateFormat.format(date);
-		logger.info("system time :", formattedDate);
-		model.addAttribute("serverTime", formattedDate );
+		model.addAttribute("controller", "WlogHome" );	
+		model.addAttribute("action", "home" );			
 		
 		return "home";
 	}

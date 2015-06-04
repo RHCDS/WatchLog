@@ -20,7 +20,7 @@
 			<artifactId>watchlog-common</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		
+
         <!-- freemark -->
         <dependency>
             <groupId>org.freemarker</groupId>

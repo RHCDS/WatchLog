@@ -1,5 +1,6 @@
 package com.netease.qa.log.storm.bolts;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -14,6 +15,8 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 
 import com.netease.qa.log.meta.LogSource;
+import com.netease.qa.log.storm.service.ConfigDataService;
+import com.netease.qa.log.util.Const;
 
 public class LogFilter implements IBasicBolt {
 
@@ -26,17 +29,39 @@ public class LogFilter implements IBasicBolt {
 	public void execute(Tuple input, BasicOutputCollector collector) {
 		String line = input.getString(0);
 
-		LogSource logSource = (LogSource) input.getValue(1);
-		String keyword = logSource.getLineFilterKeyword().trim();
-
-		if (keyword.equals("None")) {
+		LogSource logSource = ConfigDataService.getLogSource(input.getInteger(1));
+		String keywordStr = logSource.getLineFilterKeyword();
+		// 未指定过滤关键字， 不需要过滤
+		if (keywordStr.trim().equals(Const.FILTER_KEYWORD_NONE)) {
 			collector.emit(new Values(line, input.getValue(1), input.getValue(2), input.getValue(3)));
 		}
+		// 需要过滤
 		else {
-			//TODO 支持多个keyword OR/AND连接
-			if (line.indexOf(keyword) != -1) {
-				collector.emit(new Values(line, input.getValue(1), input.getValue(2), input.getValue(3)));
-				logger.debug("get!");
+			ArrayList<String> keywords = logSource.getLineFilterKeywords();
+			String condition = logSource.getLineFilterKeywordsCondition();
+			// OR 关键字过滤
+			if (condition.equals(Const.FILTER_KEYWORD_OR)) {
+				for (String keyword : keywords) {
+					if (line.indexOf(keyword.trim()) != -1) {
+						collector.emit(new Values(line, input.getValue(1), input.getValue(2), input.getValue(3)));
+						logger.debug("or get! " + keyword);
+						break;
+					}
+				}
+			}
+			// AND关键字过滤
+			else {
+				boolean flag = true;
+				for (String keyword : keywords) {
+					if (line.indexOf(keyword.trim()) == -1) {
+						flag = false;
+						break;
+					}
+				}
+				if (flag) {
+					collector.emit(new Values(line, input.getValue(1), input.getValue(2), input.getValue(3)));
+					logger.debug("and get! " + line);
+				}
 			}
 		}
 	}

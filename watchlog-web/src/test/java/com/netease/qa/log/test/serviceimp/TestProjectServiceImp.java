@@ -1,3 +1,4 @@
+package com.netease.qa.log.test.serviceimp;
 //package com.netease.qa.log.user.serviceimp;
 //
 //import javax.annotation.Resource;

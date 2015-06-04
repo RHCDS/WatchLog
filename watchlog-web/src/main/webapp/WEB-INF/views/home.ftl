@@ -1,4 +1,12 @@
 <#import "layout/defaultLayout.ftl" as layout>
 <@layout.myLayout>
-  <div><h1>this is the content</h1></div>
+   <div>
+          controller:  ${controller}<br/>
+          action: ${action}<br/>
+		
+		<#list RequestParameters?keys as key>
+		    ${key} = ${RequestParameters[key]}<br/>
+		</#list>    
+</div>
+ 
 </@layout.myLayout>

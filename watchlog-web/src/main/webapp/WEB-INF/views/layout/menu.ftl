@@ -13,12 +13,42 @@
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
       <ul class="nav navbar-nav">
-        <li class="active"><a href="#">日志源管理</a></li>
-        <li><a href="#">实时分析</a></li>
-  		<li><a href="#">日志聚合分析</a></li>        
-  		<li><a href="#">报警管理</a></li>        
+      
+      <!-- 获取project.id -->
+      <#if RequestParameters.proj?exists >
+      	<#assign proj=RequestParameters.proj>
+	      	<li <#if controller == "WlogManage">class="active"</#if>  ><a href="/logsrc/manage?proj=${proj}">日志源管理</a></li>
+	        <li <#if controller == "WlogRT">class="active"</#if>  ><a href="/logsrc/rt_analyse?proj=${proj}">实时分析</a></li>
+	  		<li <#if controller == "WlogPM">class="active"</#if>  ><a href="/logsrc/pm_analyse?proj=${proj}">日志聚合分析</a></li>        
+	  		<li><a href="#">报警管理</a></li>        
+      	<#else>
+	      	<li <#if controller == "WlogManage">class="active"</#if>  ><a href="/logsrc/manage">日志源管理</a></li>
+	        <li <#if controller == "WlogRT">class="active"</#if>  ><a href="/logsrc/rt_analyse">实时分析</a></li>
+	  		<li <#if controller == "WlogPM">class="active"</#if>  ><a href="/logsrc/pm_analyse">日志聚合分析</a></li>        
+	  		<li><a href="#">报警管理</a></li>              	
+      	</#if>
+      	
+
       </ul>
+
+      
+      <div class="pull-right  col-md-2">
+          		<select   id="project_select"  style="width:100%" onchange="window.location.href=this.options[selectedIndex].value" >
+          			
+    		</select>
+    	</div>
+    			
       </div><!-- /.navbar-collapse -->
+      
+      <!-- p>
+          controller:  ${controller}
+          action: ${action}
+		
+		<#list RequestParameters?keys as key>
+		    ${key} = ${RequestParameters[key]}
+		</#list>    
+	</p-->
       
   </div><!-- /.container-fluid -->
 </nav>
+

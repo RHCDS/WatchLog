@@ -51,7 +51,7 @@ public class ReadServiceAPI {
 			@RequestParam(value = "end", required = false) String end,
 			@RequestParam(value = "limit", required = false) String limit,
 			@RequestParam(value = "offset", required = false) String offset, Model model) {
-		if (start == null || end == null || limit == null || offset == null) {
+		if (MathUtil.isEmpty(start, end, limit, offset)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
@@ -97,7 +97,7 @@ public class ReadServiceAPI {
 			@RequestParam(value = "end", required = false) String end, 
 			@RequestParam(value = "limit", required = false) String limit,
 			@RequestParam(value = "offset", required = false) String offset, Model model) {
-		if (start == null || end == null || limit == null || offset == null) {
+		if (MathUtil.isEmpty(start, end, limit, offset)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
@@ -144,7 +144,7 @@ public class ReadServiceAPI {
 			@RequestParam(value = "end", required = false) String end, 
 			@RequestParam(value = "limit", required = false) String limit,
 			@RequestParam(value = "offset", required = false) String offset, Model model) {
-		if (start == null || end == null || limit == null || offset == null) {
+		if (MathUtil.isEmpty(start, end, limit, offset)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}

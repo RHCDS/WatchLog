@@ -1,16 +1,20 @@
 package com.netease.qa.log.service.impl;
 
+import java.util.List;
+
 import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.netease.qa.log.meta.LogSource;
 import com.netease.qa.log.meta.dao.LogSourceDao;
 import com.netease.qa.log.meta.dao.ProjectDao;
 import com.netease.qa.log.service.LogSourceService;
+import com.netease.qa.log.util.MathUtil;
 
 
 @Service
@@ -95,8 +99,22 @@ public class LogsourceServiceImpl implements LogSourceService{
 			return 0;
 		}
 	}
-	
 
+	
+	@Override
+	public int deleteLogSources(int[] ids) {
+		for(int i=0; i < ids.length; i++){
+			try {
+				logSourceDao.delete(ids[i]);
+			} catch (Exception e) {
+				logger.error("error", e);
+				return 0;
+			}
+		}
+		return 1;
+	}
+
+	
 	@Override
 	public boolean checkLogSourceExist(String hostname, String path, String filePattern) {
 		LogSource logsource = logSourceDao.findByLocation(hostname, path, filePattern);
@@ -110,5 +128,86 @@ public class LogsourceServiceImpl implements LogSourceService{
 		return logsource != null;
 	}
 
-	
+
+	@Override
+	public int getTotalCountByProjectId(int projectid) {
+		int count = logSourceDao.getTotalCountByProjectId(projectid);
+		return count;
+	}
+
+
+	@Override
+	public JSONArray getLogSourcesListByProjectid(int projectid, int limit, int offset) {
+		List<LogSource> logSources = null;
+		try {
+			logSources = logSourceDao.findByProjectId(projectid, limit, offset);
+		} catch (Exception e) {
+			logger.error("error", e);
+			return null;
+		}
+		
+		JSONArray result = new JSONArray();
+		if(logSources.size() == 0){
+		  result.add(new JSONObject());
+		  return result;
+		}
+		JSONObject record = null;
+		JSONArray records = new JSONArray();
+		LogSource logSource = new LogSource();
+		int i = 0;
+		while(i < logSources.size()){
+			record = new JSONObject();
+			logSource = logSources.get(i);
+			record.put("DT_RowId", logSource.getLogSourceId());
+			record.put("logsrc_name", logSource.getLogSourceName());
+			record.put("host_name", logSource.getHostname());
+			record.put("logsrc_path", logSource.getPath());
+			record.put("logsrc_file", logSource.getFilePattern());
+			record.put("status", logSource.getLogSourceStatus());
+			record.put("update_time", MathUtil.parse2Str(logSource.getModifyTime()));
+			record.put("creator", logSource.getLogSourceCreatorName());
+			records.add(record);
+			i++;
+		}
+		return records;
+	}
+
+
+	@Override
+	public JSONArray getLogSourcesListSortedByProjectid(int project, String field, String order, int limit, int offset) {
+		List<LogSource> logSources = null;
+		try {
+			logSources = logSourceDao.getSortedByProjectId(project, field, order, limit, offset);
+		} catch (Exception e) {
+			logger.error("error", e);
+			return null;
+		}
+		JSONArray result = new JSONArray();
+		if(logSources.size() == 0){
+		  result.add(new JSONObject());
+		  return result;
+		}
+		JSONObject record = null;
+		JSONArray records = new JSONArray();
+		LogSource logSource = new LogSource();
+		int i = 0;
+		while(i < logSources.size()){
+			record = new JSONObject();
+			logSource = logSources.get(i);
+			record.put("id", logSource.getLogSourceId());
+			record.put("logsrc_name", logSource.getLogSourceName());
+			record.put("host_name", logSource.getHostname());
+			record.put("logsrc_path", logSource.getPath());
+			record.put("logsrc_file", logSource.getFilePattern());
+			record.put("status", logSource.getLogSourceStatus());
+			record.put("update_time", MathUtil.parse2Str(logSource.getModifyTime()));
+			record.put("creator", logSource.getLogSourceCreatorName());
+			records.add(record);
+			i++;
+		}
+		return records;
+	}
+
+
+
 }

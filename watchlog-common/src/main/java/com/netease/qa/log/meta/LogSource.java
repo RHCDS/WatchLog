@@ -1,6 +1,11 @@
 package com.netease.qa.log.meta;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+
+import org.springframework.util.StringUtils;
+
+import com.netease.qa.log.util.Const;
 
 
 public class LogSource {
@@ -20,7 +25,99 @@ public class LogSource {
 	private String logSourceCreatorName;
 	private int logSourceStatus;
 	
+	private ArrayList<String> lineTypeRegexs;
+	private ArrayList<String> lineFilterKeywords;
+	private String lineFilterKeywordsCondition;
 	
+	
+	/**
+	 * lineFilterKeyword  lineTypeRegex格式转化
+	 */
+	public void convertParams(){
+		convertFilterKeywords();
+		convertTypeRegexs();
+	}
+
+	
+	private void convertTypeRegexs() {
+		String[] typeRegexs = lineTypeRegex.split(Const.TYPE_REGEX_CON, -1);
+		lineTypeRegexs = new ArrayList<String>();
+		for (String tmp : typeRegexs) {
+			if (!StringUtils.isEmpty(tmp)) {
+				lineTypeRegexs.add(tmp);
+			}
+		}
+	}
+
+	
+	private void convertFilterKeywords(){
+		if(lineFilterKeyword.trim().equals(Const.FILTER_KEYWORD_NONE)) { 
+			return;
+		}
+		String[] keywords = lineFilterKeyword.split(Const.FILTER_KEYWORD_OR, -1);
+		if(keywords.length > 1){
+			lineFilterKeywords = new ArrayList<String>();
+			for(String tmp : keywords){
+				if(!StringUtils.isEmpty(tmp)){
+					lineFilterKeywords.add(tmp);
+				}
+			}
+			this.setLineFilterKeywordsCondition(Const.FILTER_KEYWORD_OR);
+		}
+		else{
+			keywords = lineFilterKeyword.split(Const.FILTER_KEYWORD_AND, -1);
+			lineFilterKeywords = new ArrayList<String>();
+			for(String tmp : keywords){
+				if(!StringUtils.isEmpty(tmp)){
+					lineFilterKeywords.add(tmp);
+				}
+			}
+			this.setLineFilterKeywordsCondition(Const.FILTER_KEYWORD_AND);
+		}
+	}
+	
+	
+	
+	public static void main(String []d){
+		LogSource l = new LogSource();
+		l.setLineFilterKeyword("ERROR_AND");
+		l.setLineTypeRegex("(\\w)*Exception:.*?__as1111__");
+		l.convertParams();
+		for(String tmp : l.getLineFilterKeywords()){
+			System.out.println("LL: " + tmp);
+		}
+		System.out.println(l.getLineFilterKeywordsCondition());
+		
+		for(String tmp : l.getLineTypeRegexs()){
+			System.out.println("LL: " + tmp);
+		}
+		
+	}
+	
+	public ArrayList<String> getLineTypeRegexs() {
+		return lineTypeRegexs;
+	}
+
+	public void setLineTypeRegexs(ArrayList<String> lineTypeRegexs) {
+		this.lineTypeRegexs = lineTypeRegexs;
+	}
+	
+	public ArrayList<String> getLineFilterKeywords() {
+		return lineFilterKeywords;
+	}
+
+	public void setLineFilterKeywords(ArrayList<String> lineFilterKeywords) {
+		this.lineFilterKeywords = lineFilterKeywords;
+	}
+	
+	public String getLineFilterKeywordsCondition() {
+		return lineFilterKeywordsCondition;
+	}
+	
+	public void setLineFilterKeywordsCondition(String lineFilterKeywordsCondition) {
+		this.lineFilterKeywordsCondition = lineFilterKeywordsCondition;
+	}
+
 	public int getLogSourceId() {
 		return logSourceId;
 	}
@@ -134,9 +231,11 @@ public class LogSource {
 	}
 
 	public String toString(){
-		return "{logSourceId:" + logSourceId + ",logSourceName:" + logSourceName + ", projectId:" + projectId + ", hostname:" + hostname + 
-				", path:" + path + ", file:" + filePattern + ", lineStartRegex:" + lineStartRegex + 
-				", FilterKeyword:" + lineFilterKeyword + ", TypeRegex:" + lineTypeRegex + ",LogSourceCreatorId:" + logSourceCreatorId +
-				",logSourceCreatorName:" + logSourceCreatorName + ",logSourceStatus:" + logSourceStatus + "}";
+		StringBuilder sb = new StringBuilder();
+		sb.append("{logSourceId:").append(logSourceId).append("{projectId:").append(projectId).append(",hostname:")
+			.append(hostname).append("{path:").append(path).append(",filePattern:").append(filePattern);
+		return sb.toString();
 	}
+	
+
 }

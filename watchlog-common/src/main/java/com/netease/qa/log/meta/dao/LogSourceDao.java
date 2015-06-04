@@ -18,5 +18,10 @@ public interface LogSourceDao {
     public LogSource findByLocation(String hostname, String path, String filePattern);
     
     public List<LogSource> selectAllByProjectId(int projectId);
-
+    
+    public int getTotalCountByProjectId(int projectId);
+    
+    public List<LogSource> findByProjectId(int projectId, int limit, int offset);
+    
+    public List<LogSource> getSortedByProjectId(int projectId, String field, String order, int limit, int offset);
 }

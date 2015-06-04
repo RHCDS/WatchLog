@@ -4,7 +4,6 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.ibatis.session.SqlSession;
-import org.apache.ibatis.session.SqlSessionFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,46 +26,44 @@ public class ConfigDataService {
 	private static ConcurrentHashMap<String, LogSource> logSourceCache;
 	private static ConcurrentHashMap<Integer, LogSource> logSourceIdCache;
 	private static ConcurrentHashMap<Integer, Project> projectCache;
-	
-	private static ProjectDao projectDao = null;
-	private static LogSourceDao logSourceDao = null;
 
 	static{
 		logSourceCache = new ConcurrentHashMap<String, LogSource>();
 		logSourceIdCache = new ConcurrentHashMap<Integer, LogSource>();
 		projectCache = new ConcurrentHashMap<Integer, Project>();
-		
-		SqlSessionFactory sqlSessionFactory = MybatisUtil.getSqlSessionFactory();
-		SqlSession sqlSession = sqlSessionFactory.openSession(true);
-		projectDao = sqlSession.getMapper(ProjectDao.class);
-		logSourceDao = sqlSession.getMapper(LogSourceDao.class);
-		
 	}
 	
 	 
 	public static LogSource getLogSource(String hostname, String path, String filePattern){
 		String key = hostname + "_" + path + "_" + filePattern;
-
 		if(logSourceCache.containsKey(key)){
 			return logSourceCache.get(key);
 		}
 		else{
 			logger.info("---get LogSource from DB---");
-			LogSource logSource = logSourceDao.findByLocation(hostname, path, filePattern);
-			if(logSource == null) return null; // CACHE 、DB中都没有数据，但是datastream有—— ds agent可能未及时更新，数据应该丢弃，等待内存数据定时更新 
-			// TODO 存在性能隐患 
-			
-			logSourceCache.put(key, logSource);
-			logSourceIdCache.put(logSource.getLogSourceId(), logSource);
+			SqlSession sqlSession = MybatisUtil.getSqlSessionFactory().openSession(true);
+			try{
+				LogSourceDao logSourceDao = sqlSession.getMapper(LogSourceDao.class);
+				LogSource logSource = logSourceDao.findByLocation(hostname, path, filePattern);
+				if(logSource == null) return null; // CACHE 、DB中都没有数据，但是datastream有—— ds agent可能未及时更新，数据应该丢弃，等待内存数据定时更新 
+				// TODO 存在性能隐患 
+				logSource.convertParams();
+				logSourceCache.put(key, logSource);
+				logSourceIdCache.put(logSource.getLogSourceId(), logSource);
 
-			int projectId = logSource.getProjectId();
-			if(!projectCache.containsKey(projectId)){
-				Project project = projectDao.findByProjectId(projectId);
-				if(project == null) return null;// CACHE 、DB中都没有数据，但是datastream有—— ds agent可能未及时更新，数据应该丢弃，等待内存数据定时更新
+				int projectId = logSource.getProjectId();
+				if(!projectCache.containsKey(projectId)){
+					ProjectDao projectDao = sqlSession.getMapper(ProjectDao.class);
+					Project project = projectDao.findByProjectId(projectId);
+					if(project == null) return null;// CACHE 、DB中都没有数据，但是datastream有—— ds agent可能未及时更新，数据应该丢弃，等待内存数据定时更新
 
-				projectCache.put(projectId, project); 
+					projectCache.put(projectId, project); 
+				}
+				return logSource;
 			}
-			return logSource;
+			finally{
+				sqlSession.close();
+			}
 		}
 	}
 	
@@ -77,20 +74,29 @@ public class ConfigDataService {
 		}
 		else{
 			logger.info("---get LogSource from DB---");
-			LogSource logSource = logSourceDao.findByLogSourceId(logSourceId);
-			if(logSource == null) return null;
-			
-			logSourceCache.put(logSource.getHostname() + "_" + logSource.getPath() + "_" + logSource.getFilePattern(), logSource);
-			logSourceIdCache.put(logSourceId, logSource);
-			
-			int projectId = logSource.getProjectId();
-			if(!projectCache.containsKey(projectId)){
-				Project project = projectDao.findByProjectId(projectId);
-				if(project == null) return null;
+			SqlSession sqlSession = MybatisUtil.getSqlSessionFactory().openSession(true);
+			try{
+				LogSourceDao logSourceDao = sqlSession.getMapper(LogSourceDao.class);
+				LogSource logSource = logSourceDao.findByLogSourceId(logSourceId);
+				if(logSource == null) return null;
 				
-				projectCache.put(projectId, project); 
+				logSource.convertParams();
+				logSourceCache.put(logSource.getHostname() + "_" + logSource.getPath() + "_" + logSource.getFilePattern(), logSource);
+				logSourceIdCache.put(logSourceId, logSource);
+				
+				int projectId = logSource.getProjectId();
+				if(!projectCache.containsKey(projectId)){
+					ProjectDao projectDao = sqlSession.getMapper(ProjectDao.class);
+					Project project = projectDao.findByProjectId(projectId);
+					if(project == null) return null;
+					
+					projectCache.put(projectId, project); 
+				}
+				return logSource;
 			}
-			return logSource;
+			finally{
+				sqlSession.close();
+			}
 		}
 	}
 	
@@ -100,48 +106,63 @@ public class ConfigDataService {
 			return projectCache.get(projectId);
 		}
 		else{
-			logger.info("---get project from DB---");
-			Project project = projectDao.findByProjectId(projectId);
-			if(project == null) return null;
-			projectCache.put(projectId, project); 
-			return project;
+			SqlSession sqlSession = MybatisUtil.getSqlSessionFactory().openSession(true);
+			try{
+				logger.info("---get project from DB---");
+				ProjectDao projectDao = sqlSession.getMapper(ProjectDao.class);
+				Project project = projectDao.findByProjectId(projectId);
+				if(project == null) return null;
+				projectCache.put(projectId, project); 
+				return project;
+			}
+			finally{
+				sqlSession.close();
+			}
 		}
 	}
 	
 	
 	public static void loadConfig(){
 		logger.info("---reload config cache from DB---");
-		//更新logSourceIdCache
-		for(Entry<Integer, LogSource> l: logSourceIdCache.entrySet()){
-			logSourceIdCache.remove(l.getKey());
-			LogSource logSource = logSourceDao.findByLogSourceId(l.getKey());
-			if(logSource != null){
-				logSourceIdCache.put(l.getKey(), logSource);
-			}
-		}
+		SqlSession sqlSession = MybatisUtil.getSqlSessionFactory().openSession(true);
+		try{
+			LogSourceDao logSourceDao = sqlSession.getMapper(LogSourceDao.class);
+			ProjectDao projectDao = sqlSession.getMapper(ProjectDao.class);
 
-		// 更新logSourceCache
-		for (Entry<String, LogSource> l : logSourceCache.entrySet()) {
-			logSourceCache.remove(l.getKey());
-			String [] keys = l.getKey().split("_");
-			LogSource logSource = logSourceDao.findByLocation(keys[0], keys[1], keys[2]);
-			if(logSource != null){
-				logSourceCache.put(l.getKey(), logSource);
+			//更新logSourceIdCache
+			for(Entry<Integer, LogSource> l: logSourceIdCache.entrySet()){
+				logSourceIdCache.remove(l.getKey());
+				LogSource logSource = logSourceDao.findByLogSourceId(l.getKey());
+				if(logSource != null){
+					logSource.convertParams();
+					logSourceIdCache.put(l.getKey(), logSource);
+				}
 			}
-		}
-
-		// 更新projectCache
-		for (Entry<Integer, Project> p : projectCache.entrySet()) {
-			projectCache.remove(p.getKey());
-			Project project = projectDao.findByProjectId(p.getKey());
-			if(project != null){ 
-				projectCache.put(p.getKey(), project);
+			// 更新logSourceCache
+			for (Entry<String, LogSource> l : logSourceCache.entrySet()) {
+				logSourceCache.remove(l.getKey());
+				String [] keys = l.getKey().split("_");
+				LogSource logSource = logSourceDao.findByLocation(keys[0], keys[1], keys[2]);
+				if(logSource != null){
+					logSource.convertParams();
+					logSourceCache.put(l.getKey(), logSource);
+				}
 			}
+			// 更新projectCache
+			for (Entry<Integer, Project> p : projectCache.entrySet()) {
+				projectCache.remove(p.getKey());
+				Project project = projectDao.findByProjectId(p.getKey());
+				if(project != null){ 
+					projectCache.put(p.getKey(), project);
+				}
+			}
+			logger.info("logSourceCache:   " + logSourceCache.size()); 
+			logger.info("logSourceIdCache: " + logSourceIdCache.size()); 
+			logger.info("projectCache:     " + projectCache.size()); 
 		}
-		logger.info("logSourceCache:   " + logSourceCache.size()); 
-		logger.info("logSourceIdCache: " + logSourceIdCache.size()); 
-		logger.info("projectCache:     " + projectCache.size()); 
-
+		finally{
+			sqlSession.close();
+		}
 	}
 	
 }

@@ -70,6 +70,25 @@
 		<include refid="allColumn" />
 		from log_source where project_id=#{projectId}
 	</select>
+	
+	<select id="getTotalCountByProjectId" parameterType="java.lang.Integer"
+	     resultType="java.lang.Integer">
+	     select count(log_source_id) as num from log_source where project_id=#{projectId}
+	</select>
+	
+	 
+	<select id="findByProjectId" parameterType="java.lang.Integer"
+	     resultType="com.netease.qa.log.meta.LogSource">
+	     select
+		<include refid="allColumn" />
+		from log_source where project_id=#{param1} limit #{param2} offset #{param3}
+	</select>
+	
+	<select id="getSortedByProjectId" resultType="com.netease.qa.log.meta.LogSource">
+	      select
+	      <include refid="allColumn" />
+	      from log_source where project_id=${param1} order by ${param2} ${param3} limit ${param4} offset ${param5}
+	</select>
 </mapper>
 
 

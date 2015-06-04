@@ -44,6 +44,12 @@
 	       <include refid="allColumn"/>
 	      from project where project_name_eng=#{name_eng} limit 1
 	</select>
+	
+	<select id="getAllProjects" resultType="com.netease.qa.log.meta.Project">
+	       select
+	       <include refid="allColumn"/>
+	       from project
+	</select>
 </mapper>
 
 

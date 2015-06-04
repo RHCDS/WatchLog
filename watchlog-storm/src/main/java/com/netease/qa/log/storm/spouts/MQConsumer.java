@@ -1,16 +1,7 @@
 package com.netease.qa.log.storm.spouts;
 
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.util.Map;
-import java.util.Properties;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,6 +13,7 @@ import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 
+import com.netease.qa.log.storm.util.ConfigReader;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -35,18 +27,16 @@ public class MQConsumer extends BaseRichSpout {
 	private static final Logger logger = LoggerFactory.getLogger(MQConsumer.class);
 
 	private SpoutOutputCollector collector;
-	private boolean completed = false;
 
 	private static Channel channel;
 	private static Connection connection;
-	private static final String CONF_FILE = "storm.conf";
-	private static String queueName;
-	private static String host;
-	private static int port;
-	
+	private static String queueName = ConfigReader.MQ_QUEUE;
+	private static String host = ConfigReader.MQ_HOST;
+	private static int port = ConfigReader.MQ_PORT;
+
 
 	public void ack(Object msgId) {
-//		logger.info("OK:" + msgId);
+		// logger.info("OK:" + msgId);
 	}
 
 
@@ -58,33 +48,37 @@ public class MQConsumer extends BaseRichSpout {
 		logger.error("FAIL:" + msgId);
 	}
 
-	
-	public static void main(String []args) throws IOException, ShutdownSignalException, 
-	                ConsumerCancelledException, InterruptedException{ 
-		loadConfig();
+
+	public static void main(String[] args) throws IOException, ShutdownSignalException, ConsumerCancelledException, InterruptedException {
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(host);
 		factory.setPort(port);
 
 		connection = factory.newConnection();
 		channel = connection.createChannel();
-		channel.queueDeclare(queueName, false, false, false, null); 
-		
-		QueueingConsumer consumer = new QueueingConsumer(channel); 
+//		channel.queueDeclare(queueName, false, false, false, null);
+
+		QueueingConsumer consumer = new QueueingConsumer(channel);
+		// channel.basicConsume(queueName, true, consumer);
 		channel.basicConsume(queueName, true, consumer);
+		channel.basicQos(50);
+
 		String message = "";
-		while (true) {  
-            QueueingConsumer.Delivery delivery = consumer.nextDelivery();  
-            message = new String(delivery.getBody());  
-            logger.info("Consume: " + message);  
-            logger.info(delivery.getProperties().getHeaders().get("__DS_.fields.tag").toString());  
-            logger.info(delivery.getProperties().getHeaders().get("__DS_.timestamp").toString());  
-        }  
-		
+		QueueingConsumer.Delivery delivery = null;
+		int i = 0;
+		while (true) {
+			delivery = consumer.nextDelivery();
+			message = new String(delivery.getBody());
+			logger.debug("Consume: " + message);
+			logger.debug(delivery.getProperties().getHeaders().get("__DS_.fields.tag").toString());
+			logger.debug(delivery.getProperties().getHeaders().get("__DS_.timestamp").toString());
+			logger.info(""+ ++i);
+//			channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+		}
+
 	}
 
-	
-	
+
 	/**
 	 * The only thing that the methods will do It is emit each file line
 	 */
@@ -93,52 +87,47 @@ public class MQConsumer extends BaseRichSpout {
 		 * The nextuple it is called forever, so if we have been readed the file
 		 * we will wait and then return
 		 */
-		if (completed) {
+		while (true) {
 			try {
-				Thread.sleep(1000);
-				channel.close();
-				connection.close(); 
-			}
-			catch (InterruptedException e) {
-	        	logger.error("error", e);
-			}
-			catch (IOException e) {
-	        	logger.error("error", e);
-			}
-			return;
-		}
-		/*
-		 * 从公司内部拿到数据
-		 * 数据放在队列中，storm及时消费
-		 */
+				logger.info("=====get a new channel======");
+				Channel channel = getChannel();
+				QueueingConsumer consumer = new QueueingConsumer(channel);
+				channel.basicConsume(queueName, true, consumer);
+				channel.basicQos(10);
+				while (true) {
+					QueueingConsumer.Delivery delivery = consumer.nextDelivery();
+					String message = new String(delivery.getBody());
 
-		QueueingConsumer consumer = new QueueingConsumer(channel);
-		try {
-			channel.basicConsume(queueName, true, consumer);
-			while (true) {   
-	            QueueingConsumer.Delivery delivery = consumer.nextDelivery();  
-	            String message = new String(delivery.getBody()); 
-	            
-	            Map<String, Object> headers = delivery.getProperties().getHeaders();
-	            this.collector.emit(new Values(message, headers), message);
-//	            logger.info("Consume: " + message);  
-	        }  
-		}
-		catch (IOException e) {
-        	logger.error("error", e);
-		}
-		catch (ShutdownSignalException e) { 
-        	logger.error("error", e);
-		}
-		catch (ConsumerCancelledException e) {
-        	logger.error("error", e);
-		}
-		catch (InterruptedException e) {
-        	logger.error("error", e);
-		}
-		finally{
-			logger.error("ERROR: SET COMPLETED" );
-			completed = true;
+					Map<String, Object> headers = delivery.getProperties().getHeaders();
+					String hostname = "";  
+				    String path =  "";  
+				    String filePattern =  "";
+				    String dsTime = "";
+					try{
+						hostname = headers.get("__DS_.fields.hostname").toString();  
+					    path =  headers.get("__DS_.fields._ds_target_dir").toString();  
+					    filePattern =  headers.get("__DS_.fields._ds_file_pattern").toString();  
+					    dsTime =  headers.get("__DS_.timestamp").toString();   
+					}
+					catch(NullPointerException e){
+						logger.error("can't get header", e);
+					}
+					
+					this.collector.emit(new Values(message, hostname, path, filePattern, dsTime), message);
+					logger.debug("Consume: " + message);
+				}
+			}
+			catch (Exception e) {
+				logger.error("consume error, close connction", e);
+				if (channel != null) {
+					try {
+						channel.close();
+					}
+					catch (IOException e1) {
+						channel = null;
+					}
+				}
+			}
 		}
 	}
 
@@ -148,57 +137,54 @@ public class MQConsumer extends BaseRichSpout {
 	 */
 	@SuppressWarnings("rawtypes")
 	public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
-		loadConfig();
-		try {
-			logger.info("==============================");
-			ConnectionFactory factory = new ConnectionFactory();
-			factory.setHost(host);
-			factory.setPort(port);
-
-			connection = factory.newConnection();
-			channel = connection.createChannel();
-			channel.queueDeclare(queueName, false, false, false, null); 
-		}
-		catch (IOException e) { 
-        	logger.error("error", e);
-		}
 		this.collector = collector;
 	}
 
-	
-
-	private static void loadConfig(){
-		File configFile = new File(CONF_FILE);
-		Properties properties = new Properties();
-		InputStream is = null;
-		Reader reader = null;
-		try {
-			is = new FileInputStream(configFile);
-			reader = new InputStreamReader(is, "UTF-8");
-			properties.load(reader);
-		}
-		catch (FileNotFoundException e) {
-        	logger.error("error", e);
-		}
-		catch (UnsupportedEncodingException e) {
-        	logger.error("error", e);
-		}
-		catch (IOException e) {
-        	logger.error("error", e);
-		}
-
-		host = properties.getProperty("mq.host");
-		port = Integer.valueOf(properties.getProperty("mq.port"));
-		queueName = properties.getProperty("mq.queue");
-	}
-	
-	
 
 	/**
 	 * Declare the output field "word"
 	 */
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
-		declarer.declare(new Fields("line", "headers"));
+		declarer.declare(new Fields("line", "hostname", "path", "filePattern", "dsTime"));
 	}
-	
+
+
+	private Connection getConnection() throws IOException {
+		ConnectionFactory factory = new ConnectionFactory();
+		factory.setHost(host);
+		factory.setPort(port);
+		connection = factory.newConnection();
+		return connection;
+	}
+
+
+	private Channel getChannel() {
+		int count = 3;
+		while (count-- > 0) {
+			try {
+				if (connection == null) {
+					connection = getConnection();
+				}
+				return connection.createChannel();
+			}
+			catch (Exception e) {
+				logger.error("get channel error, try left: " + count, e); 
+				if (connection != null) {
+					try {
+						connection.close();
+					}
+					catch (Exception e1) {
+					}
+				}
+				connection = null;
+				try {
+					Thread.sleep(1000);
+				}
+				catch (InterruptedException e2) {
+				}
+			}
+		}
+		return null;
+	}
+
 }

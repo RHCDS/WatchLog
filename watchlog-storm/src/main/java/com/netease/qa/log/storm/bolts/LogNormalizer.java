@@ -26,16 +26,11 @@ public class LogNormalizer implements IBasicBolt {
 	private static final Logger logger = LoggerFactory.getLogger(LogNormalizer.class);
 
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void execute(Tuple input, BasicOutputCollector collector) {
-		
-		Map<String, Object> headers = (Map<String, Object>) input.getValue(1);  
-        String hostname = headers.get("__DS_.fields.hostname").toString();  
-        String path =  headers.get("__DS_.fields._ds_target_dir").toString();  
-        String filePattern =  headers.get("__DS_.fields._ds_file_pattern").toString();  
-        String dsTime =  headers.get("__DS_.timestamp").toString();   
-		
+		String hostname = input.getString(1);
+        String path = input.getString(2);
+        String filePattern = input.getString(3);
 		LogSource logsource = ConfigDataService.getLogSource(hostname, path, filePattern);
 		if(logsource == null) return;
 		
@@ -47,7 +42,7 @@ public class LogNormalizer implements IBasicBolt {
 		
 		// 日志源启动了监控
 		if (logsource.getLogSourceStatus() == 1) {
-			collector.emit(new Values(input.getString(0), logsource, project, dsTime));
+			collector.emit(new Values(input.getString(0), logsource.getLogSourceId(), project.getProjectId(), input.getValue(4)));
 		}
 
 	}
