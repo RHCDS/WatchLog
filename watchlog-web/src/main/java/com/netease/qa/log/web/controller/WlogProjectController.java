@@ -15,7 +15,7 @@ import com.netease.qa.log.service.ProjectService;
 import com.netease.qa.log.util.Const;
 
 @Controller
-@RequestMapping(value = "/logsrc")
+@RequestMapping(value = "/")
 public class WlogProjectController {
 
 	@Resource
