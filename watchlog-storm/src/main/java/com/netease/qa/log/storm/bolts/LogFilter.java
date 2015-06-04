@@ -15,6 +15,7 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 
 import com.netease.qa.log.meta.LogSource;
+import com.netease.qa.log.storm.service.ConfigDataService;
 import com.netease.qa.log.util.Const;
 
 public class LogFilter implements IBasicBolt {
@@ -28,7 +29,7 @@ public class LogFilter implements IBasicBolt {
 	public void execute(Tuple input, BasicOutputCollector collector) {
 		String line = input.getString(0);
 
-		LogSource logSource = (LogSource) input.getValue(1);
+		LogSource logSource = ConfigDataService.getLogSource(input.getInteger(1));
 		String keywordStr = logSource.getLineFilterKeyword();
 		// 未指定过滤关键字， 不需要过滤
 		if (keywordStr.trim().equals(Const.FILTER_KEYWORD_NONE)) {
