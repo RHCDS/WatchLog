@@ -3,6 +3,7 @@ package com.netease.qa.log.web.controller;
 import java.util.Locale;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.servlet.mvc.support.RedirectAttributesModelMap;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -148,6 +151,9 @@ public class WlogSrcController {
 			model.addAttribute("logsrc_path", logSource.getPath());
 			model.addAttribute("logsrc_file", logSource.getFilePattern());
 			model.addAttribute("start_regex", logSource.getLineStartRegex());
+			
+			System.out.println("keywords:" + logSource.getLineFilterKeyword());
+			
 			model.addAttribute("filter_keyword", logSource.getLineFilterKeyword());
 			model.addAttribute("reg_regex", logSource.getLineTypeRegex());
 		}
@@ -156,7 +162,7 @@ public class WlogSrcController {
 	
 	
 	@RequestMapping(value = "/new", method = RequestMethod.GET)
-	public String test2(Locale locale, Model model) {
+	public String newLogsrc(Locale locale, Model model) {
 		model.addAttribute("controller", "WlogManage" );	
 		model.addAttribute("action", "new" );			
 		return "logsrc/new";
@@ -174,27 +180,27 @@ public class WlogSrcController {
 			@RequestParam(value = "reg_regex_arr[]", required = false) String[] typeregexs,
 			@RequestParam(value = "filter_keyword_con", required = false)String filter_keyword_con,
 			@RequestParam(value = "reg_regex_con", required = false)String reg_regex_con,
-			@RequestParam(value = "logsourcecreatorname", required = false, defaultValue = "none") String creatorname, Model model) {
+			@RequestParam(value = "logsourcecreatorname", required = false, defaultValue = "none") String creatorname, RedirectAttributes  model) {
 		String ret = "redirect:/logsrc/manage?proj=" + projectid;
 		if (MathUtil.isEmpty(logsourceName, projectid, hostname, path, filepattern, linestart, filter_keyword_con,
 				reg_regex_con, creatorname)) {
-			model.addAttribute("message", Const.NULL_PARAM);
+			model.addFlashAttribute("message", Const.NULL_PARAM);
 			return ret;
 		}
 		if(filterkeywords==null || typeregexs == null){
-			model.addAttribute("message", Const.NULL_PARAM);
+			model.addFlashAttribute("message", Const.NULL_PARAM);
 			return ret;
 		}
 		if (!MathUtil.isInteger(projectid)) {
-			model.addAttribute("message", Const.ID_MUST_BE_NUM);
+			model.addFlashAttribute("message", Const.ID_MUST_BE_NUM);
 			return ret;
 		}
 		if (!projectService.checkProjectExsit(Integer.parseInt(projectid))) {
-			model.addAttribute("message", Const.PROJECT_NOT_EXSIT);
+			model.addFlashAttribute("message", Const.PROJECT_NOT_EXSIT);
 			return ret;
 		}
 		if (logSourceService.checkLogSourceExist(hostname, path, filepattern)) {
-			model.addAttribute("message", Const.LOG_ALREADY_EXSIT);
+			model.addFlashAttribute("message", Const.LOG_ALREADY_EXSIT);
 			return ret;
 		}
 		

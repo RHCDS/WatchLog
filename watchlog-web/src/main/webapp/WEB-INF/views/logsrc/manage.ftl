@@ -25,6 +25,11 @@
         <button id="remove" class="btn btn-primary"  onclick="destroyLogsrc()" > 删除日志源 </button>
     </div>
     </br>
+ 
+    <#if message?exists>
+        ${message}
+    </#if>
+ 
     
         <table id="logtable"
                data-toggle="toolbar"
