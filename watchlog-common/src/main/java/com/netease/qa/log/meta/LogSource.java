@@ -40,7 +40,7 @@ public class LogSource {
 
 	
 	private void convertTypeRegexs() {
-		String[] typeRegexs = lineTypeRegex.split(Const.TYPE_REGEX_CON, -1);
+		String[] typeRegexs = lineTypeRegex.split(Const.FILTER_KEYWORD_OR, -1);
 		lineTypeRegexs = new ArrayList<String>();
 		for (String tmp : typeRegexs) {
 			if (!StringUtils.isEmpty(tmp)) {

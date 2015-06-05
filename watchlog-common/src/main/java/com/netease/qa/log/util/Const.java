@@ -7,13 +7,12 @@ public class Const {
     public static final String FILTER_KEYWORD_AND = "_AND_";
     public static final String FILTER_KEYWORD_OR = "_OR_";
     public static final String FILTER_KEYWORD_NONE = "NONE";
-    public static final String TYPE_REGEX_CON = "__";
     
 	public static final String UNKNOWN_TYPE = "unknown";
 
 
     public static final String ID_MUST_BE_NUM = "id must be a number";
-    public static final String STATUS_MUST_BE_NUM = "status must be 0,1,2";
+    public static final String STATUS_MUST_BE_NUM = "status must be 0 or 1";
     public static final String ACCURACY_MUST_BE_NUM = "accuracy must be a number";
     public static final String LIMIT_AND_OFFSET_MUST_BE_NUM = " limit or offset  must be a number";
     public static final String LOG_ALREADY_EXSIT = "logsource already exist";
