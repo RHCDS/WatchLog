@@ -1,5 +1,7 @@
 package com.netease.qa.log.web.controller;
 
+import java.util.Locale;
+
 import javax.annotation.Resource;
 
 import org.springframework.http.HttpStatus;
@@ -150,6 +152,14 @@ public class WlogSrcController {
 			model.addAttribute("reg_regex", logSource.getLineTypeRegex());
 		}
 		return "logsrc/show";
+	}
+	
+	
+	@RequestMapping(value = "/new", method = RequestMethod.GET)
+	public String test2(Locale locale, Model model) {
+		model.addAttribute("controller", "WlogManage" );	
+		model.addAttribute("action", "new" );			
+		return "logsrc/new";
 	}
 	
 	@RequestMapping(value = "/create", method = RequestMethod.POST)
