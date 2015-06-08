@@ -216,10 +216,10 @@ public class WlogSrcController {
 		logSource.setLogSourceCreatorName(creatorname);
 		int result = logSourceService.createLogSource(logSource);
 		if (result == 0) {
-			model.addAttribute("message", Const.INNER_ERROR);
+			model.addFlashAttribute("message", Const.INNER_ERROR);
 			return ret; 
 		} else {
-			model.addAttribute("message", Const.RESPONSE_SUCCESSFUL); 
+			model.addFlashAttribute("message", Const.RESPONSE_SUCCESSFUL); 
 			return ret;
 		}
 	}
