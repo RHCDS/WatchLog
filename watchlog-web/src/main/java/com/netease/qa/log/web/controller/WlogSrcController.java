@@ -3,6 +3,7 @@ package com.netease.qa.log.web.controller;
 import java.util.Locale;
 
 import javax.annotation.Resource;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.netease.qa.log.exception.ApiExceptionHandler;
@@ -21,7 +23,7 @@ import com.netease.qa.log.exception.NullParamException;
 import com.netease.qa.log.meta.LogSource;
 import com.netease.qa.log.service.LogSourceService;
 import com.netease.qa.log.service.ProjectService;
-import com.netease.qa.log.util.Const;
+import com.netease.qa.log.util.ConstCN;
 import com.netease.qa.log.util.MathUtil;
 
 @Controller
@@ -43,29 +45,29 @@ public class WlogSrcController {
 			@RequestParam(value = "limit", required = false) String limit,
 			@RequestParam(value = "offset", required = false) String offset) {
 		if (MathUtil.isEmpty(projectid, limit, offset)) {
-			NullParamException ne = new NullParamException(Const.NULL_PARAM);
+			NullParamException ne = new NullParamException(ConstCN.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
 		if (!MathUtil.isInteger(projectid)) {
-			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
+			InvalidRequestException ex = new InvalidRequestException(ConstCN.ID_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
 		if (!MathUtil.isInteger(limit) || !MathUtil.isInteger(offset)) {
-			InvalidRequestException ex = new InvalidRequestException(Const.LIMIT_AND_OFFSET_MUST_BE_NUM);
+			InvalidRequestException ex = new InvalidRequestException(ConstCN.LIMIT_AND_OFFSET_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
 		if (!projectService.checkProjectExsit(Integer.parseInt(projectid))) {
-			NotFoundRequestException nr = new NotFoundRequestException(Const.PROJECT_NOT_EXSIT);
+			NotFoundRequestException nr = new NotFoundRequestException(ConstCN.PROJECT_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
 		}
 		String field = MathUtil.getSortField(sort);
 		int recordsTotal = logSourceService.getTotalCountByProjectId(Integer.parseInt(projectid));
-		String message = Const.RESPONSE_SUCCESSFUL;
+		String message = ConstCN.RESPONSE_SUCCESSFUL;
 		JSONArray data = logSourceService.getLogSourcesListSortedByProjectid(Integer.parseInt(projectid), field, order,
 				Integer.parseInt(limit), Integer.parseInt(offset));
 		JSONObject result = new JSONObject();
 		if (data == null)
-			message = Const.RESPONSE_NOTSUCCESSFUL;
+			message = ConstCN.RESPONSE_NOTSUCCESSFUL;
 		result.put("message", message);
 		result.put("total", recordsTotal);
 		result.put("rows", data);
@@ -75,19 +77,19 @@ public class WlogSrcController {
 	@RequestMapping(value = "/destroy", method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> deleteLogSources(@RequestParam(value = "ids") String ids, Model model) {
 		if (MathUtil.isEmpty(ids)) {
-			NullParamException ne = new NullParamException(Const.NULL_PARAM);
+			NullParamException ne = new NullParamException(ConstCN.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
 		// 选中删除，所以日志必存在，不需要进行日志检查
 		int[] logsource_ids = MathUtil.parse2IntArray(ids);
 		int result = logSourceService.deleteLogSources(logsource_ids);
 		if (result == 0) {
-			InvalidRequestException ex = new InvalidRequestException(Const.INNER_ERROR);
+			InvalidRequestException ex = new InvalidRequestException(ConstCN.INNER_ERROR);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex),
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		JSONObject resultJson = new JSONObject();
-		resultJson.put("message", Const.RESPONSE_SUCCESSFUL);
+		resultJson.put("message", ConstCN.RESPONSE_SUCCESSFUL);
 		return new ResponseEntity<JSONObject>(resultJson, HttpStatus.OK);
 	}
 
@@ -112,9 +114,6 @@ public class WlogSrcController {
 			model.addAttribute("logsrc_path", logSource.getPath());
 			model.addAttribute("logsrc_file", logSource.getFilePattern());
 			model.addAttribute("start_regex", logSource.getLineStartRegex());
-
-			System.out.println("keywords:" + logSource.getLineFilterKeyword());
-
 			model.addAttribute("filter_keyword", logSource.getLineFilterKeyword());
 			model.addAttribute("reg_regex", logSource.getLineTypeRegex());
 		}
@@ -142,31 +141,31 @@ public class WlogSrcController {
 			@RequestParam(value = "logsourcecreatorname", required = false, defaultValue = "none") String creatorname,
 			RedirectAttributes model) {
 		String ret = "redirect:/logsrc/manage?proj=" + projectid;
+		String ret_new = "redirect:/logsrc/new?proj=" + projectid;
 		if (MathUtil.isEmpty(logsourceName, projectid, hostname, path, filepattern, linestart, filter_keyword_con,
 				reg_regex_con, creatorname)) {
-			model.addFlashAttribute("message", Const.NULL_PARAM);
-			System.out.println("null param");
-			return ret;
+			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
+			return ret_new;
 		}
 		if (filterkeywords == null || typeregexs == null) {
-			model.addFlashAttribute("message", Const.NULL_PARAM);
-			return ret;
+			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
+			return ret_new;
 		}
 		if (!MathUtil.isInteger(projectid)) {
-			model.addFlashAttribute("message", Const.ID_MUST_BE_NUM);
-			return ret;
+			model.addFlashAttribute("message", ConstCN.ID_MUST_BE_NUM);
+			return ret_new;
 		}
 		if (!projectService.checkProjectExsit(Integer.parseInt(projectid))) {
-			model.addFlashAttribute("message", Const.PROJECT_NOT_EXSIT);
-			return ret;
+			model.addFlashAttribute("message", ConstCN.PROJECT_NOT_EXSIT);
+			return ret_new;
 		}
 		if (logSourceService.checkLogSourceExist(logsourceName)) {
-			model.addFlashAttribute("message", Const.LOG_NAME_ALREADY_EXSIT);
-			return ret;
+			model.addFlashAttribute("message", ConstCN.LOG_NAME_ALREADY_EXSIT);
+			return ret_new;
 		}
 		if (logSourceService.checkLogSourceExist(hostname, path, filepattern)) {
-			model.addFlashAttribute("message", Const.LOG_PATH_ALREADY_EXSIT);
-			return ret;
+			model.addFlashAttribute("message", ConstCN.LOG_PATH_ALREADY_EXSIT);
+			return ret_new;
 		}
 
 		LogSource logSource = new LogSource();
@@ -181,61 +180,54 @@ public class WlogSrcController {
 		logSource.setLogSourceCreatorName(creatorname);
 		int result = logSourceService.createLogSource(logSource);
 		if (result == 0) {
-			model.addFlashAttribute("message", Const.INNER_ERROR);
-			return ret;
+			model.addFlashAttribute("message", ConstCN.INNER_ERROR);
+			return ret_new;
 		} else {
-			model.addFlashAttribute("message", Const.RESPONSE_SUCCESSFUL);
+			model.addFlashAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);
 			return ret;
 		}
 	}
 
 	@RequestMapping(value = "/start_monitor", method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> startMonitorStatus(
-			@RequestParam(value = "ids", required = false) String ids) {
-		
-		System.out.println("111111111");
-//		System.out.println("ids" + ());
-		
-		if(MathUtil.isEmpty(ids)){
-			NullParamException ne = new NullParamException(Const.NULL_PARAM);
+	public ResponseEntity<JSONObject> startMonitorStatus(@RequestParam(value = "ids", required = false) String ids) {
+		if (MathUtil.isEmpty(ids)) {
+			NullParamException ne = new NullParamException(ConstCN.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
 		// 选中修改，所以日志必存在，不需要进行日志检查
-				int[] logsource_ids = MathUtil.parse2IntArray(ids);
-				int result = logSourceService.changeMonitorStatus(logsource_ids, 1);
-				JSONObject resultJson = new JSONObject();
-				if (result == -1) {
-					resultJson.put("status", -1);
-					resultJson.put("message", Const.INNER_ERROR);
-					return new ResponseEntity<JSONObject>(resultJson, HttpStatus.INTERNAL_SERVER_ERROR);
-				}else{
-					resultJson.put("status", 0);
-					resultJson.put("message", Const.RESPONSE_SUCCESSFUL);
-					return new ResponseEntity<JSONObject>(resultJson, HttpStatus.OK);
-				}
+		int[] logsource_ids = MathUtil.parse2IntArray(ids);
+		int result = logSourceService.changeMonitorStatus(logsource_ids, 1);
+		JSONObject resultJson = new JSONObject();
+		if (result == -1) {
+			resultJson.put("status", -1);
+			resultJson.put("message", ConstCN.INNER_ERROR);
+			return new ResponseEntity<JSONObject>(resultJson, HttpStatus.INTERNAL_SERVER_ERROR);
+		} else {
+			resultJson.put("status", 0);
+			resultJson.put("message", ConstCN.RESPONSE_SUCCESSFUL);
+			return new ResponseEntity<JSONObject>(resultJson, HttpStatus.OK);
+		}
 	}
-	
-	
+
 	@RequestMapping(value = "/stop_monitor", method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> stopMonitorStatus(
-			@RequestParam(value = "ids", required = false) String ids) {
-		if(MathUtil.isEmpty(ids)){
-			NullParamException ne = new NullParamException(Const.NULL_PARAM);
+	public ResponseEntity<JSONObject> stopMonitorStatus(@RequestParam(value = "ids", required = false) String ids) {
+		if (MathUtil.isEmpty(ids)) {
+			NullParamException ne = new NullParamException(ConstCN.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
 		// 选中修改，所以日志必存在，不需要进行日志检查
-				int[] logsource_ids = MathUtil.parse2IntArray(ids);
-				int result = logSourceService.changeMonitorStatus(logsource_ids, 0);
-				JSONObject resultJson = new JSONObject();
-				if (result == -1) {
-					resultJson.put("status", -1);
-					resultJson.put("message", Const.INNER_ERROR);
-					return new ResponseEntity<JSONObject>(resultJson, HttpStatus.INTERNAL_SERVER_ERROR);
-				}else{
-					resultJson.put("status", 0);
-					resultJson.put("message", Const.RESPONSE_SUCCESSFUL);
-					return new ResponseEntity<JSONObject>(resultJson, HttpStatus.OK);
-				}
+		int[] logsource_ids = MathUtil.parse2IntArray(ids);
+		int result = logSourceService.changeMonitorStatus(logsource_ids, 0);
+		JSONObject resultJson = new JSONObject();
+		if (result == -1) {
+			resultJson.put("status", -1);
+			resultJson.put("message", ConstCN.INNER_ERROR);
+			return new ResponseEntity<JSONObject>(resultJson, HttpStatus.INTERNAL_SERVER_ERROR);
+		} else {
+			resultJson.put("status", 0);
+			resultJson.put("message", ConstCN.RESPONSE_SUCCESSFUL);
+			return new ResponseEntity<JSONObject>(resultJson, HttpStatus.OK);
+		}
 	}
-	
+
 }
