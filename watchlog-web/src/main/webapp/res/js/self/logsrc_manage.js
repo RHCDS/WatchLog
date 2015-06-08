@@ -39,7 +39,7 @@
   }
   
 
-      
+      //  删除日志源
       function destroyLogsrc(){
           var ids = getIdSelections();
          // console.log(ids); //tmp log
@@ -59,14 +59,12 @@
       }
       
       
-      
-      
       // 开始监控
       function startMonitorLogsrc(){
     	  var ids = getIdSelections();
     	  var ids_str = ids.toString();
     	  if(ids_str==""){
-    		  $("#notice").html("<font color='red'>  请勾选需要开始监控的日志源</font></br>");
+    		  $("#js_notice").html("<font color='red'>  请勾选需要开始监控的日志源</font></br>");
     	  }else{
     		  // send ajax 
     	      	$.ajax({
@@ -78,7 +76,7 @@
     	    				 location.reload() ;
     	    			 }
     	    			 else{
-    	    				 $("#notice").html("<font color='color'> "+e['message']+"</font></br>");
+    	    				 $("#js_notice").html("<font color='color'> "+e['message']+"</font></br>");
     	    			 }
     	    		}
     	    	}) ;  //--ajax--  		  
@@ -90,7 +88,7 @@
     	  var ids = getIdSelections();
     	  var ids_str = ids.toString();
     	  if(ids_str==""){
-    		  $("#notice").html("<font color='red'>  请勾选需要停止监控的日志源</font></br>");
+    		  $("#js_notice").html("<font color='red'>  请勾选需要停止监控的日志源</font></br>");
     	  }else{
     		  // send ajax 
     	      	$.ajax({
@@ -102,7 +100,7 @@
     	    				 location.reload() ;
     	    			 }
     	    			 else{
-    	    				 $("#notice").html("<font color='color'> "+e['message']+"</font></br>");
+    	    				 $("#js_notice").html("<font color='color'> "+e['message']+"</font></br>");
     	    			 }
     	    		}
     	    	}) ;  //--ajax--  		  

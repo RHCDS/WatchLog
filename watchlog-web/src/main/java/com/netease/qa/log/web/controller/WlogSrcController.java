@@ -94,7 +94,7 @@ public class WlogSrcController {
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
-	public String getDetailLogsource(@PathVariable String id, Model model) {
+	public String getDetailLogsource(@PathVariable(value = "id") String id, Model model) {
 		LogSource logSource = logSourceService.getByLogSourceId(Integer.parseInt(id));
 		if (logSource == null) {
 			model.addAttribute("controller", "WlogManage");
@@ -231,16 +231,16 @@ public class WlogSrcController {
 	}
 
 	@RequestMapping(value = "/{id}/edit", method = RequestMethod.GET)
-	public String editLogSource(@PathVariable String logsourceId,
+	public String editLogSource(@PathVariable(value = "id") String logsourceId,
 			@RequestParam(value = "proj", required = false) String projectid, Model model) {
-		if (MathUtil.isEmpty(logsourceId, projectid) || MathUtil.isInteger(logsourceId)) {
+		if (MathUtil.isEmpty(logsourceId, projectid) || !MathUtil.isInteger(logsourceId)) {
 			return "redirect:/logsrc/manage?proj=" + projectid;
 		}
 		LogSource logSource = logSourceService.getByLogSourceId(Integer.parseInt(logsourceId));
 
 		if (logSource == null) {
 			model.addAttribute("controller", "WlogManage");
-			model.addAttribute("action", "show");
+			model.addAttribute("action", "edit");
 			model.addAttribute("id", "0");
 			model.addAttribute("logsrc_name", "NONE");
 			model.addAttribute("host_name", "NONE");
@@ -251,7 +251,7 @@ public class WlogSrcController {
 			model.addAttribute("reg_regex", "NONE");
 		} else {
 			model.addAttribute("controller", "WlogManage");
-			model.addAttribute("action", "show");
+			model.addAttribute("action", "edit");
 			model.addAttribute("id", logSource.getLogSourceId());
 			model.addAttribute("logsrc_name", logSource.getLogSourceName());
 			model.addAttribute("host_name", logSource.getHostname());
@@ -265,7 +265,8 @@ public class WlogSrcController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public String commitEditLogSource(@RequestParam(value = "proj", required = false) String projectid,
+	public String commitEditLogSource(
+			@RequestParam(value = "proj", required = false) String projectid,
 			@RequestParam(value = "id", required = false) String logsourceid,
 			@RequestParam(value = "logsrc_name", required = false) String logsourceName,
 			@RequestParam(value = "host_name", required = false) String hostname,
@@ -280,7 +281,7 @@ public class WlogSrcController {
 			RedirectAttributes model) {
 		
 		String ret_succ = "redirect:/logsrc/manage?proj=" + projectid;
-		String ret_fail = "redirect:/logsrc/edit?proj=" + projectid;
+		String ret_fail = "redirect:/logsrc/" + logsourceid + "/edit?proj=" + projectid;
 		if (MathUtil.isEmpty(logsourceid, logsourceName, projectid, hostname, path, filepattern, linestart, filter_keyword_con,
 				reg_regex_con, creatorname)) {
 			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
@@ -314,14 +315,15 @@ public class WlogSrcController {
 		}
 		}
 
-		LogSource logSource = new LogSource();
+		LogSource logSource =  logsource;
 		logSource.setLogSourceName(logsourceName);
 		logSource.setProjectId(Integer.parseInt(projectid));
 		logSource.setHostname(hostname);
 		logSource.setPath(path);
 		logSource.setFilePattern(filepattern);
-		logSource.setLineStartRegex(linestart);
+		logSource.setLineStartRegex(linestart);	
 		logSource.setLineFilterKeyword(MathUtil.parse2Str(filterkeywords, filter_keyword_con));
+		
 		logSource.setLineTypeRegex(MathUtil.parse2Str(typeregexs, "OR"));
 		logSource.setLogSourceCreatorName(creatorname);
 		int result = logSourceService.updateLogSource(logSource);

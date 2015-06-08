@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import org.springframework.util.StringUtils;
 
 import com.netease.qa.log.util.Const;
+import com.netease.qa.log.util.MathUtil;
 
 
 public class LogSource {

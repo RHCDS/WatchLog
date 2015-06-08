@@ -38,6 +38,7 @@
    	<div class="wrapper">
 		<#include "header.ftl"/>
 	     <#include "menu.ftl"/>
+	     <#if message?exists>	 <#include "notice.ftl"/> </#if> 	
 	     <div class="container">  	<#nested>     	</div>
     </div>
     <#include "footer.ftl"/>

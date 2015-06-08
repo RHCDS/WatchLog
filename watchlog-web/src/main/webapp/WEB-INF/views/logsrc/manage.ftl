@@ -19,12 +19,8 @@
   <#if RequestParameters.proj?exists >
   	<#assign pid = RequestParameters.proj>
     <div class="container">
-
- <div id="notice" class="row">
-     <#if message?exists>
-        ${message}
-    </#if>
- </div>
+    
+ 	
  
     <div id="toolbar">
 	    <a class="btn btn-primary" href="/logsrc/new?proj=${pid}" role="button">创建日志源</a>
@@ -34,6 +30,7 @@
     </div>
     </br>
  
+ <div id="js_notice" class="row"   style="padding-left: 15px; padding-right: 15px;" > </div>
 
 
  
