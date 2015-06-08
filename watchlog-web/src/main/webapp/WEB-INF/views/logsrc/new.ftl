@@ -12,6 +12,11 @@
   <#if RequestParameters.proj?exists >
   	<#assign pid = RequestParameters.proj>
   	
+ <div id="notice" class="row">
+     <#if message?exists>
+        ${message}
+    </#if>
+ </div>  	
   	
 <div class="container">
 

@@ -193,7 +193,7 @@ public class WlogSrcController {
 	public ResponseEntity<JSONObject> startMonitorStatus(
 			@RequestParam(value = "ids", required = false) String ids) {
 		
-		System.out.println("111111111");
+//		System.out.println("111111111");
 //		System.out.println("ids" + ());
 		
 		if(MathUtil.isEmpty(ids)){
