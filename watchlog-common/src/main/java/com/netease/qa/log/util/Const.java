@@ -16,7 +16,8 @@ public class Const {
     public static final String STATUS_MUST_BE_NUM = "status must be 0,1,2";
     public static final String ACCURACY_MUST_BE_NUM = "accuracy must be a number";
     public static final String LIMIT_AND_OFFSET_MUST_BE_NUM = " limit or offset  must be a number";
-    public static final String LOG_ALREADY_EXSIT = "logsource already exist";
+    public static final String LOG_NAME_ALREADY_EXSIT = "logsource name already exist";
+    public static final String LOG_PATH_ALREADY_EXSIT = "logsource path already exist";
     public static final String LOG_NOT_EXSIT = "logsource not exist";
     public static final String PROJECT_ALREADY_EXSIT = "project already exist";
     public static final String PROJECT_NOT_EXSIT = "project not exist";

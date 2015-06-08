@@ -82,6 +82,13 @@ public class LogsourceServiceImpl implements LogSourceService{
 		return logSourceDao.findByLogSourceId(logSourceid);
 	}
 	
+
+	@Override
+	public boolean checkLogSourceExist(String logsourceName) {
+			LogSource logsource = logSourceDao.findByLogSourceName(logsourceName);
+			return logsource != null;
+	}
+	
 	
 	@Override
 	public LogSource getByLocation(String hostname, String path, String filePattern) {
@@ -121,6 +128,9 @@ public class LogsourceServiceImpl implements LogSourceService{
 		return logsource != null;
 	}
 
+	
+	
+	
 
 	@Override
 	public boolean checkLogSourceExist(int logSourceId) {
@@ -208,6 +218,22 @@ public class LogsourceServiceImpl implements LogSourceService{
 		return records;
 	}
 
+
+	@Override
+	public int changeMonitorStatus(int[] ids, int status) {
+		LogSource logsource;
+		for(int i=0; i < ids.length; i++){
+			try {
+				logsource = logSourceDao.findByLogSourceId(ids[i]);
+				logsource.setLogSourceStatus(status);
+				logSourceDao.update(logsource);
+			} catch (Exception e) {
+				logger.error("error", e);
+				return -1;
+			}
+		}
+		return 0;
+	}
 
 
 }

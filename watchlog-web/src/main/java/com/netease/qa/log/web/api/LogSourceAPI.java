@@ -60,8 +60,13 @@ public class LogSourceAPI {
 			NotFoundRequestException nr = new NotFoundRequestException(Const.PROJECT_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
 		}
+		if (logsourceService.checkLogSourceExist(logsourceName)) {
+			ConflictRequestException cr = new ConflictRequestException(Const.LOG_NAME_ALREADY_EXSIT);
+			return new ResponseEntity<JSONObject>(apiException.handleConflictRequestException(cr), HttpStatus.CONFLICT);
+		}
+		
 		if (logsourceService.checkLogSourceExist(hostname, path, filepattern)) {
-			ConflictRequestException cr = new ConflictRequestException(Const.LOG_ALREADY_EXSIT);
+			ConflictRequestException cr = new ConflictRequestException(Const.LOG_PATH_ALREADY_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleConflictRequestException(cr), HttpStatus.CONFLICT);
 		}
 
@@ -110,12 +115,19 @@ public class LogSourceAPI {
 			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
 		}
-		
+
+		if(!logSource.getLogSourceName().trim().equals(logsourcename)){
+			if(logsourceService.checkLogSourceExist(logsourcename)){
+				ConflictRequestException cr = new ConflictRequestException(Const.LOG_NAME_ALREADY_EXSIT);
+				return new ResponseEntity<JSONObject>(apiException.handleConflictRequestException(cr),
+						HttpStatus.CONFLICT);
+			}
+		}
 		// 日志源改变了,才去判断是不是其他日志源
-		if (!(logSource.getHostname().equals(hostname) && logSource.getPath().equals(path) && logSource
-				.getFilePattern().equals(filepattern))) {
+		if (!(logSource.getHostname().trim().equals(hostname) && logSource.getPath().trim().equals(path)
+				&& logSource.getFilePattern().trim().equals(filepattern))) {
 			if (logsourceService.checkLogSourceExist(hostname, path, filepattern)) {
-				ConflictRequestException cr = new ConflictRequestException(Const.LOG_ALREADY_EXSIT);
+				ConflictRequestException cr = new ConflictRequestException(Const.LOG_PATH_ALREADY_EXSIT);
 				return new ResponseEntity<JSONObject>(apiException.handleConflictRequestException(cr),
 						HttpStatus.CONFLICT);
 			}
@@ -126,7 +138,7 @@ public class LogSourceAPI {
 		logSource.setFilePattern(filepattern);
 		logSource.setLineStartRegex(linestart);
 		logSource.setLineFilterKeyword(filterkeyword);
-		logSource.setLineTypeRegex(typeregex);		
+		logSource.setLineTypeRegex(typeregex);
 		int result = logsourceService.updateLogSource(logSource);
 		if (result == 0) {
 			InvalidRequestException ex = new InvalidRequestException(Const.INNER_ERROR);
