@@ -230,4 +230,109 @@ public class WlogSrcController {
 		}
 	}
 
+	@RequestMapping(value = "/{id}/edit", method = RequestMethod.GET)
+	public String editLogSource(@PathVariable String logsourceId,
+			@RequestParam(value = "proj", required = false) String projectid, Model model) {
+		if (MathUtil.isEmpty(logsourceId, projectid) || MathUtil.isInteger(logsourceId)) {
+			return "redirect:/logsrc/manage?proj=" + projectid;
+		}
+		LogSource logSource = logSourceService.getByLogSourceId(Integer.parseInt(logsourceId));
+
+		if (logSource == null) {
+			model.addAttribute("controller", "WlogManage");
+			model.addAttribute("action", "show");
+			model.addAttribute("id", "0");
+			model.addAttribute("logsrc_name", "NONE");
+			model.addAttribute("host_name", "NONE");
+			model.addAttribute("logsrc_path", "NONE");
+			model.addAttribute("logsrc_file", "NONE");
+			model.addAttribute("start_regex", "NONE");
+			model.addAttribute("filter_keyword", "NONE");
+			model.addAttribute("reg_regex", "NONE");
+		} else {
+			model.addAttribute("controller", "WlogManage");
+			model.addAttribute("action", "show");
+			model.addAttribute("id", logSource.getLogSourceId());
+			model.addAttribute("logsrc_name", logSource.getLogSourceName());
+			model.addAttribute("host_name", logSource.getHostname());
+			model.addAttribute("logsrc_path", logSource.getPath());
+			model.addAttribute("logsrc_file", logSource.getFilePattern());
+			model.addAttribute("start_regex", logSource.getLineStartRegex());
+			model.addAttribute("filter_keyword", logSource.getLineFilterKeyword());
+			model.addAttribute("reg_regex", logSource.getLineTypeRegex());
+		}
+		return "logsrc/edit";
+	}
+
+	@RequestMapping(value = "/update", method = RequestMethod.POST)
+	public String commitEditLogSource(@RequestParam(value = "proj", required = false) String projectid,
+			@RequestParam(value = "id", required = false) String logsourceid,
+			@RequestParam(value = "logsrc_name", required = false) String logsourceName,
+			@RequestParam(value = "host_name", required = false) String hostname,
+			@RequestParam(value = "logsrc_path", required = false) String path,
+			@RequestParam(value = "logsrc_file", required = false) String filepattern,
+			@RequestParam(value = "start_regex", required = false) String linestart,
+			@RequestParam(value = "filter_keyword_arr[]", required = false) String[] filterkeywords,
+			@RequestParam(value = "reg_regex_arr[]", required = false) String[] typeregexs,
+			@RequestParam(value = "filter_keyword_con", required = false) String filter_keyword_con,
+			@RequestParam(value = "reg_regex_con", required = false) String reg_regex_con,
+			@RequestParam(value = "logsourcecreatorname", required = false, defaultValue = "none") String creatorname,
+			RedirectAttributes model) {
+		
+		String ret_succ = "redirect:/logsrc/manage?proj=" + projectid;
+		String ret_fail = "redirect:/logsrc/edit?proj=" + projectid;
+		if (MathUtil.isEmpty(logsourceid, logsourceName, projectid, hostname, path, filepattern, linestart, filter_keyword_con,
+				reg_regex_con, creatorname)) {
+			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
+			return ret_fail;
+		}
+		if (filterkeywords == null || typeregexs == null) {
+			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
+			return ret_fail;
+		}
+		if (!MathUtil.isInteger(projectid) || !MathUtil.isInteger(logsourceid)) {
+			model.addFlashAttribute("message", ConstCN.ID_MUST_BE_NUM);
+			return ret_fail;
+		}
+		if (!projectService.checkProjectExsit(Integer.parseInt(projectid))) {
+			model.addFlashAttribute("message", ConstCN.PROJECT_NOT_EXSIT);
+			return ret_fail;
+		}
+		//日志源名称改了，才能check
+		LogSource logsource = logSourceService.getByLogSourceId(Integer.parseInt(logsourceid));
+		if(!logsourceName.trim().equals(logsource.getLogSourceName())){
+			if(logSourceService.checkLogSourceExist(logsourceName)){
+				model.addFlashAttribute("message", ConstCN.LOG_NAME_ALREADY_EXSIT);
+				return ret_fail;
+			}	
+		}
+		//path修改
+		if(!(hostname.trim().equals(logsource.getHostname()) && path.trim().equals(logsource.getPath()) && filepattern.trim().equals(logsource.getFilePattern()))){
+		if (logSourceService.checkLogSourceExist(hostname, path, filepattern)) {
+			model.addFlashAttribute("message", ConstCN.LOG_PATH_ALREADY_EXSIT);
+			return ret_fail;
+		}
+		}
+
+		LogSource logSource = new LogSource();
+		logSource.setLogSourceName(logsourceName);
+		logSource.setProjectId(Integer.parseInt(projectid));
+		logSource.setHostname(hostname);
+		logSource.setPath(path);
+		logSource.setFilePattern(filepattern);
+		logSource.setLineStartRegex(linestart);
+		logSource.setLineFilterKeyword(MathUtil.parse2Str(filterkeywords, filter_keyword_con));
+		logSource.setLineTypeRegex(MathUtil.parse2Str(typeregexs, "OR"));
+		logSource.setLogSourceCreatorName(creatorname);
+		int result = logSourceService.updateLogSource(logSource);
+		if (result == 0) {
+			model.addFlashAttribute("message", ConstCN.INNER_ERROR);
+			return ret_fail;
+		} else {
+			model.addFlashAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);
+			return ret_succ;
+		}
+
+	}
+
 }
