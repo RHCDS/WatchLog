@@ -50,8 +50,6 @@
 		</form>
 
 
-
-
 	    <div id="toolbar">
 		      <a class="btn btn-primary" href="/logsrc/new?proj=${pid}" role="button">创建日志源</a>
 		      <button id="remove" class="btn btn-primary"  onclick="delete_logsrc()" > 删除日志源 </button>
