@@ -16,12 +16,13 @@
   	
 <div class="container">
 
-<form  id="logsrc_new_form" class="form-horizontal" role="form"   accept-charset="UTF-8" action="/logsrc/create" data-remote="true" method="post">
+<form  id="logsrc_new_form" class="form-horizontal" role="form"   accept-charset="UTF-8" action="/logsrc/create" data-remote="true" method="post"  onsubmit="return check_create_logsrc()">
 
 		<div class="form-group"  >
 				<label for="logsrc_name" class="col-sm-2 control-label"  style="text-align: left; font-size: medium; color: gray;">日志源名称</label>
 		      <div class="col-sm-6">
 		         <input type="text" class="form-control"  style="height: 30px;border-radius: 0;"   id="logsrc_name"      name="logsrc_name"   placeholder="请输入名字">
+		         <div id="warn_new_logsrc_name"></div>
 		      </div>
 		</div>
 	
@@ -34,6 +35,7 @@
 							<label for="host_name" class="col-sm-2 control-label"  style="text-align: center;color: gray;font-weight: 100;">服务器地址</label>
 					      <div class="col-sm-6">
 					         <input type="text" class="form-control"  style="height: 30px;border-radius: 0;"   id="host_name"     name="host_name"   placeholder="请输入服务器地址">
+					          <div id="warn_new_host_name"></div>
 					      </div>
 					</div>		
 		
@@ -41,6 +43,7 @@
 							<label for="logsrc_path" class="col-sm-2 control-label"  style="text-align: center;color: gray;font-weight: 100;">日志文件路径</label>
 					      <div class="col-sm-6">
 					         <input type="text" class="form-control"  style="height: 30px;border-radius: 0;"   id="logsrc_path"       name="logsrc_path"  placeholder="请输入日志文件路径">
+					           <div id="warn_new_logsrc_path"></div>
 					      </div>
 					</div>		
 		
@@ -49,6 +52,7 @@
 							<label for="logsrc_file" class="col-sm-2 control-label"  style="text-align: center;color: gray;font-weight: 100;">日志文件名</label>
 					      <div class="col-sm-6">
 					         <input type="text" class="form-control"  style="height: 30px;border-radius: 0;"   id="logsrc_file"  name="logsrc_file"      placeholder="请输入日志文件名">
+					          <div id="warn_new_logsrc_file"></div>
 					      </div>
 					</div>		
 					
@@ -67,6 +71,7 @@
 							</label>
 					      <div class="col-sm-6">
 					         <input type="text" class="form-control"  style="height: 30px;border-radius: 0;"   id="start_regex"  name="start_regex"      placeholder="请输入起始标志">
+					           <div id="warn_new_start_regex"></div>
 					      </div>
 					</div>		
 					

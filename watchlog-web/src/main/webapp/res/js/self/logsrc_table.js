@@ -1,9 +1,4 @@
-//	var $table = $('#logtable'), $remove = $('#remove'),  selections = [];
 
-//  var pid = getParam( 'proj' );
-  //console.log(pid); //tmp log
-  
-  
   $(document).ready(function() {
 	  	$('#logtable').bootstrapTable({
 	  		url : "manage/logtable",
@@ -153,13 +148,16 @@
 		  }
 	  else{
 		  return [
+		          // 调试功能
 	//	            '<a class="debug" href="javascript:void(0)" title="调试" disabled>',
 	//	            '<i class="glyphicon glyphicon-cog"></i>',
 	//	            '</a>  ',
-	//	            '<a class="copy" href="javascript:void(0)" title="复制" disabled>',
-	//	            '<i class="glyphicon glyphicon-file"></i>',
-	//	            '</a>  ',	            
-		           '<a class="like" href="' + row.id + '/edit?proj=' + pid + '" >',
+		          	// 复制日志源功能
+//		            '<a class="copy" href="javascript:void(0)"  title="复制"  onclick=logsrc_copy('+row.id+')>',
+//		            '<i class="glyphicon glyphicon-file"></i>',
+//		            '</a>  ',	            
+		            // 编辑日志源功能
+		           '<a class="edit" href="' + row.id + '/edit?proj=' + pid + '" >',
 		            '<i class="glyphicon glyphicon-edit"></i>',
 		            '</a>'
 		        ].join('');
@@ -167,26 +165,21 @@
   }
 
   
-  
-//  function getParam( name )
-//  {
-//	   name = name.replace(/[\[]/,"\\\[").replace(/[\]]/,"\\\]");
-//	   var regexS = "[\\?&]"+name+"=([^&#]*)";
-//	   var regex = new RegExp( regexS );
-//	   var results = regex.exec( window.location.href );
-//	   if( results == null )
-//	    return "";
-//	  else
-//	   return results[1];
+//  // 复制日志源
+//  function logsrc_copy(logsrcid){
+//	  console.log(logsrcid)
+//	  $('#copy_logsrc_id').val(logsrcid);
+//	  $("#copy_logsrc_modal").modal('show');
 //  }
-//  
-function test(){
-	$.ajax({
-		url: '/api/logsource/1',
-		success :function(data){
-			$('#result').html(data);
-		}
-	})
-}
+    
+
+//function test(){
+//	$.ajax({
+//		url: '/api/logsource/1',
+//		success :function(data){
+//			$('#result').html(data);
+//		}
+//	})
+//}
 
 

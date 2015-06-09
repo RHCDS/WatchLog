@@ -60,6 +60,28 @@
         </table>
     </div>
     
+<!--  复制日志源 弹窗 用rubymine去掉注释 -->    
+<!--<form  id="copy_logsrc_form" class="form-horizontal" role="form"   accept-charset="UTF-8" action="/logsrc/copy" data-remote="true" method="post">-->
+    <!--&lt;!&ndash; 模态框（Modal） &ndash;&gt;-->
+    <!--<div class="modal fade" id="copy_logsrc_modal" tabindex="-1" role="dialog"    aria-labelledby="myModalLabel" aria-hidden="true">-->
+        <!--<div class="modal-dialog">-->
+            <!--<div class="modal-content">-->
+                <!--<input type="hidden" id="copy_logsrc_id" name="copy_logsrc_name"  />-->
+                <!--<input type="hidden"  name="proj"  value= ${pid} />-->
+                <!--<div class="modal-header">-->
+                    <!--<button type="button" class="close" data-dismiss="modal"   aria-hidden="true"> &times;  </button>-->
+                    <!--<h4 class="modal-title" id="myModalLabel">    this is 标题   </h4>-->
+                <!--</div>&lt;!&ndash; /.modal-header &ndash;&gt;-->
+                <!--<div class="modal-body">     this is  主体</div>-->
+                <!--<div class="modal-footer">-->
+                    <!--<button type="button" class="btn btn-default"  data-dismiss="modal">    关闭       </button>-->
+                    <!--<button type="submit" class="btn btn-primary">      提交更改   </button>-->
+                <!--</div>&lt;!&ndash; /.modal-footer &ndash;&gt;-->
+            <!--</div>&lt;!&ndash; /.modal-content &ndash;&gt;-->
+        <!--</div>&lt;!&ndash; /.modal-dialog &ndash;&gt;-->
+    <!--</div>&lt;!&ndash; /.modal &ndash;&gt;-->
+<!--</form>	 -->
+    
 <#else>
    <div class="container"> 请选择项目，亲:)</div>
 </#if>
