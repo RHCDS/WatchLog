@@ -1,5 +1,6 @@
 
   $(document).ready(function() {
+	  // 表格分页设置
 	  	$('#logtable').bootstrapTable({
 	  		url : "manage/logtable",
 	  		sortName : "update_time",
@@ -15,9 +16,13 @@
 	  			}
 	  		}
 	  	});
+	  	
+
+	  	
     } );
   
   
+
 	
   $('#logtable').on('check.bs.table uncheck.bs.table ' +
             'check-all.bs.table uncheck-all.bs.table', function () {
@@ -27,32 +32,53 @@
         // push or splice the selections if you want to save all data selections
     });
   
+  // 获取表格选择的所有ids
   function getIdSelections() {
       return $.map($('#logtable').bootstrapTable('getSelections'), function (row) {
           return row.id
       });
   }
   
+  
 
-      //  删除日志源
-      function destroyLogsrc(){
-          var ids = getIdSelections();
-         // console.log(ids); //tmp log
-          $('#logtable').bootstrapTable('remove', {
-              field: 'id',
-              values: ids
-          });
-      	$.ajax({
-      		type: 'POST',
-    		url: '/logsrc/destroy',
-    		data:{ ids: ids.toString(),
-    					proj: pid},
-    		success :function(data){
-    			$('#result').html(data);
-    		}
-    	})
-      }
-      
+  // 删除日志源+二次确认
+	function delete_logsrc(){
+	  	  var ids = getIdSelections(); //待删除id数组
+		  var ids_str = ids.toString();  //待删除id字符串
+		  // 用户没有勾选内容
+		  if(ids_str == "" ){
+			  $("#js_notice").html("<font color='red'>  请勾选需要删除的日志源</font></br>");
+		  }
+		  else{
+			  $("#js_notice").html("");
+				 $('#ids').val(ids_str);  //post请求参数 ids
+				 $('#proj').val(pid);  //post请求参数 projj
+				$('#destroy_logsrc_modal').modal('show');  //弹窗modal
+		  }
+
+	}
+
+	
+	
+//      //  删除日志源
+//      function destroyLogsrc(){
+//          var ids = getIdSelections();
+//         // console.log(ids); //tmp log
+//          $('#logtable').bootstrapTable('remove', {
+//              field: 'id',
+//              values: ids
+//          });
+//      	$.ajax({
+//      		type: 'POST',
+//    		url: '/logsrc/destroy',
+//    		data:{ ids: ids.toString(),
+//    					proj: pid},
+//    		success :function(data){
+//    			$('#result').html(data);
+//    		}
+//    	})
+//      }
+//      
       
       // 开始监控
       function startMonitorLogsrc(){

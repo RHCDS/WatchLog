@@ -75,22 +75,29 @@ public class WlogSrcController {
 	}
 
 	@RequestMapping(value = "/destroy", method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> deleteLogSources(@RequestParam(value = "ids") String ids, Model model) {
+	public String deleteLogSources(@RequestParam(value = "ids") String ids,  @RequestParam(value = "proj") String projectid, Model model) {
+		
+		String ret = "redirect:/logsrc/manage?proj=" + projectid;
+		
 		if (MathUtil.isEmpty(ids)) {
 			NullParamException ne = new NullParamException(ConstCN.NULL_PARAM);
-			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+			//return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+			 return ret;
 		}
 		// 选中删除，所以日志必存在，不需要进行日志检查
 		int[] logsource_ids = MathUtil.parse2IntArray(ids);
 		int result = logSourceService.deleteLogSources(logsource_ids);
 		if (result == 0) {
 			InvalidRequestException ex = new InvalidRequestException(ConstCN.INNER_ERROR);
-			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			//return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.INTERNAL_SERVER_ERROR);
+			 return ret;
 		}
 		JSONObject resultJson = new JSONObject();
 		resultJson.put("message", ConstCN.RESPONSE_SUCCESSFUL);
-		return new ResponseEntity<JSONObject>(resultJson, HttpStatus.OK);
+		//return new ResponseEntity<JSONObject>(resultJson, HttpStatus.OK);
+		
+		 
+		 return ret;
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)

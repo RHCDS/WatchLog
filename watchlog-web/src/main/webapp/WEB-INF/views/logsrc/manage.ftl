@@ -20,28 +20,56 @@
   	<#assign pid = RequestParameters.proj>
     <div class="container">
     
+
  	
- 
-    <div id="toolbar">
-	    <a class="btn btn-primary" href="/logsrc/new?proj=${pid}" role="button">创建日志源</a>
-        <button id="remove" class="btn btn-primary"  onclick="destroyLogsrc()" > 删除日志源 </button>
-         <button id="remove" class="btn btn-primary"  onclick="startMonitorLogsrc()" > 开始监控 </button>
-         <button id="remove" class="btn btn-primary"  onclick="stopMonitorLogsrc()" > 停止监控 </button>
-    </div>
-    </br>
- 
- <div id="js_notice" class="row"   style="padding-left: 15px; padding-right: 15px;" > </div>
+ 	  
+		<form  id="destroy_logsrc_form" action="/logsrc/destroy"  method="post"   class="form-horizontal" role="form"   accept-charset="UTF-8"   data-remote="true">     	  
+			<!-- 模态框（Modal）for: 删除日志源 二次确认对话框 -->
+			<div class="modal fade" id="destroy_logsrc_modal" tabindex="-1" role="dialog"    aria-labelledby="myModalLabel" aria-hidden="true">
+				   <div class="modal-dialog">
+							      <div class="modal-content">
+							      		<input type="hidden" id="ids" name="ids"  />
+							      		<input type="hidden" id="proj" name="proj"  />
+							      		 <!-- header  -->
+								         <div class="modal-header">
+									            <button type="button" class="close"    data-dismiss="modal" aria-hidden="true">   &times;  </button>
+									            <h4 class="modal-title" id="myModalLabel">    确认删除    </h4>
+								         </div>
+								         <!-- body  -->
+								         <div class="modal-body">
+								            	您确定要删除选中日志源？
+								         </div>
+								         <!-- footer  -->
+								         <div class="modal-footer">
+								           <button type="submit" class="btn btn-primary">  确定  </button>
+								            <button type="button" class="btn btn-default"    data-dismiss="modal"> 取消  </button>
+								         </div>
+							      </div><!-- /.modal-content -->
+					</div><!-- /.modal-dialog -->
+			</div><!-- 模态框（Modal） -->
+		</form>
 
 
+
+
+	    <div id="toolbar">
+		      <a class="btn btn-primary" href="/logsrc/new?proj=${pid}" role="button">创建日志源</a>
+		      <button id="remove" class="btn btn-primary"  onclick="delete_logsrc()" > 删除日志源 </button>
+	        	<!--button id="remove" class="btn btn-primary"  onclick="destroyLogsrc()" > 删除日志源 </button-->
+	         	<button  class="btn btn-primary"  onclick="startMonitorLogsrc()" > 开始监控 </button>
+	         	<button  class="btn btn-primary"  onclick="stopMonitorLogsrc()" > 停止监控 </button>
+	    </div>
+	    </br>
  
-    
+ 
+ 		<div id="js_notice" class="row"   style="padding-left: 15px; padding-right: 15px;" > </div></br>
+ 
         <table id="logtable"
                data-toggle="toolbar"
                data-height="500"
                data-side-pagination="server"
                data-pagination="true"
                data-search="false">
-               
             <thead>
             <tr>
                 <th data-field="state" data-checkbox="true" ></th>
@@ -54,10 +82,10 @@
                  <th data-field="update_time" data-sortable="true" >更新时间</th>
                  <th data-field="creator" data-sortable="true" >创建人</th>
                   <th data-field="operate"    data-formatter="operateFormatter" ">操作</th>
-                
             </tr>
             </thead>
         </table>
+        
     </div>
     
 <!--  复制日志源 弹窗 用rubymine去掉注释 -->    
