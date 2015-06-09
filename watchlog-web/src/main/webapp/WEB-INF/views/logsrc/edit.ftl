@@ -139,7 +139,7 @@
 			<#assign reg_regex_arr=reg_regex?split("_OR_")>
 	<#else>
 			<#assign reg_regex_flag = "none">
-			<#assign reg_regex_arr=[filter_keyword]>
+			<#assign reg_regex_arr=[reg_regex]>
 	</#if>					
 			
 					<div class="row" >
@@ -158,7 +158,7 @@
 													<#list reg_regex_arr as r>
 															<tr>
 																	<td class="col-md-6" style="padding:0px">
-																				<input type="text" class="form-control"  id="reg_regex_input_id"   name="reg_regex_arr[]"  value=${r}  style="display: block;padding: 0px;margin: 0px;border: 0;width: 100%;border-radius: 0;line-height: 1;" >	
+																				<input type="text" class="form-control"  id="reg_regex_input_id"   name="reg_regex_arr[]"   style="display: block;padding: 0px;margin: 0px;border: 0;width: 100%;border-radius: 0;line-height: 1;"  value=${r}  >	
 																	</td>
 																	<#if j==0> 
 																		<td class="col-md-1"  style="padding:0px"> 

@@ -116,7 +116,7 @@
 			<#assign reg_regex_arr=reg_regex?split("_OR_")>
 	<#else>
 			<#assign reg_regex_flag = "none">
-			<#assign reg_regex_arr=[filter_keyword]>
+			<#assign reg_regex_arr=[reg_regex]>
 	</#if>
 		<div class="row" >
 			<div class="col-md-2">
