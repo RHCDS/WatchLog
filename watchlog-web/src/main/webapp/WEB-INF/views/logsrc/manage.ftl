@@ -19,12 +19,21 @@
   <#if RequestParameters.proj?exists >
   	<#assign pid = RequestParameters.proj>
     <div class="container">
-
+    
+ 	
+ 
     <div id="toolbar">
 	    <a class="btn btn-primary" href="/logsrc/new?proj=${pid}" role="button">创建日志源</a>
         <button id="remove" class="btn btn-primary"  onclick="destroyLogsrc()" > 删除日志源 </button>
+         <button id="remove" class="btn btn-primary"  onclick="startMonitorLogsrc()" > 开始监控 </button>
+         <button id="remove" class="btn btn-primary"  onclick="stopMonitorLogsrc()" > 停止监控 </button>
     </div>
     </br>
+ 
+ <div id="js_notice" class="row"   style="padding-left: 15px; padding-right: 15px;" > </div>
+
+
+ 
     
         <table id="logtable"
                data-toggle="toolbar"

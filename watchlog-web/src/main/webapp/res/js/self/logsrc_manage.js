@@ -39,7 +39,7 @@
   }
   
 
-      
+      //  删除日志源
       function destroyLogsrc(){
           var ids = getIdSelections();
          // console.log(ids); //tmp log
@@ -56,8 +56,59 @@
     			$('#result').html(data);
     		}
     	})
-          //$('#remove').prop('disabled', true);
       }
+      
+      
+      // 开始监控
+      function startMonitorLogsrc(){
+    	  var ids = getIdSelections();
+    	  var ids_str = ids.toString();
+    	  if(ids_str==""){
+    		  $("#js_notice").html("<font color='red'>  请勾选需要开始监控的日志源</font></br>");
+    	  }else{
+    		  // send ajax 
+    	      	$.ajax({
+    	      		type: 'POST',
+    	    		url: '/logsrc/start_monitor',
+    	    		data:{ ids: ids_str},
+    	    		success :function(e){
+    	    			 if(e['status'] == 0 ) { //开始监控成功
+    	    				 location.reload() ;
+    	    			 }
+    	    			 else{
+    	    				 $("#js_notice").html("<font color='color'> "+e['message']+"</font></br>");
+    	    			 }
+    	    		}
+    	    	}) ;  //--ajax--  		  
+    	  }	//--else--  		
+      }
+      
+      // 停止监控
+      function stopMonitorLogsrc(){
+    	  var ids = getIdSelections();
+    	  var ids_str = ids.toString();
+    	  if(ids_str==""){
+    		  $("#js_notice").html("<font color='red'>  请勾选需要停止监控的日志源</font></br>");
+    	  }else{
+    		  // send ajax 
+    	      	$.ajax({
+    	      		type: 'POST',
+    	    		url: '/logsrc/stop_monitor',
+    	    		data:{ ids: ids_str},
+    	    		success :function(e){
+    	    			 if(e['status'] == 0 ) { //开始监控成功
+    	    				 location.reload() ;
+    	    			 }
+    	    			 else{
+    	    				 $("#js_notice").html("<font color='color'> "+e['message']+"</font></br>");
+    	    			 }
+    	    		}
+    	    	}) ;  //--ajax--  		  
+    	  }	//--else--  		
+      }      
+      
+      
+      
       
   function logsrcnameFormatter(value, row, index) {
 //	  console.log(value);

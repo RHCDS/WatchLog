@@ -16,19 +16,20 @@
      <link href="/res/css/plugin/select2/select2.min.css" rel="stylesheet" />
 	<script src="/res/js/plugin/select2/select2.min.js"></script>
 	
-	<!-- dataTables plugin -->
-	<link href="/res/css/plugin/dataTables/jquery.dataTables.min.css"  rel="stylesheet"/>
-	<script src="/res/js/plugin/dataTables/jquery.dataTables.min.js"></script>
+	<!-- table plugin -->
+	     <link href="/res/css/plugin/table/bootstrap-table.min.css" rel="stylesheet" />
+		<script src="/res/js/plugin/table/bootstrap-table.min.js"></script>	 
 
      <!--  self defined  -->    
 	 <link rel="stylesheet" href="/res/css/self/layout.css" />
 	 <script src="/res/js/self/layout.js" ></script>
 	 	 
 	 <#if controller == "WlogManage">
-	 <script src="/res/js/self/manage.js"></script>
-     <link href="/res/css/plugin/table/bootstrap-table.min.css" rel="stylesheet" />
-	<script src="/res/js/plugin/table/bootstrap-table.min.js"></script>	 
+		 <script src="/res/js/self/logsrc_manage.js"></script>
+		  <script src="/res/js/self/logsrc_new.js"></script>
 	 </#if>
+	 
+	 
 	 
 
   </head>
@@ -37,6 +38,7 @@
    	<div class="wrapper">
 		<#include "header.ftl"/>
 	     <#include "menu.ftl"/>
+	     <#if message?exists>	 <#include "notice.ftl"/> </#if> 	
 	     <div class="container">  	<#nested>     	</div>
     </div>
     <#include "footer.ftl"/>

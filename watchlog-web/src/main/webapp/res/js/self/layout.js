@@ -23,16 +23,15 @@ var pid = getParam( 'proj' );
 	      		type: 'GET',
 	    		url: '/projects',
 	    		success :function(e){
-	    			//console.log(e);
-    				//console.log(typeof(e));
-	    			var r = JSON.parse(e)
-	    			var data =r['data'];
+//	    			console.log(e);
+//    				console.log(typeof(e));
+//	    			var r = JSON.parse(e)
+//	    			var data =r['data'];
+    				var data = e['data'];
 	    			var i=0, html = "";
 	    			
 	    			if(typeof(pid)=='string' && pid.length==0){
-	    				console.log("pid empty sss");
 	    				html  =  '<option  selected="true" value="#"> 请选择项目</option>';
-	    				//console.log(html);
 	    			}
 	    			
 	    			for(i=0; i<data.length; i++){
@@ -46,11 +45,8 @@ var pid = getParam( 'proj' );
 	    				
 	    			}
 	    			
-	    			//console.log(html);
-	    			
 	    			$("#project_select").empty().append(html);
 	    			$('#project_select').select2();
-	    			
 	    		}
 	    	})
 		}

@@ -45,17 +45,18 @@
 	<delete id="delete" parameterType="java.lang.Integer">
 		delete from log_source where log_source_id=#{logSourceId}
 	</delete>
-
+   
+    <!-- limit 1 important -->
     <select id="findByLogSourceName" resultType="com.netease.qa.log.meta.LogSource">
         select
           <include refid="allColumn"/>
-         from log_source where log_source_name=#{logSourceName}
+         from log_source where log_source_name=#{logSourceName} limit 1
     </select>
     
 	<select id="findByLogSourceId" parameterType="java.lang.Integer" resultType="com.netease.qa.log.meta.LogSource">
 		select
 		<include refid="allColumn" />
-		from log_source where log_source_id=#{logSourceId}
+		from log_source where log_source_id=#{logSourceId} limit 1
 	</select>
 
 	<select id="findByLocation" resultType="com.netease.qa.log.meta.LogSource">

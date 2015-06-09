@@ -27,10 +27,9 @@
 	  		<li <#if controller == "WlogPM">class="active"</#if>  ><a href="/logsrc/pm_analyse">日志聚合分析</a></li>        
 	  		<li><a href="#">报警管理</a></li>              	
       	</#if>
+      	 
       	
-
       </ul>
-
       
       <div class="pull-right  col-md-2">
           		<select   id="project_select"  style="width:100%" onchange="window.location.href=this.options[selectedIndex].value" >

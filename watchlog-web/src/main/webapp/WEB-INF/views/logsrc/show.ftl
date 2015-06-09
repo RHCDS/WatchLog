@@ -73,10 +73,10 @@
 			
 	
 	<#if  filter_keyword?contains("_AND_")>
-			<#assign filter_keyword_flag = "And">
+			<#assign filter_keyword_flag = "AND">
 			<#assign filter_keyword_arr=filter_keyword?split("_AND_")>
 	<#elseif  filter_keyword?contains("_OR_")>				
-			<#assign filter_keyword_flag = "Or">
+			<#assign filter_keyword_flag = "OR">
 			<#assign filter_keyword_arr=filter_keyword?split("_OR_")>
 	<#else>
 			<#assign filter_keyword_flag = "none">
@@ -109,10 +109,10 @@
 	
 		
 	<#if  reg_regex?contains("_AND_")>
-			<#assign reg_regex_flag = "And">
+			<#assign reg_regex_flag = "AND">
 			<#assign reg_regex_arr=reg_regex?split("_AND_")>
 	<#elseif  reg_regex?contains("_OR_")>				
-			<#assign reg_regex_flag = "Or">
+			<#assign reg_regex_flag = "OR">
 			<#assign reg_regex_arr=reg_regex?split("_OR_")>
 	<#else>
 			<#assign reg_regex_flag = "none">
