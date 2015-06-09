@@ -27,4 +27,6 @@ public class Const {
     
     public static final String RESPONSE_SUCCESSFUL = "response successfully";
     public static final String RESPONSE_NOTSUCCESSFUL = "response not successfully";
+    
+    public static final String FILITER_TYPE = "type_regex";
 }

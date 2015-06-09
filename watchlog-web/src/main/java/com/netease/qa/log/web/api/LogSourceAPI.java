@@ -52,6 +52,10 @@ public class LogSourceAPI {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
+		if (!MathUtil.isName(logsourceName)) {
+			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_NAME);
+			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
+		}
 		if (!MathUtil.isInteger(projectid)) {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
@@ -105,6 +109,10 @@ public class LogSourceAPI {
 				typeregex)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+		}
+		if (!MathUtil.isName(logsourcename)) {
+			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_NAME);
+			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
 		if (!MathUtil.isInteger(logsourceid)) {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);

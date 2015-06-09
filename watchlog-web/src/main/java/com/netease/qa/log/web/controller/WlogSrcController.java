@@ -23,6 +23,7 @@ import com.netease.qa.log.exception.NullParamException;
 import com.netease.qa.log.meta.LogSource;
 import com.netease.qa.log.service.LogSourceService;
 import com.netease.qa.log.service.ProjectService;
+import com.netease.qa.log.util.Const;
 import com.netease.qa.log.util.ConstCN;
 import com.netease.qa.log.util.MathUtil;
 
@@ -167,6 +168,10 @@ public class WlogSrcController {
 			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
 			return ret_new;
 		}
+		if (!MathUtil.isName(logsourceName)) {
+			model.addFlashAttribute("message", ConstCN.INVALID_NAME);
+			return ret_new;
+		}
 		if (!MathUtil.isInteger(projectid)) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.ID_MUST_BE_NUM);
@@ -196,7 +201,7 @@ public class WlogSrcController {
 		logSource.setFilePattern(filepattern);
 		logSource.setLineStartRegex(linestart);
 		logSource.setLineFilterKeyword(MathUtil.parse2Str(filterkeywords, filter_keyword_con));
-		logSource.setLineTypeRegex(MathUtil.parse2Str(typeregexs, "OR"));
+		logSource.setLineTypeRegex(MathUtil.parse2Str(typeregexs, Const.FILITER_TYPE));
 		logSource.setLogSourceCreatorName(creatorname);
 		int result = logSourceService.createLogSource(logSource);
 		if (result == 0) {
@@ -301,8 +306,9 @@ public class WlogSrcController {
 			@RequestParam(value = "reg_regex_con", required = false) String reg_regex_con,
 			@RequestParam(value = "logsourcecreatorname", required = false, defaultValue = "none") String creatorname,
 			RedirectAttributes model) {
-		
+
 		String ret_succ = "redirect:/logsrc/manage?proj=" + projectid;
+
 		String ret_fail = "redirect:/logsrc/" + logsourceid + "/edit?proj=" + projectid;
 		if (MathUtil.isEmpty(logsourceid, logsourceName, projectid, hostname, path, filepattern, linestart, filter_keyword_con,
 				reg_regex_con, creatorname)) {
@@ -315,6 +321,10 @@ public class WlogSrcController {
 			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
 			return ret_fail;
 		}
+		if (!MathUtil.isName(logsourceName)) {
+			model.addFlashAttribute("message", ConstCN.INVALID_NAME);
+			return ret_fail;
+		}
 		if (!MathUtil.isInteger(projectid) || !MathUtil.isInteger(logsourceid)) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.ID_MUST_BE_NUM);
@@ -325,22 +335,22 @@ public class WlogSrcController {
 			model.addFlashAttribute("message", ConstCN.PROJECT_NOT_EXSIT);
 			return ret_fail;
 		}
-		//日志源名称改了，才能check
+		// 日志源名称改了，才能check
 		LogSource logsource = logSourceService.getByLogSourceId(Integer.parseInt(logsourceid));
-		if(!logsourceName.trim().equals(logsource.getLogSourceName())){
-			if(logSourceService.checkLogSourceExist(logsourceName)){
+		if (!logsourceName.trim().equals(logsource.getLogSourceName())) {
+			if (logSourceService.checkLogSourceExist(logsourceName)) {
 				model.addFlashAttribute("status", -1);
 				model.addFlashAttribute("message", ConstCN.LOG_NAME_ALREADY_EXSIT);
 				return ret_fail;
-			}	
+			}
 		}
-		//path修改
-		if(!(hostname.trim().equals(logsource.getHostname()) && path.trim().equals(logsource.getPath()) && filepattern.trim().equals(logsource.getFilePattern()))){
-		if (logSourceService.checkLogSourceExist(hostname, path, filepattern)) {
-			model.addFlashAttribute("status", -1);
-			model.addFlashAttribute("message", ConstCN.LOG_PATH_ALREADY_EXSIT);
-			return ret_fail;
-		}
+		// path修改
+		if (!(hostname.trim().equals(logsource.getHostname()) && path.trim().equals(logsource.getPath()) && filepattern
+				.trim().equals(logsource.getFilePattern()))) {
+			if (logSourceService.checkLogSourceExist(hostname, path, filepattern)) {
+				model.addFlashAttribute("message", ConstCN.LOG_PATH_ALREADY_EXSIT);
+				return ret_fail;
+			}
 		}
 
 		LogSource logSource =  logsource;
@@ -351,8 +361,7 @@ public class WlogSrcController {
 		logSource.setFilePattern(filepattern);
 		logSource.setLineStartRegex(linestart);	
 		logSource.setLineFilterKeyword(MathUtil.parse2Str(filterkeywords, filter_keyword_con));
-		
-		logSource.setLineTypeRegex(MathUtil.parse2Str(typeregexs, "OR"));
+		logSource.setLineTypeRegex(MathUtil.parse2Str(typeregexs, Const.FILITER_TYPE));
 		logSource.setLogSourceCreatorName(creatorname);
 		int result = logSourceService.updateLogSource(logSource);
 		if (result == 0) {
