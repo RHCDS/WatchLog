@@ -61,7 +61,7 @@ public class MQConsumer extends BaseRichSpout {
 		QueueingConsumer consumer = new QueueingConsumer(channel);
 		// channel.basicConsume(queueName, true, consumer);
 		channel.basicConsume(queueName, true, consumer);
-		channel.basicQos(50);
+		channel.basicQos(1);
 
 		String message = "";
 		QueueingConsumer.Delivery delivery = null;
@@ -69,9 +69,23 @@ public class MQConsumer extends BaseRichSpout {
 		while (true) {
 			delivery = consumer.nextDelivery();
 			message = new String(delivery.getBody());
+			Map<String, Object> headers = delivery.getProperties().getHeaders();
+			String hostname = "";  
+		    String path =  "";  
+		    String filePattern =  "";
+		    String dsTime = "";
+			try{
+				hostname = headers.get("__DS_.fields.hostname").toString();  
+			    path =  headers.get("__DS_.fields._ds_target_dir").toString();  
+			    filePattern =  headers.get("__DS_.fields._ds_file_pattern").toString();  
+			    dsTime =  headers.get("__DS_.timestamp").toString();   
+			}
+			catch(NullPointerException e){
+				logger.error("can't get header", e);
+			}
+			
 			logger.debug("Consume: " + message);
-			logger.debug(delivery.getProperties().getHeaders().get("__DS_.fields.tag").toString());
-			logger.debug(delivery.getProperties().getHeaders().get("__DS_.timestamp").toString());
+			logger.debug("hostname: " + hostname + ", path: " + path + ", filePattern: " + filePattern);
 			logger.info(""+ ++i);
 //			channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
 		}
@@ -93,7 +107,7 @@ public class MQConsumer extends BaseRichSpout {
 				Channel channel = getChannel();
 				QueueingConsumer consumer = new QueueingConsumer(channel);
 				channel.basicConsume(queueName, true, consumer);
-				channel.basicQos(10);
+				channel.basicQos(1);
 				while (true) {
 					QueueingConsumer.Delivery delivery = consumer.nextDelivery();
 					String message = new String(delivery.getBody());
@@ -115,6 +129,7 @@ public class MQConsumer extends BaseRichSpout {
 					
 					this.collector.emit(new Values(message, hostname, path, filePattern, dsTime), message);
 					logger.debug("Consume: " + message);
+					logger.debug("hostname: " + hostname + ", path: " + path + ", filePattern: " + filePattern);
 				}
 			}
 			catch (Exception e) {

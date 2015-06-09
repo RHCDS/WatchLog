@@ -29,11 +29,13 @@ public class MonitorDataService {
 	private static ConcurrentHashMap<String, Exception> exceptionCache;
 	private static ConcurrentHashMap<Integer, Exception> exceptionIdCache;
 	private static ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>> exceptionCountCache;
-	
+	private static ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Long>> exceptionTimeCache;
+
 	static{
 		exceptionCache = new ConcurrentHashMap<String, Exception>();
 		exceptionIdCache = new ConcurrentHashMap<Integer, Exception>();
 		exceptionCountCache = new ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>>();
+		exceptionTimeCache = new ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Long>>();
 	}
 	
 	
@@ -118,7 +120,11 @@ public class MonitorDataService {
 	}
 	
 	
-	public static void putExceptionData(int logSourceId, int exceptionId){
+	/**
+	 * 监控数据添加至内存缓存
+	 */
+	public static void putExceptionData(int logSourceId, int exceptionId, Long dsTime){
+		//添加logSourceId:exceptionId:count缓存。  count为该exceptionId对应的日志数量
 		if(!exceptionCountCache.containsKey(logSourceId)){ 
 			ConcurrentHashMap<Integer, Integer> tmp = new ConcurrentHashMap<Integer, Integer>();
 			tmp.put(exceptionId, 1);
@@ -133,12 +139,26 @@ public class MonitorDataService {
 				tmp.put(exceptionId, tmp.get(exceptionId) + 1);
 			}
 		}
+		//添加logSourceId:exceptionId:time缓存. time为这个监控周期内，该exceptionId对应的日志的ds_time(flume-agent接收到原始日志的时间)之和。
+		if(!exceptionTimeCache.containsKey(logSourceId)){ 
+			ConcurrentHashMap<Integer, Long> tmp = new ConcurrentHashMap<Integer, Long>();
+			tmp.put(exceptionId, dsTime);
+			exceptionTimeCache.put(logSourceId, tmp);
+		}
+		else{
+			ConcurrentHashMap<Integer, Long> tmp = exceptionTimeCache.get(logSourceId);
+			if(!tmp.containsKey(exceptionId)){
+				tmp.put(exceptionId, dsTime);
+			}
+			else{
+				tmp.put(exceptionId, tmp.get(exceptionId) + dsTime);
+			}
+		}
 	}
 	
 	
 	/**
 	 * 写入数据库 exception_data表
-	 * @param sampleTime
 	 */
 	public static void writeExceptionData(Long sampleTime){
 		logger.info("---write exception data into DB---");
@@ -148,21 +168,24 @@ public class MonitorDataService {
 			for(Entry<Integer, ConcurrentHashMap<Integer, Integer>> e1: exceptionCountCache.entrySet()){
 				int logSourceId = e1.getKey();
 				ConcurrentHashMap<Integer, Integer> tmp = e1.getValue();
+				ConcurrentHashMap<Integer, Long> exception_time = exceptionTimeCache.get(logSourceId);
 				
 				for(Entry<Integer, Integer> e2: tmp.entrySet()){
 					int exceptionId = e2.getKey();
 					int count = e2.getValue();
+					Long dsTime = exception_time.get(exceptionId) / count;
 					
 					ExceptionData exceptionData = new ExceptionData();
 					exceptionData.setLogSourceId(logSourceId);
 					exceptionData.setExceptionId(exceptionId);
-					exceptionData.setSampleTime(sampleTime);
+					exceptionData.setSampleTime(dsTime); //改成dsTime的平均值
 					exceptionData.setExceptionCount(count);
 					exceptionDataDao.insert(exceptionData);
 					logger.info(exceptionData.toString());
 				}
 			}
 			exceptionCountCache.clear();
+			exceptionTimeCache.clear();
 		}
 		finally{
 			sqlSession.close();
