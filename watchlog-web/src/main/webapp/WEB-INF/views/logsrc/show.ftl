@@ -41,7 +41,7 @@
 							</form>			
 			
 				<div class="row"  style="border-bottom: solid 1px #eee;  height: 35px; ">
-						<div class="col-md-2 pull-left">  
+						<div class="col-md-6 pull-left">  
 								 <a href="/logsrc/manage?proj=${pid}">  返回 >   </a>
 								<small>${logsrc_name}</small>
 						</div>
