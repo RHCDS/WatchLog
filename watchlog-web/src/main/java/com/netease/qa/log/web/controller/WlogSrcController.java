@@ -114,6 +114,7 @@ public class WlogSrcController {
 		if (logSource == null) {
 			model.addAttribute("controller", "WlogManage");
 			model.addAttribute("action", "show");
+			model.addAttribute("id", 0);
 			model.addAttribute("logsrc_name", "NONE");
 			model.addAttribute("host_name", "NONE");
 			model.addAttribute("logsrc_path", "NONE");
@@ -124,6 +125,7 @@ public class WlogSrcController {
 		} else {
 			model.addAttribute("controller", "WlogManage");
 			model.addAttribute("action", "show");
+			model.addAttribute("id", logSource.getLogSourceId());
 			model.addAttribute("logsrc_name", logSource.getLogSourceName());
 			model.addAttribute("host_name", logSource.getHostname());
 			model.addAttribute("logsrc_path", logSource.getPath());

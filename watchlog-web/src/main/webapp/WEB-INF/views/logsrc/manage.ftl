@@ -52,7 +52,7 @@
 
 	    <div id="toolbar">
 		      <a class="btn btn-primary" href="/logsrc/new?proj=${pid}" role="button">创建日志源</a>
-		      <button id="remove" class="btn btn-primary"  onclick="delete_logsrc()" > 删除日志源 </button>
+		      <button id="remove" class="btn btn-primary"  onclick="delete_logsrc_table()" > 删除日志源 </button>
 	        	<!--button id="remove" class="btn btn-primary"  onclick="destroyLogsrc()" > 删除日志源 </button-->
 	         	<button  class="btn btn-primary"  onclick="startMonitorLogsrc()" > 开始监控 </button>
 	         	<button  class="btn btn-primary"  onclick="stopMonitorLogsrc()" > 停止监控 </button>
@@ -73,9 +73,9 @@
                 <th data-field="state" data-checkbox="true" ></th>
                 <th data-field="id"  data-sortable="true"  data-visible="false">ID</th>
                 <th data-field="logsrc_name"   data-sortable="true"   data-formatter="logsrcnameFormatter"  >日志源名称</th>
-                <th data-field="host_name" data-sortable="true" >服务器地址</th>
-                 <th data-field="logsrc_path" data-sortable="true" >日志源地址 </th>
-                 <th data-field="logsrc_file" data-sortable="true" >日志文件名称</th>
+                <th data-field="host_name" data-sortable="true"    data-formatter="hostnameFormatter">服务器地址</th>
+                 <th data-field="logsrc_path" data-sortable="true"   data-formatter="logsrcpathFormatter" >日志源地址 </th>
+                 <th data-field="logsrc_file" data-sortable="true"  data-formatter="logsrcfileFormatter" >日志文件名称</th>
                  <th data-field="status"   data-formatter="statusFormatter"  data-sortable="true" >监控状态</th>
                  <th data-field="update_time" data-sortable="true" >更新时间</th>
                  <th data-field="creator" data-sortable="true" >创建人</th>

@@ -15,13 +15,100 @@
 	  				order: p.order
 	  			}
 	  		}
-	  	});
+	  	});//  表格end
 	  	
 
-	  	
     } );
   
   
+  // 日志源名称显示   
+ function logsrcnameFormatter(value, row, index) {
+//	  console.log(value);
+//	  console.log(row);
+//	  console.log(index);
+	//  console.log(row.id);
+	  
+	  if(row.id==undefined){
+		return "-";	  
+	  }
+	     var maxwidth = 10; 
+	     value_show = value;
+	     if (value.length > maxwidth) {
+	    	 value_show = value.substring(0, maxwidth) + '...'
+	     }
+	  return  '<a class="like" title=' + value +' href="/logsrc/' + row.id + '?proj=' + pid + '" >' + value_show + '</a>';
+ }
+ 
+ // 服务器地址显示：限制长度截断+hover显示所有文字
+ function hostnameFormatter(value, row, index){
+     var maxwidth = 20; 
+     value_show = value;
+     if (value.length > maxwidth) {
+    	 value_show = value.substring(0, maxwidth) + '...'
+     }
+	  return' <a class="table_text_limit" title='+value+'>'+value_show+'</a>';
+ }
+ 
+ // 日志源地址显示：限制长度截断+hover显示所有文字
+ function logsrcpathFormatter(value, row, index){
+     var maxwidth = 30; 
+     value_show = value;
+     if (value.length > maxwidth) {
+    	 value_show = value.substring(0, maxwidth) + '...'
+     }
+	  return' <a class="table_text_limit" title='+value+'>'+value_show+'</a>';
+ }
+ 
+ function logsrcfileFormatter(value, row, index){
+     var maxwidth = 20; 
+     value_show = value;
+     if (value.length > maxwidth) {
+    	 value_show = value.substring(0, maxwidth) + '...'
+     }
+	  return' <a class="table_text_limit" title='+value+'>'+value_show+'</a>';
+ }
+ 
+ function statusFormatter(value, row, index){
+	  if(row.id==undefined){
+		return "-";	  
+	  }
+	  
+	  if (value==0){
+		  return '未开始'
+	  }
+	  else if(value == 1){
+		  return '<font color="red">监控中</red>'
+	  }
+	  else if(value == 2){
+		  return '监控结束'
+	  }	  
+	  else{
+		  return '其他'
+	  }
+ }
+
+ function operateFormatter(value, row, index){
+
+	  if(row.id==undefined){
+			return "-";	  
+		  }
+	  else{
+		  return [
+		          // 调试功能
+	//	            '<a class="debug" href="javascript:void(0)" title="调试" disabled>',
+	//	            '<i class="glyphicon glyphicon-cog"></i>',
+	//	            '</a>  ',
+		          	// 复制日志源功能
+//		            '<a class="copy" href="javascript:void(0)"  title="复制"  onclick=logsrc_copy('+row.id+')>',
+//		            '<i class="glyphicon glyphicon-file"></i>',
+//		            '</a>  ',	            
+		            // 编辑日志源功能
+		           '<a class="edit" href="' + row.id + '/edit?proj=' + pid + '" >',
+		            '<i class="glyphicon glyphicon-edit"></i>',
+		            '</a>'
+		        ].join('');
+	  }
+ }
 
 	
   $('#logtable').on('check.bs.table uncheck.bs.table ' +
@@ -32,6 +119,8 @@
         // push or splice the selections if you want to save all data selections
     });
   
+  
+  
   // 获取表格选择的所有ids
   function getIdSelections() {
       return $.map($('#logtable').bootstrapTable('getSelections'), function (row) {
@@ -41,8 +130,8 @@
   
   
 
-  // 删除日志源+二次确认
-	function delete_logsrc(){
+  // 表格：删除日志源+二次确认 (可能有多个)
+	function delete_logsrc_table(){
 	  	  var ids = getIdSelections(); //待删除id数组
 		  var ids_str = ids.toString();  //待删除id字符串
 		  // 用户没有勾选内容
@@ -55,7 +144,15 @@
 				 $('#proj').val(pid);  //post请求参数 projj
 				$('#destroy_logsrc_modal').modal('show');  //弹窗modal
 		  }
-
+	}
+	
+	// 详情：删除日志源 + 二次确认 ( 单个删除)
+	function delete_logsrc_single(id, proj){
+		console.log(id);
+		console.log(pid);
+		 $('#ids').val(id);  //post请求参数 ids
+		 $('#proj').val(proj);  //post请求参数 projj
+		$('#destroy_logsrc_single_modal').modal('show');  //弹窗modal		
 	}
 
 	
@@ -130,65 +227,7 @@
       
       
       
-      
-  function logsrcnameFormatter(value, row, index) {
-//	  console.log(value);
-//	  console.log(row);
-//	  console.log(index);
-	//  console.log(row.id);
-	  
-	  if(row.id==undefined){
-		return "-";	  
-	  }
-	  
-	  return  '<a class="like" href="/logsrc/' + row.id + '?proj=' + pid + '" >' + value + '</a>';
-		  
-	  //return   '<a class="like" href="1?‘’proj='+pid + '" >' + value + '</a>';
-  }
-  
-  function statusFormatter(value, row, index){
-	  
-	  if(row.id==undefined){
-		return "-";	  
-	  }
-	  
-	  
-	  if (value==0){
-		  return '未开始'
-	  }
-	  else if(value == 1){
-		  return '<font color="red">监控中</red>'
-	  }
-	  else if(value == 2){
-		  return '监控结束'
-	  }	  
-	  else{
-		  return '其他'
-	  }
-  }
 
-  function operateFormatter(value, row, index){
-
-	  if(row.id==undefined){
-			return "-";	  
-		  }
-	  else{
-		  return [
-		          // 调试功能
-	//	            '<a class="debug" href="javascript:void(0)" title="调试" disabled>',
-	//	            '<i class="glyphicon glyphicon-cog"></i>',
-	//	            '</a>  ',
-		          	// 复制日志源功能
-//		            '<a class="copy" href="javascript:void(0)"  title="复制"  onclick=logsrc_copy('+row.id+')>',
-//		            '<i class="glyphicon glyphicon-file"></i>',
-//		            '</a>  ',	            
-		            // 编辑日志源功能
-		           '<a class="edit" href="' + row.id + '/edit?proj=' + pid + '" >',
-		            '<i class="glyphicon glyphicon-edit"></i>',
-		            '</a>'
-		        ].join('');
-	  }
-  }
 
   
 //  // 复制日志源

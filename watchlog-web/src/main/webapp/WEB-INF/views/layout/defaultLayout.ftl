@@ -25,6 +25,7 @@
 	 <script src="/res/js/self/layout.js" ></script>
 	 	 
 	 <#if controller == "WlogManage">
+	  	<link rel="stylesheet" href="/res/css/self/logsrc_manage.css" />
 		 <script src="/res/js/self/logsrc_table.js"></script>
 		  <script src="/res/js/self/logsrc_crud.js"></script>
 	 </#if>
