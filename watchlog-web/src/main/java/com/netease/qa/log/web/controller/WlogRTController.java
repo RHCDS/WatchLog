@@ -19,12 +19,12 @@ public class WlogRTController {
 	@RequestMapping(value = "logsrc/rt_analyse", method = RequestMethod.GET)
 	public String rt_analyse( 
 			@RequestParam(value = "proj", required = false) String projectid,
-			@RequestParam(value = "log_id", required = false) String logsrcid,
+			@RequestParam(value = "log_id", required = false, defaultValue = "-1") String logsrcid,
 			Model model) {
 		// 项目id
-		//System.out.println("project id: " + projectid);
+		System.out.println("project id: " + projectid);
 		// 日志源id   (如果参数中没有带log_id，默认取项目的第一个日志源详情)
-		// System.out.println("project id: " + projectid);
+		System.out.println("log id: " + logsrcid);
 		
 		// 1. add conmmon属性
 		model.addAttribute("controller", "WlogRT" );		
@@ -40,7 +40,7 @@ public class WlogRTController {
 		System.out.println(logs);
 		
 		// 3. add 表格内容  (如果参数中没有带log_id，默认取项目的第一个日志源详情)
-		// 表格row-1 col-2   ：  [{"count":3,"type":"error"},{"count":6,"type":"debug"}]
+		
 		JSONObject error_rc_d1 = new JSONObject();
 		error_rc_d1.put("type", "error");		
 		error_rc_d1.put("count", 3);		
@@ -49,47 +49,30 @@ public class WlogRTController {
 		error_rc_d2.put("count", 6);			
 		JSONArray error_rc_1 = new JSONArray();
 		error_rc_1.add(error_rc_d1);
-		error_rc_1.add(error_rc_d2);
+		error_rc_1.add(error_rc_d2);		
+		JSONObject record = new JSONObject();		
+		record.put("logtc", error_rc_1);
+		record.put("datetime",  "2015-06-01 18:00:00");
+		record.put("totalcount",  9);
 		
-		// 表格row-1    ["2015-06-01",[{"count":3,"type":"error"},{"count":6,"type":"debug"}],14]
-		JSONArray d1 = new JSONArray();
-		// 表格row-1 col-1
-		d1.add("2015-06-01");	
-		// 表格row-1 col-2
-		d1.add(error_rc_1);
-		// 表格row-1 col-3
-		d1.add(14);
 		
-		/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		// 表格row-2 col-2   ：  [{"count":3,"type":"error"},{"count":6,"type":"debug"}]
-		JSONObject error_rc_d3 = new JSONObject();
-		error_rc_d3.put("type", "info");		
-		error_rc_d3.put("count", 4);		
-		JSONObject error_rc_d4 = new JSONObject();
-		error_rc_d4.put("type", "warn");		
-		error_rc_d4.put("count", 1);			
-		JSONArray error_rc_2 = new JSONArray();
-		error_rc_2.add(error_rc_d3);
-		error_rc_2.add(error_rc_d4);
+		JSONArray records = new JSONArray();
+		records.add(record);
 		
-		// 表格row-1    ["2015-06-01",[{"count":3,"type":"error"},{"count":6,"type":"debug"}],14]
-		JSONArray d2 = new JSONArray();
-		// 表格row-1 col-1
-		d2.add("2015-06-08");	
-		// 表格row-1 col-2
-		d2.add(error_rc_2);
-		// 表格row-1 col-3
-		d2.add(10);		
-		
-		// 表格所有行 
-		// 例子：[["2015-06-01",[{"count":3,"type":"error"},{"count":6,"type":"debug"}],14],["2015-06-08",[{"count":4,"type":"info"},{"count":1,"type":"warn"}],10]]
-		JSONArray rt_data = new JSONArray();
-		rt_data.add(d1);
-		rt_data.add(d2);
-		model.addAttribute("rt_table", rt_data);
+		model.addAttribute("rt_table", records);
 		System.out.println("rt_table");
-		System.out.println(rt_data);
+		System.out.println(records);		
+
+		
+		
+		
+
+		
+
 			
+
+		
+		
 		
 		
 		// 4. add 日志源详情   (如果参数中没有带log_id，默认取项目的第一个日志源详情)

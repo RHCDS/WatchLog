@@ -38,14 +38,12 @@
 				<!-- 左侧： 实时表格-->
 				<div class="col-md-6"    style="border:solid 1px yellow">
 				<#list rt_table as data>
-							${data[0]}</br>
-							
-							<#list data[1] as rt>
-									${rt['type']}	
-									${rt['count']}</br>
-							</#list>	
-							
-							${data[2]}</br>
+						${data['datetime']}<br>
+						${data['totalcount']}<br>
+						<#list data['logtc'] as x>
+							${x['type']}
+							${x['count']}<br>
+						 </#list>	
 				</#list>					
 
 					
