@@ -30,6 +30,9 @@
 		  <script src="/res/js/self/logsrc_crud.js"></script>
 	 </#if>
 	 
+	 <#if controller == "WlogRT">
+	  	<link rel="stylesheet" href="/res/css/self/logsrc_rt.css" />
+	 </#if>	 
 	 
 	 
 
@@ -40,7 +43,7 @@
 		<#include "header.ftl"/>
 	     <#include "menu.ftl"/>
 	     <#if message?exists>	 <#include "notice.ftl"/> </#if> 	
-	     <div class="container">  	<#nested>     	</div>
+	     	<#nested>     	
     </div>
     <#include "footer.ftl"/>
   </body>
