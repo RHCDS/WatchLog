@@ -19,7 +19,11 @@
 <form  id="logsrc_new_form" class="form-horizontal" role="form"   accept-charset="UTF-8" action="/logsrc/create" data-remote="true" method="post"  onsubmit="return check_create_logsrc()">
 
 		<div class="form-group"  >
-				<label for="logsrc_name" class="col-sm-2 control-label"  style="text-align: left; font-size: medium; color: gray;">日志源名称</label>
+				<label for="logsrc_name" class="col-sm-2 control-label"  style="text-align: left; font-size: medium; color: gray;">日志源名称 
+				<a title="不能以下划线_开始和结尾;  
+只能包含英文字母，数字，汉字;  
+长度最短为1,最长为20;"  style="color: gray;"><span class="glyphicon glyphicon-question-sign"  aria-hidden="true"><a>
+				</label>				
 		      <div class="col-sm-6">
 		         <input type="text" class="form-control"  style="height: 30px;border-radius: 0;"   id="logsrc_name"      name="logsrc_name"   placeholder="请输入名字">
 		         <div id="warn_new_logsrc_name"></div>
@@ -29,7 +33,6 @@
 		<div class="row" style=" border-bottom: solid 1px #eee; margin-bottom: 10px;">
 					<label  class="col-sm-2 control-label"  style="text-align: left; font-size: medium; color: gray; ">日志源位置</label>
 		</div>
-		
 		
 					<div class="form-group" >
 							<label for="host_name" class="col-sm-2 control-label"  style="text-align: center;color: gray;font-weight: 100;">服务器地址</label>
