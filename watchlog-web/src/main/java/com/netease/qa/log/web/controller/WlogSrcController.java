@@ -170,6 +170,9 @@ public class WlogSrcController {
 			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
 			return ret_new;
 		}
+		
+		System.out.println("logsourceName:" + logsourceName);
+		
 		if (!MathUtil.isName(logsourceName)) {
 			model.addFlashAttribute("message", ConstCN.INVALID_NAME);
 			return ret_new;

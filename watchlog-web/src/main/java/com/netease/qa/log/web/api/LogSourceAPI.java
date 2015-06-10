@@ -68,7 +68,7 @@ public class LogSourceAPI {
 			ConflictRequestException cr = new ConflictRequestException(Const.LOG_NAME_ALREADY_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleConflictRequestException(cr), HttpStatus.CONFLICT);
 		}
-		
+
 		if (logsourceService.checkLogSourceExist(hostname, path, filepattern)) {
 			ConflictRequestException cr = new ConflictRequestException(Const.LOG_PATH_ALREADY_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleConflictRequestException(cr), HttpStatus.CONFLICT);
@@ -124,16 +124,16 @@ public class LogSourceAPI {
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
 		}
 
-		if(!logSource.getLogSourceName().trim().equals(logsourcename)){
-			if(logsourceService.checkLogSourceExist(logsourcename)){
+		if (!logSource.getLogSourceName().trim().equals(logsourcename)) {
+			if (logsourceService.checkLogSourceExist(logsourcename)) {
 				ConflictRequestException cr = new ConflictRequestException(Const.LOG_NAME_ALREADY_EXSIT);
 				return new ResponseEntity<JSONObject>(apiException.handleConflictRequestException(cr),
 						HttpStatus.CONFLICT);
 			}
 		}
 		// 日志源改变了,才去判断是不是其他日志源
-		if (!(logSource.getHostname().trim().equals(hostname) && logSource.getPath().trim().equals(path)
-				&& logSource.getFilePattern().trim().equals(filepattern))) {
+		if (!(logSource.getHostname().trim().equals(hostname) && logSource.getPath().trim().equals(path) && logSource
+				.getFilePattern().trim().equals(filepattern))) {
 			if (logsourceService.checkLogSourceExist(hostname, path, filepattern)) {
 				ConflictRequestException cr = new ConflictRequestException(Const.LOG_PATH_ALREADY_EXSIT);
 				return new ResponseEntity<JSONObject>(apiException.handleConflictRequestException(cr),
@@ -205,7 +205,7 @@ public class LogSourceAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		if (!status.equals("0") && !status.equals("1")) {
+		if (!status.equals("0") && !status.equals("1") && !status.equals("2")) {
 			InvalidRequestException ex = new InvalidRequestException(Const.STATUS_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}

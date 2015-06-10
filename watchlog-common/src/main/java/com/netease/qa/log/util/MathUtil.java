@@ -21,8 +21,8 @@ public class MathUtil {
 	}
 	
 	public static final boolean isName(String str){
-		//只含有汉字、数字、字母、下划线,并且不能以下划线开头和结尾
-		boolean isName = str.matches("^(?!_)(?!.*?_$)[0-9a-zA-Z_\u4e00-\u9fa5]+$");
+		//只含有汉字、数字、字母、下划线,并且不能以下划线开头和结尾,长度1-20之间
+		boolean isName = str.matches("^(?!_)(?!.*?_$)[0-9a-zA-Z_\u4e00-\u9fa5]{1,20}$");
 		return isName;
 	}
 
