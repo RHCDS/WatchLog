@@ -48,22 +48,37 @@ public class WlogRTController {
 		error_rc_d2.put("type", "debug");		
 		error_rc_d2.put("count", 6);			
 		JSONArray error_rc_1 = new JSONArray();
-		error_rc_1.add(error_rc_d1);
-		error_rc_1.add(error_rc_d2);		
-		JSONObject record = new JSONObject();		
-		record.put("logtc", error_rc_1);
-		record.put("datetime",  "2015-06-01 18:00:00");
-		record.put("totalcount",  9);
+		//error_rc_1.add(error_rc_d1);
+		//error_rc_1.add(error_rc_d2);		
+		JSONObject record1 = new JSONObject();		
+		record1.put("logtc", error_rc_1);
+		record1.put("datetime",  "2015-06-01 18:00:00");
+		record1.put("totalcount",  9);
+		
+		JSONObject error_rc_d3 = new JSONObject();
+		error_rc_d3.put("type", "info");		
+		error_rc_d3.put("count", 4);		
+		JSONObject error_rc_d4 = new JSONObject();
+		error_rc_d4.put("type", "org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer postProcessTemplateLoaders");		
+		error_rc_d4.put("count", 3);			
+		JSONArray error_rc_2 = new JSONArray();
+		error_rc_2.add(error_rc_d3);
+		error_rc_2.add(error_rc_d4);		
+		JSONObject record2 = new JSONObject();		
+		record2.put("logtc", error_rc_2);
+		record2.put("datetime",  "2025-06-02 28:00:00");
+		record2.put("totalcount",  0);				
+
 		
 		
 		JSONArray records = new JSONArray();
-		records.add(record);
+		records.add(record1);
+		records.add(record2);
 		
 		model.addAttribute("rt_table", records);
 		System.out.println("rt_table");
 		System.out.println(records);		
 
-		
 		
 		
 
@@ -81,7 +96,8 @@ public class WlogRTController {
 		model.addAttribute("logsrc_path", "/home/qatest/");
 		model.addAttribute("logsrc_file", "catalina.out.2015.22.2");
 		model.addAttribute("start_regex", "\\d{4}\\-\\d{2}\\-\\d{2");
-		model.addAttribute("filter_keyword", "aaa_AND_bbb_AND_ccc");
+		//model.addAttribute("filter_keyword", "11111111111111111111111111111111111111111111111111111111111111111111111111111111111aaa_AND_bbb_AND_ccc");
+		model.addAttribute("filter_keyword", "aaa_AND_bbb_AND_ccc");		
 		model.addAttribute("reg_regex", "111_OR_222_OR_333");
 		
 		// 5 add失败信息，如果成功，去掉status和message

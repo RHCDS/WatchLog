@@ -109,7 +109,7 @@
 <!--</form>	 -->
     
 <#else>
-   <div class="container"> 请选择项目，亲:)</div>
+     <div class="container  alert alert-warning"> 请先选择右上角项目</div>
 </#if>
     
 
