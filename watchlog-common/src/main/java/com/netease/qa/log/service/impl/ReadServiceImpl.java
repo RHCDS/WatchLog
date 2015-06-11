@@ -61,7 +61,8 @@ public class ReadServiceImpl implements ReadService {
 		record.put("totalcount", first.getExceptionCount());
 
 		JSONObject detail = new JSONObject();
-		detail.put(this.exceptionDao.findByExceptionId(first.getExceptionId()).getExceptionType(), first.getExceptionCount());
+		detail.put("exceptionType", this.exceptionDao.findByExceptionId(first.getExceptionId()).getExceptionType());
+		detail.put("count", first.getExceptionCount());
 		details.add(detail);
 		for (int i = 1; i < exceptionDatas.size(); i++) {
 			ExceptionData next = exceptionDatas.get(i);
@@ -69,8 +70,8 @@ public class ReadServiceImpl implements ReadService {
 			if (MathUtil.parse2Str(next.getSampleTime()).equals(record.getString("time"))) {
 				record.put("totalcount", record.getInteger("totalcount") + next.getExceptionCount());
 				detail = new JSONObject();
-				detail.put(this.exceptionDao.findByExceptionId(next.getExceptionId()).getExceptionType(),
-						next.getExceptionCount());
+				detail.put("exceptionType", this.exceptionDao.findByExceptionId(next.getExceptionId()).getExceptionType());
+				detail.put("count",next.getExceptionCount());
 				details.add(detail);
 			} else {
 				record.put("detail", details);
@@ -80,8 +81,8 @@ public class ReadServiceImpl implements ReadService {
 				record.put("time", MathUtil.parse2Str(next.getSampleTime()));
 				record.put("totalcount", next.getExceptionCount());
 				detail = new JSONObject();
-				detail.put(this.exceptionDao.findByExceptionId(next.getExceptionId()).getExceptionType(),
-						next.getExceptionCount());
+				detail.put("exceptionType", this.exceptionDao.findByExceptionId(next.getExceptionId()).getExceptionType());
+				detail.put("count",next.getExceptionCount());
 				details.add(detail);
 			}
 		}

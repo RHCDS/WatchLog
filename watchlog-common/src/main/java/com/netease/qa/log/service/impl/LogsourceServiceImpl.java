@@ -1,5 +1,6 @@
 package com.netease.qa.log.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -233,6 +234,16 @@ public class LogsourceServiceImpl implements LogSourceService{
 			}
 		}
 		return 0;
+	}
+
+
+	@Override
+	public ArrayList<LogSource> selectAllByProjectId(int projectId) {
+		List<LogSource> logSources =  logSourceDao.selectAllByProjectId(projectId);
+		ArrayList<LogSource> logsources = new ArrayList<LogSource>();
+		for(int i=0; i<logSources.size(); i++)
+			logsources.add(logSources.get(i));
+		return logsources;
 	}
 
 

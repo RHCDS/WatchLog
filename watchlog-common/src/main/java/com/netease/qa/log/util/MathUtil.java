@@ -36,6 +36,11 @@ public class MathUtil {
 		SimpleDateFormat sdf = new SimpleDateFormat(Const.TIME_FORMAT);
 		return sdf.format(new Date(time * 1000));
 	}
+	
+	public static String parse2Str(Date time){
+		SimpleDateFormat sdf = new SimpleDateFormat(Const.TIME_FORMAT);
+		return sdf.format(time);
+	}
 
 	public static String parse2Str(Timestamp time) {
 		SimpleDateFormat sdf = new SimpleDateFormat(Const.TIME_FORMAT);
