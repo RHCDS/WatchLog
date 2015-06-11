@@ -19,6 +19,12 @@ public class MathUtil {
 		boolean isEng = str.matches("^(?!_)(?!.*?_$)[0-9a-zA-Z_]+$");
 		return isEng;
 	}
+	
+	public static final boolean isName(String str){
+		//只含有汉字、数字、字母、下划线,并且不能以下划线开头和结尾
+		boolean isName = str.matches("^(?!_)(?!.*?_$)[0-9a-zA-Z_\u4e00-\u9fa5]+$");
+		return isName;
+	}
 
 	public static Long parse2Long(String time) throws ParseException {
 		SimpleDateFormat format = new SimpleDateFormat(Const.TIME_FORMAT);
@@ -83,8 +89,12 @@ public class MathUtil {
 			newStrs.add(strs[i].trim());
 		}
 		if(newStrs.size() == 0)
+		{
+			if(con.equals(Const.FILITER_TYPE))
+				return " ";
+			else
 			return "NONE";
-		
+		}
 		StringBuffer sb = new StringBuffer();
 		if (con.trim().toLowerCase().equals("and")) {
 			for (int i = 0; i < newStrs.size() - 1; i++) {

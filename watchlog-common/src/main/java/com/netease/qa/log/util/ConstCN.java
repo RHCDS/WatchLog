@@ -23,7 +23,7 @@ public class ConstCN {
     public static final String PROJECT_NOT_EXSIT = "该项目不存在";
     public static final String INNER_ERROR = "数据库内部错误";
     public static final String INVALID_TIME_FORMAT = "invalid time format, please use: " + TIME_FORMAT;
-    public static final String INVALID_NAME ="invalid name format";
+    public static final String INVALID_NAME ="名称非法";
     public static final String NULL_PARAM = "缺少参数";
     
     public static final String RESPONSE_SUCCESSFUL = "响应成功";

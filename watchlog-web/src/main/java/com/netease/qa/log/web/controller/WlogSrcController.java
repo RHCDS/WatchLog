@@ -23,6 +23,7 @@ import com.netease.qa.log.exception.NullParamException;
 import com.netease.qa.log.meta.LogSource;
 import com.netease.qa.log.service.LogSourceService;
 import com.netease.qa.log.service.ProjectService;
+import com.netease.qa.log.util.Const;
 import com.netease.qa.log.util.ConstCN;
 import com.netease.qa.log.util.MathUtil;
 
@@ -75,22 +76,36 @@ public class WlogSrcController {
 	}
 
 	@RequestMapping(value = "/destroy", method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> deleteLogSources(@RequestParam(value = "ids") String ids, Model model) {
+	public String deleteLogSources(@RequestParam(value = "ids") String ids,  @RequestParam(value = "proj") String projectid,RedirectAttributes model) {
+		
+		// 成功和失败的重定向url
+		String ret = "redirect:/logsrc/manage?proj=" + projectid;
+		
 		if (MathUtil.isEmpty(ids)) {
-			NullParamException ne = new NullParamException(ConstCN.NULL_PARAM);
-			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+			//NullParamException ne = new NullParamException(ConstCN.NULL_PARAM);
+			//return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+			model.addFlashAttribute("status", -1);
+			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
+			 return ret;
 		}
 		// 选中删除，所以日志必存在，不需要进行日志检查
 		int[] logsource_ids = MathUtil.parse2IntArray(ids);
 		int result = logSourceService.deleteLogSources(logsource_ids);
 		if (result == 0) {
-			InvalidRequestException ex = new InvalidRequestException(ConstCN.INNER_ERROR);
-			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex),
-					HttpStatus.INTERNAL_SERVER_ERROR);
+			//InvalidRequestException ex = new InvalidRequestException(ConstCN.INNER_ERROR);
+			//return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.INTERNAL_SERVER_ERROR);
+			model.addFlashAttribute("status", -1);
+			model.addFlashAttribute("message", ConstCN.INNER_ERROR);			
+			 return ret;
 		}
-		JSONObject resultJson = new JSONObject();
-		resultJson.put("message", ConstCN.RESPONSE_SUCCESSFUL);
-		return new ResponseEntity<JSONObject>(resultJson, HttpStatus.OK);
+		//JSONObject resultJson = new JSONObject();
+		//resultJson.put("message", ConstCN.RESPONSE_SUCCESSFUL);
+		//return new ResponseEntity<JSONObject>(resultJson, HttpStatus.OK);
+		
+		
+		model.addFlashAttribute("status", 0);
+		model.addFlashAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);		 
+		 return ret;
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -99,6 +114,7 @@ public class WlogSrcController {
 		if (logSource == null) {
 			model.addAttribute("controller", "WlogManage");
 			model.addAttribute("action", "show");
+			model.addAttribute("id", 0);
 			model.addAttribute("logsrc_name", "NONE");
 			model.addAttribute("host_name", "NONE");
 			model.addAttribute("logsrc_path", "NONE");
@@ -109,6 +125,7 @@ public class WlogSrcController {
 		} else {
 			model.addAttribute("controller", "WlogManage");
 			model.addAttribute("action", "show");
+			model.addAttribute("id", logSource.getLogSourceId());
 			model.addAttribute("logsrc_name", logSource.getLogSourceName());
 			model.addAttribute("host_name", logSource.getHostname());
 			model.addAttribute("logsrc_path", logSource.getPath());
@@ -144,26 +161,36 @@ public class WlogSrcController {
 		String ret_new = "redirect:/logsrc/new?proj=" + projectid;
 		if (MathUtil.isEmpty(logsourceName, projectid, hostname, path, filepattern, linestart, filter_keyword_con,
 				reg_regex_con, creatorname)) {
+			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
 			return ret_new;
 		}
 		if (filterkeywords == null || typeregexs == null) {
+			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
 			return ret_new;
 		}
+		if (!MathUtil.isName(logsourceName)) {
+			model.addFlashAttribute("message", ConstCN.INVALID_NAME);
+			return ret_new;
+		}
 		if (!MathUtil.isInteger(projectid)) {
+			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.ID_MUST_BE_NUM);
 			return ret_new;
 		}
 		if (!projectService.checkProjectExsit(Integer.parseInt(projectid))) {
+			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.PROJECT_NOT_EXSIT);
 			return ret_new;
 		}
 		if (logSourceService.checkLogSourceExist(logsourceName)) {
+			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.LOG_NAME_ALREADY_EXSIT);
 			return ret_new;
 		}
 		if (logSourceService.checkLogSourceExist(hostname, path, filepattern)) {
+			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.LOG_PATH_ALREADY_EXSIT);
 			return ret_new;
 		}
@@ -176,13 +203,15 @@ public class WlogSrcController {
 		logSource.setFilePattern(filepattern);
 		logSource.setLineStartRegex(linestart);
 		logSource.setLineFilterKeyword(MathUtil.parse2Str(filterkeywords, filter_keyword_con));
-		logSource.setLineTypeRegex(MathUtil.parse2Str(typeregexs, "OR"));
+		logSource.setLineTypeRegex(MathUtil.parse2Str(typeregexs, Const.FILITER_TYPE));
 		logSource.setLogSourceCreatorName(creatorname);
 		int result = logSourceService.createLogSource(logSource);
 		if (result == 0) {
+			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.INNER_ERROR);
 			return ret_new;
 		} else {
+			model.addFlashAttribute("status", 0);
 			model.addFlashAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);
 			return ret;
 		}
@@ -279,40 +308,51 @@ public class WlogSrcController {
 			@RequestParam(value = "reg_regex_con", required = false) String reg_regex_con,
 			@RequestParam(value = "logsourcecreatorname", required = false, defaultValue = "none") String creatorname,
 			RedirectAttributes model) {
-		
+
 		String ret_succ = "redirect:/logsrc/manage?proj=" + projectid;
+
 		String ret_fail = "redirect:/logsrc/" + logsourceid + "/edit?proj=" + projectid;
 		if (MathUtil.isEmpty(logsourceid, logsourceName, projectid, hostname, path, filepattern, linestart, filter_keyword_con,
 				reg_regex_con, creatorname)) {
+			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
 			return ret_fail;
 		}
 		if (filterkeywords == null || typeregexs == null) {
+			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
 			return ret_fail;
 		}
+		if (!MathUtil.isName(logsourceName)) {
+			model.addFlashAttribute("message", ConstCN.INVALID_NAME);
+			return ret_fail;
+		}
 		if (!MathUtil.isInteger(projectid) || !MathUtil.isInteger(logsourceid)) {
+			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.ID_MUST_BE_NUM);
 			return ret_fail;
 		}
 		if (!projectService.checkProjectExsit(Integer.parseInt(projectid))) {
+			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.PROJECT_NOT_EXSIT);
 			return ret_fail;
 		}
-		//日志源名称改了，才能check
+		// 日志源名称改了，才能check
 		LogSource logsource = logSourceService.getByLogSourceId(Integer.parseInt(logsourceid));
-		if(!logsourceName.trim().equals(logsource.getLogSourceName())){
-			if(logSourceService.checkLogSourceExist(logsourceName)){
+		if (!logsourceName.trim().equals(logsource.getLogSourceName())) {
+			if (logSourceService.checkLogSourceExist(logsourceName)) {
+				model.addFlashAttribute("status", -1);
 				model.addFlashAttribute("message", ConstCN.LOG_NAME_ALREADY_EXSIT);
 				return ret_fail;
-			}	
+			}
 		}
-		//path修改
-		if(!(hostname.trim().equals(logsource.getHostname()) && path.trim().equals(logsource.getPath()) && filepattern.trim().equals(logsource.getFilePattern()))){
-		if (logSourceService.checkLogSourceExist(hostname, path, filepattern)) {
-			model.addFlashAttribute("message", ConstCN.LOG_PATH_ALREADY_EXSIT);
-			return ret_fail;
-		}
+		// path修改
+		if (!(hostname.trim().equals(logsource.getHostname()) && path.trim().equals(logsource.getPath()) && filepattern
+				.trim().equals(logsource.getFilePattern()))) {
+			if (logSourceService.checkLogSourceExist(hostname, path, filepattern)) {
+				model.addFlashAttribute("message", ConstCN.LOG_PATH_ALREADY_EXSIT);
+				return ret_fail;
+			}
 		}
 
 		LogSource logSource =  logsource;
@@ -323,14 +363,15 @@ public class WlogSrcController {
 		logSource.setFilePattern(filepattern);
 		logSource.setLineStartRegex(linestart);	
 		logSource.setLineFilterKeyword(MathUtil.parse2Str(filterkeywords, filter_keyword_con));
-		
-		logSource.setLineTypeRegex(MathUtil.parse2Str(typeregexs, "OR"));
+		logSource.setLineTypeRegex(MathUtil.parse2Str(typeregexs, Const.FILITER_TYPE));
 		logSource.setLogSourceCreatorName(creatorname);
 		int result = logSourceService.updateLogSource(logSource);
 		if (result == 0) {
+			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.INNER_ERROR);
 			return ret_fail;
 		} else {
+			model.addFlashAttribute("status", 0);
 			model.addFlashAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);
 			return ret_succ;
 		}

@@ -1,0 +1,10 @@
+
+.table_text_limit{
+	color: black;
+}
+
+.table_text_limit:hover{
+	text-decoration: none;
+	cursor: pointer;
+	color: black;
+}
