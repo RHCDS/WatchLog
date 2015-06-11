@@ -78,7 +78,7 @@ public class LogAnalyser implements IBasicBolt {
 			
 			
 			// 记录异常类型和数量
-			MonitorDataService.putExceptionData(logSourceId, exceptionId);
+			MonitorDataService.putExceptionData(logSourceId, exceptionId, dsTime / 1000);
 		}
 	
 	}

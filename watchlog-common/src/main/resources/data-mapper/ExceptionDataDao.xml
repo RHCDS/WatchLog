@@ -10,6 +10,13 @@
 		exception_count as exceptionCount
 	</sql>
 	
+	<sql id="allColumn_sum">
+        exception_data_id as exceptionDataId,
+        log_source_id as logSourceId,
+        sample_time as sampleTime,
+        exception_id as exceptionId,
+        sum(exception_count) as exceptionCount
+    </sql>
     
 	<insert id="insert" parameterType="com.netease.qa.log.meta.ExceptionData"
 		useGeneratedKeys="true" keyProperty="exceptionDataId">
@@ -27,12 +34,13 @@
 		<include refid="allColumn" />
 		from exception_data where exception_data_id=#{exceptionDataId}
 	</select>
-    
+	
     <select id="findByLogSourceIdAndTime" resultType="com.netease.qa.log.meta.ExceptionData">
         select
-        <include refid="allColumn" /> 
+        <include refid="allColumn_sum" /> 
         from exception_data where log_source_id=${param1} and sample_time 
-        between ${param2} and ${param3} order by ${param4} limit ${param5} offset ${param6} 
+        between ${param2} and ${param3} group by log_source_id, sample_time, exception_id  
+        order by ${param4} desc limit ${param5} offset ${param6} 
     </select>
     
     <select id="findByExceptionId" parameterType="java.lang.Integer"

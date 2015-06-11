@@ -1,30 +1,11 @@
 <#import "../layout/defaultLayout.ftl" as layout>
 <@layout.myLayout>
-  <!-- div>
-          controller:  ${controller} </br>
-          action: ${action}</br>
-		
-		<#list RequestParameters?keys as key>
-		    ${key} = ${RequestParameters[key]}</br>
-		</#list>    
-		
-		logs[0]: ${logs[0]}   </br>
-		
-		logsrc_name: ${logsrc_name} </br>
-		host_name : ${host_name} </br>
-		logsrc_file : ${logsrc_file}  </br>
-		start_regex: ${start_regex}  </br>
-		filter_keyword: ${filter_keyword}  </br>
-		reg_regex: ${reg_regex}  </br>
-</div -->
 
-				
-  <#if RequestParameters.proj?exists >
+  <#if RequestParameters.proj?exists  && logs?has_content >
   	<#assign pid = RequestParameters.proj>	
-		  
 				<!-- 左侧： 日志源名称列表-->
-				<div class="col-md-2"  style="border:solid 1px red;padding-left:0px; padding-right:0px;">
-						<div class=" btn-group-vertical  col-md-12 " role="group" >
+				<div class="col-sm-2"  style="/*border:solid 1px red;*/padding-left:0px; padding-right:0px;">
+						<div class=" btn-group-vertical  col-sm-12 " role="group" >
 								<#list logs as log_str>
 										<#assign lg_arr=log_str?split("#")>
 										<#if lg_arr[0]?exists><#assign id=lg_arr[0]>
@@ -32,31 +13,158 @@
 								  		</#if>
 								</#list>
 						</div>
-				</div><!--  col-md-2 -->
+				</div><!--  col-sm-2 -->
 				
 				
-				<!-- 左侧： 实时表格-->
-				<div class="col-md-6"    style="border:solid 1px yellow">
-				<#list rt_table as data>
-						${data['datetime']}<br>
-						${data['totalcount']}<br>
-						<#list data['logtc'] as x>
-							${x['type']}
-							${x['count']}<br>
-						 </#list>	
-				</#list>					
-
+				<!-- 中间： 实时表格-->
+				<div class="col-sm-6"    style="/*border:solid 1px yellow*/">
+								<div  class="row">
+										<table  class="table table-bordered">
+											<tbody>
+														<tr>
+															<th class="col-sm-4">采样时间</th>
+															<th class="col-sm-6">Error type & count </th>
+															<th class="col-sm-2">Total  count</th>
+														</tr>		
+														<#list rt_table as data>
+															<tr>
+																<td class="col-sm-4">${data['datetime']}</td>
+																<td class="col-sm-6">
+																	<#if  data['logtc']?has_content>
+																			<#list data['logtc'] as x>
+																					<a title="${x['type']}"   href ="#" >${x['count']},</a>
+																			 </#list>
+																	 </#if>
+																 </td>																	
+																<td class="col-sm-2">${data['totalcount']}</td>
+															</tr>																 
+													</#list>																	
+											</tbody>
+										</table>
+								</div><!-- /row -->				
+				</div><!--  col-sm-6 -->
 					
-				</div><!--  col-md-6 -->
 					
-					
-				<!-- 左侧： 日志源详情-->
-				<div class="col-md-4"    style="border:solid 1px blue">
+				<!-- 右侧： 日志源详情-->
+				<div class="col-sm-4"    style="/*border:solid 1px blue; */ padding-left: 30px;">
+						<div class="row" style=" border-bottom: solid 1px #eee; margin-bottom:10px;">
+									<p style="font-size: 15px;font-weight: bold;">日志源位置</p>
+						</div>
+						
+							<div class="row"    style="height:25px;">
+								<div class="col-sm-4">
+									<p>服务器地址：</p>
+								</div>
+								<div class="col-sm-8"> 
+									 <p>${host_name}</p>
+								</div>			
+						</div>
+						
+							<div class="row"    style="height:25px;">
+								<div class="col-sm-4">
+									<p>日志文件路径：</p>
+								</div>
+								<div class="col-sm-8"> 
+									 <p>${logsrc_path}</p>
+								</div>			
+						</div>						
+						
+							<div class="row"    style="height:25px;">
+								<div class="col-sm-4">
+									<p>日志文件名：</p>
+								</div>
+								<div class="col-sm-8"> 
+									 <p>${logsrc_file}</p>
+								</div>			
+						</div>					
+						
+							<div class="row"    style="height:25px;">
+								<div class="col-sm-4">
+									<p>起始地址：</p>
+								</div>
+								<div class="col-sm-8"> 
+									 <p>${start_regex}</p>
+								</div>			
+						</div>						
+						
+				<#if  filter_keyword?contains("_AND_")>
+						<#assign filter_keyword_flag = "AND">
+						<#assign filter_keyword_arr=filter_keyword?split("_AND_")>
+				<#elseif  filter_keyword?contains("_OR_")>				
+						<#assign filter_keyword_flag = "OR">
+						<#assign filter_keyword_arr=filter_keyword?split("_OR_")>
+				<#else>
+						<#assign filter_keyword_flag = "none">
+						<#assign filter_keyword_arr=[filter_keyword]>
+				</#if>
 				
-				</div><!--  col-md-4 -->
-
+						<div class="row"    style="height:25px;">
+								<div class="col-sm-4">
+									<p>Step 1: </p>
+								</div>
+								<div class="col-sm-8"> 
+									 <p>过滤关键字</p>
+								</div>			
+						</div>						
+				
+				<div class="row" >
+						<div class="col-sm-12"> 
+										<table  class="table table-bordered">
+											<tbody>
+													<#list filter_keyword_arr as f>
+														<tr>
+															<td class="col-sm-6">${f}</td>
+															<td class="col-sm-1">${filter_keyword_flag}</td>
+														</tr>											
+													</#list>
+											</tbody>
+										</table>
+						</div><!-- /col-sm-12 -->			
+				</div><!-- /row -->
+				
+				<#if  reg_regex?contains("_AND_")>
+						<#assign reg_regex_flag = "AND">
+						<#assign reg_regex_arr=reg_regex?split("_AND_")>
+				<#elseif  reg_regex?contains("_OR_")>				
+						<#assign reg_regex_flag = "OR">
+						<#assign reg_regex_arr=reg_regex?split("_OR_")>
+				<#else>
+						<#assign reg_regex_flag = "none">
+						<#assign reg_regex_arr=[reg_regex]>
+				</#if>				
+				
+						<div class="row"    style="height:25px;">
+								<div class="col-sm-3">
+									<p>Step 2: </p>
+								</div>
+								<div class="col-sm-9"> 
+									 <p>正则表达式</p>
+								</div>			
+						</div>						
+				
+				<div class="row" >
+						<div class="col-sm-12"> 
+										<table  class="table table-bordered">
+											<tbody>
+													<#list reg_regex_arr as r>
+														<tr>
+															<td class="col-sm-6">${r}</td>
+															<td class="col-sm-1">${reg_regex_flag}</td>
+														</tr>											
+													</#list>
+											</tbody>
+										</table>
+						</div><!-- /col-sm-12 -->			
+				</div><!-- /row -->				
+																												
+				</div><!--  col-sm-4 -->
+				
+<#elseif  !RequestParameters.proj?exists >
+	   <div class="container  alert alert-warning"> 请先选择右上角项目</div>
+<#elseif ! logs?has_content>
+	<div class="container  alert alert-warning">该项目没有日志源</div>
 <#else>
-   <div class="container"> 请选择项目，亲:)</div>
+	<div class="container  alert alert-warning">其他位置错误，请联系管理员</div>
 </#if>
     
 

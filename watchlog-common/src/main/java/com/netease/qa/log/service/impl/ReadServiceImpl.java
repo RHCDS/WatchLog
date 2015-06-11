@@ -96,7 +96,7 @@ public class ReadServiceImpl implements ReadService {
 	public JSONObject queryErrorRecords(int logSourceId, long startTime, long endTime, int limit, int offset) {
 		List<ExceptionData> exceptionDatas = null;
 		try{
-			exceptionDatas = exceptionDataDao.findByLogSourceIdAndTime(logSourceId, startTime, endTime, "exception_id", limit, offset);
+			exceptionDatas = exceptionDataDao.findByLogSourceIdAndTime(logSourceId, startTime, endTime, "exception_id, sample_time", limit, offset);
 		}catch (Exception e) {
 			logger.error("error", e);
 			return null;
