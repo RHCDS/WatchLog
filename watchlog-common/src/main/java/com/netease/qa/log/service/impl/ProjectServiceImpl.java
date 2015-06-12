@@ -58,7 +58,6 @@ public class ProjectServiceImpl implements ProjectService {
 		JSONObject result = new JSONObject();
 		result.put("projectid", project.getProjectId());
 		result.put("name", project.getProjectName());
-		result.put("name_eng", project.getProjectEngName());
 		result.put("accuracy", project.getTimeAccuracy());
 		
 		List<LogSource> list = this.logSourceDao.selectAllByProjectId(projectid);
@@ -76,7 +75,7 @@ public class ProjectServiceImpl implements ProjectService {
 			logsource.put("linestart", tmp.getLineStartRegex());
 			logsource.put("filterkeyword", tmp.getLineFilterKeyword());
 			logsource.put("typeregex", tmp.getLineTypeRegex());
-			logsource.put("creator", tmp.getLogSourceCreatorName());
+			logsource.put("creatorid", tmp.getLogSourceCreatorId());
 			logsource.put("status", tmp.getLogSourceStatus());
 			logsources.add(logsource);
 		}
@@ -106,7 +105,7 @@ public class ProjectServiceImpl implements ProjectService {
 			project = projects.get(i);
 			record = new JSONObject();
 			record.put("id", project.getProjectId());
-			record.put("name", project.getProjectEngName());
+			record.put("name", project.getProjectName());
 			records.add(record);
 			i++;
 		}

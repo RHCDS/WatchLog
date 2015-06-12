@@ -10,9 +10,11 @@ public class Report {
 	private Timestamp startTime;
 	private Timestamp endTime;
 	private Timestamp createTime;
-	private String creator;
-	private String reportComment;
-
+	private int creatorId;
+	private String title;
+	private String comment;
+	
+	
 	public int getReportId() {
 		return reportId;
 	}
@@ -61,28 +63,39 @@ public class Report {
 		this.createTime = createTime;
 	}
 
-	public String getCreator() {
-		return creator;
+	public int getCreatorId() {
+		return creatorId;
 	}
 
-	public void setCreator(String creator) {
-		this.creator = creator;
+	public void setCreatorId(int creatorId) {
+		this.creatorId = creatorId;
 	}
 
-	public String getReportComment() {
-		return reportComment;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setReportComment(String reportComment) {
-		this.reportComment = reportComment;
+	public void setTitle(String title) {
+		this.title = title;
 	}
+
+	public String getComment() {
+		return comment;
+	}
+
+	public void setComment(String comment) {
+		this.comment = comment;
+	}
+	
+
+
 
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("reportId:").append(reportId).append(";logSourceId:").append(logSourceId).append(";projectId:")
 				.append(projectId).append(";startTime:").append(startTime).append(";endTime:").append(endTime)
-				.append(";creator:").append(creator).append(";creatTime:").append(createTime).append(";reportComment:")
-				.append(reportComment);
+				.append(";creatorId:").append(creatorId).append(";creatTime:").append(createTime).append(";title:")
+				.append(title).append(";comment:").append(comment);
 		return sb.toString();
 	}
 }

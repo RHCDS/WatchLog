@@ -155,12 +155,11 @@ public class WlogSrcController {
 			@RequestParam(value = "reg_regex_arr[]", required = false) String[] typeregexs,
 			@RequestParam(value = "filter_keyword_con", required = false) String filter_keyword_con,
 			@RequestParam(value = "reg_regex_con", required = false) String reg_regex_con,
-			@RequestParam(value = "logsourcecreatorname", required = false, defaultValue = "none") String creatorname,
 			RedirectAttributes model) {
 		String ret = "redirect:/logsrc/manage?proj=" + projectid;
 		String ret_new = "redirect:/logsrc/new?proj=" + projectid;
 		if (MathUtil.isEmpty(logsourceName, projectid, hostname, path, filepattern, linestart, filter_keyword_con,
-				reg_regex_con, creatorname)) {
+				reg_regex_con)) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
 			return ret_new;
@@ -182,21 +181,26 @@ public class WlogSrcController {
 			model.addFlashAttribute("message", ConstCN.ID_MUST_BE_NUM);
 			return ret_new;
 		}
+		System.out.println("!!!!!!1111");
 		if (!projectService.checkProjectExsit(Integer.parseInt(projectid))) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.PROJECT_NOT_EXSIT);
 			return ret_new;
 		}
+		System.out.println("!!!!!!2222");
+		
 		if (logSourceService.checkLogSourceExist(logsourceName)) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.LOG_NAME_ALREADY_EXSIT);
 			return ret_new;
 		}
+		System.out.println("!!!!!!3333");
 		if (logSourceService.checkLogSourceExist(hostname, path, filepattern)) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.LOG_PATH_ALREADY_EXSIT);
 			return ret_new;
 		}
+		System.out.println("!!!!!!4444");
 
 		LogSource logSource = new LogSource();
 		logSource.setLogSourceName(logsourceName);
@@ -207,8 +211,9 @@ public class WlogSrcController {
 		logSource.setLineStartRegex(linestart);
 		logSource.setLineFilterKeyword(MathUtil.parse2Str(filterkeywords, filter_keyword_con));
 		logSource.setLineTypeRegex(MathUtil.parse2Str(typeregexs, Const.FILITER_TYPE));
-		logSource.setLogSourceCreatorName(creatorname);
+		System.out.println("!!!!!!5555");
 		int result = logSourceService.createLogSource(logSource);
+		System.out.println("??????");
 		if (result == 0) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.INNER_ERROR);
@@ -367,7 +372,6 @@ public class WlogSrcController {
 		logSource.setLineStartRegex(linestart);	
 		logSource.setLineFilterKeyword(MathUtil.parse2Str(filterkeywords, filter_keyword_con));
 		logSource.setLineTypeRegex(MathUtil.parse2Str(typeregexs, Const.FILITER_TYPE));
-		logSource.setLogSourceCreatorName(creatorname);
 		int result = logSourceService.updateLogSource(logSource);
 		if (result == 0) {
 			model.addFlashAttribute("status", -1);

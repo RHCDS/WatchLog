@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import org.springframework.util.StringUtils;
 
 import com.netease.qa.log.util.Const;
-import com.netease.qa.log.util.MathUtil;
 
 
 public class LogSource {
@@ -23,7 +22,6 @@ public class LogSource {
 	private String lineFilterKeyword;
 	private String lineTypeRegex;
 	private int logSourceCreatorId;
-	private String logSourceCreatorName;
 	private int logSourceStatus;
 	
 	private ArrayList<String> lineTypeRegexs;
@@ -221,14 +219,6 @@ public class LogSource {
 
 	public void setLogSourceCreatorId(int logSourceCreatorId) {
 		this.logSourceCreatorId = logSourceCreatorId;
-	}
-
-	public String getLogSourceCreatorName() {
-		return logSourceCreatorName;
-	}
-
-	public void setLogSourceCreatorName(String logSourceCreatorName) {
-		this.logSourceCreatorName = logSourceCreatorName;
 	}
 
 	public String toString(){

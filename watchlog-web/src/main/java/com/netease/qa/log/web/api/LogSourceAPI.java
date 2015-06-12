@@ -29,10 +29,8 @@ public class LogSourceAPI {
 
 	@Resource
 	private LogSourceService logsourceService;
-
 	@Resource
 	private ProjectService projectService;
-
 	@Resource
 	private ApiExceptionHandler apiException;
 
@@ -83,7 +81,6 @@ public class LogSourceAPI {
 		logSource.setLineStartRegex(linestart);
 		logSource.setLineFilterKeyword(filterkeyword);
 		logSource.setLineTypeRegex(typeregex);
-		logSource.setLogSourceCreatorName(creatorname);
 		int result = logsourceService.createLogSource(logSource);
 		if (result == 0) {
 			InvalidRequestException ex = new InvalidRequestException(Const.INNER_ERROR);
@@ -205,7 +202,7 @@ public class LogSourceAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		if (!status.equals("0") && !status.equals("1") && !status.equals("2")) {
+		if (!status.equals("0") && !status.equals("1")) {
 			InvalidRequestException ex = new InvalidRequestException(Const.STATUS_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
