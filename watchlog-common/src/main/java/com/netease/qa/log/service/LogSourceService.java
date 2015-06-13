@@ -17,6 +17,8 @@ public interface LogSourceService {
 	
 	public LogSource getByLocation(String hostname, String path, String filePattern);
 	
+	public LogSource getByLogSourceName(String logname);
+	
 	public int deleteLogSource(int logSourceid);
 	
 	public int deleteLogSources(int[] ids);

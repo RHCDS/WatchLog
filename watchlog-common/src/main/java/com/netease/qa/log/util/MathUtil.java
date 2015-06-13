@@ -46,6 +46,18 @@ public class MathUtil {
 		SimpleDateFormat sdf = new SimpleDateFormat(Const.TIME_FORMAT);
 		return sdf.format(time);
 	}
+	
+	public static Timestamp parse2Time(String str) {
+		SimpleDateFormat sdf = new SimpleDateFormat(Const.TIME_FORMAT);
+		Timestamp time = null;
+		try {
+			time = new Timestamp(sdf.parse(str).getTime());
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return time;
+	}
 
 	public static boolean isEmpty(String... params) {
 		for (String param : params) {
@@ -69,13 +81,27 @@ public class MathUtil {
 		if (str.equals("logsrc_path"))
 			return "path";
 		if (str.equals("logsrc_file"))
-			return "";
+			return "file_pattern";
 		if (str.equals("status"))
-			return "log_source_status";
+			return "status";
 		if (str.equals("creator"))
-			return "log_source_creator_name";
+			return "creator_id";
 		else
 			return "modify_time";
+	}
+	
+	public static String getReportField(String str){
+		String str0 = str.trim();
+		if(str0.equals("start_time"))
+			return "start_time";
+		if(str0.equals("end_time"))
+			return "end_time";
+		if(str0.equals("create_time"))
+			return "create_time";
+		if(str0.equals("title"))
+			return "title";
+		else
+			return "create_time";
 	}
 
 	public static int[] parse2IntArray(String str) {

@@ -76,36 +76,28 @@ public class WlogSrcController {
 	}
 
 	@RequestMapping(value = "/destroy", method = RequestMethod.POST)
-	public String deleteLogSources(@RequestParam(value = "ids") String ids,  @RequestParam(value = "proj") String projectid,RedirectAttributes model) {
-		
+	public String deleteLogSources(@RequestParam(value = "ids") String ids,
+			@RequestParam(value = "proj") String projectid, RedirectAttributes model) {
+
 		// 成功和失败的重定向url
 		String ret = "redirect:/logsrc/manage?proj=" + projectid;
-		
+
 		if (MathUtil.isEmpty(ids)) {
-			//NullParamException ne = new NullParamException(ConstCN.NULL_PARAM);
-			//return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
-			 return ret;
+			return ret;
 		}
 		// 选中删除，所以日志必存在，不需要进行日志检查
 		int[] logsource_ids = MathUtil.parse2IntArray(ids);
 		int result = logSourceService.deleteLogSources(logsource_ids);
 		if (result == 0) {
-			//InvalidRequestException ex = new InvalidRequestException(ConstCN.INNER_ERROR);
-			//return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.INTERNAL_SERVER_ERROR);
 			model.addFlashAttribute("status", -1);
-			model.addFlashAttribute("message", ConstCN.INNER_ERROR);			
-			 return ret;
+			model.addFlashAttribute("message", ConstCN.INNER_ERROR);
+			return ret;
 		}
-		//JSONObject resultJson = new JSONObject();
-		//resultJson.put("message", ConstCN.RESPONSE_SUCCESSFUL);
-		//return new ResponseEntity<JSONObject>(resultJson, HttpStatus.OK);
-		
-		
 		model.addFlashAttribute("status", 0);
-		model.addFlashAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);		 
-		 return ret;
+		model.addFlashAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);
+		return ret;
 	}
 
 	@RequestMapping(value = "/{id}", method = RequestMethod.GET)
@@ -154,8 +146,7 @@ public class WlogSrcController {
 			@RequestParam(value = "filter_keyword_arr[]", required = false) String[] filterkeywords,
 			@RequestParam(value = "reg_regex_arr[]", required = false) String[] typeregexs,
 			@RequestParam(value = "filter_keyword_con", required = false) String filter_keyword_con,
-			@RequestParam(value = "reg_regex_con", required = false) String reg_regex_con,
-			RedirectAttributes model) {
+			@RequestParam(value = "reg_regex_con", required = false) String reg_regex_con, RedirectAttributes model) {
 		String ret = "redirect:/logsrc/manage?proj=" + projectid;
 		String ret_new = "redirect:/logsrc/new?proj=" + projectid;
 		if (MathUtil.isEmpty(logsourceName, projectid, hostname, path, filepattern, linestart, filter_keyword_con,
@@ -169,9 +160,6 @@ public class WlogSrcController {
 			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
 			return ret_new;
 		}
-		
-		System.out.println("logsourceName:" + logsourceName);
-		
 		if (!MathUtil.isName(logsourceName)) {
 			model.addFlashAttribute("message", ConstCN.INVALID_NAME);
 			return ret_new;
@@ -181,27 +169,21 @@ public class WlogSrcController {
 			model.addFlashAttribute("message", ConstCN.ID_MUST_BE_NUM);
 			return ret_new;
 		}
-		System.out.println("!!!!!!1111");
 		if (!projectService.checkProjectExsit(Integer.parseInt(projectid))) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.PROJECT_NOT_EXSIT);
 			return ret_new;
 		}
-		System.out.println("!!!!!!2222");
-		
 		if (logSourceService.checkLogSourceExist(logsourceName)) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.LOG_NAME_ALREADY_EXSIT);
 			return ret_new;
 		}
-		System.out.println("!!!!!!3333");
 		if (logSourceService.checkLogSourceExist(hostname, path, filepattern)) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.LOG_PATH_ALREADY_EXSIT);
 			return ret_new;
 		}
-		System.out.println("!!!!!!4444");
-
 		LogSource logSource = new LogSource();
 		logSource.setLogSourceName(logsourceName);
 		logSource.setProjectId(Integer.parseInt(projectid));
@@ -211,9 +193,7 @@ public class WlogSrcController {
 		logSource.setLineStartRegex(linestart);
 		logSource.setLineFilterKeyword(MathUtil.parse2Str(filterkeywords, filter_keyword_con));
 		logSource.setLineTypeRegex(MathUtil.parse2Str(typeregexs, Const.FILITER_TYPE));
-		System.out.println("!!!!!!5555");
 		int result = logSourceService.createLogSource(logSource);
-		System.out.println("??????");
 		if (result == 0) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.INNER_ERROR);
@@ -302,8 +282,7 @@ public class WlogSrcController {
 	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
-	public String commitEditLogSource(
-			@RequestParam(value = "proj", required = false) String projectid,
+	public String commitEditLogSource(@RequestParam(value = "proj", required = false) String projectid,
 			@RequestParam(value = "id", required = false) String logsourceid,
 			@RequestParam(value = "logsrc_name", required = false) String logsourceName,
 			@RequestParam(value = "host_name", required = false) String hostname,
@@ -316,12 +295,11 @@ public class WlogSrcController {
 			@RequestParam(value = "reg_regex_con", required = false) String reg_regex_con,
 			@RequestParam(value = "logsourcecreatorname", required = false, defaultValue = "none") String creatorname,
 			RedirectAttributes model) {
-
 		String ret_succ = "redirect:/logsrc/manage?proj=" + projectid;
 
 		String ret_fail = "redirect:/logsrc/" + logsourceid + "/edit?proj=" + projectid;
-		if (MathUtil.isEmpty(logsourceid, logsourceName, projectid, hostname, path, filepattern, linestart, filter_keyword_con,
-				reg_regex_con, creatorname)) {
+		if (MathUtil.isEmpty(logsourceid, logsourceName, projectid, hostname, path, filepattern, linestart,
+				filter_keyword_con, reg_regex_con, creatorname)) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
 			return ret_fail;
@@ -363,13 +341,13 @@ public class WlogSrcController {
 			}
 		}
 
-		LogSource logSource =  logsource;
+		LogSource logSource = logsource;
 		logSource.setLogSourceName(logsourceName);
 		logSource.setProjectId(Integer.parseInt(projectid));
 		logSource.setHostname(hostname);
 		logSource.setPath(path);
 		logSource.setFilePattern(filepattern);
-		logSource.setLineStartRegex(linestart);	
+		logSource.setLineStartRegex(linestart);
 		logSource.setLineFilterKeyword(MathUtil.parse2Str(filterkeywords, filter_keyword_con));
 		logSource.setLineTypeRegex(MathUtil.parse2Str(typeregexs, Const.FILITER_TYPE));
 		int result = logSourceService.updateLogSource(logSource);

@@ -25,6 +25,7 @@ public class ConstCN {
     public static final String INVALID_TIME_FORMAT = "invalid time format, please use: " + TIME_FORMAT;
     public static final String INVALID_NAME ="名称非法";
     public static final String NULL_PARAM = "缺少参数";
+    public static final String REPORT_EXSIT = "相同的报告已存在";
     
     public static final String RESPONSE_SUCCESSFUL = "响应成功";
     public static final String RESPONSE_NOTSUCCESSFUL = "响应不成功";

@@ -83,6 +83,13 @@ public class LogsourceServiceImpl implements LogSourceService{
 		return logSourceDao.findByLogSourceId(logSourceid);
 	}
 	
+	
+
+	@Override
+	public LogSource getByLogSourceName(String logname) {
+		return logSourceDao.findByLogSourceName(logname);
+	}
+	
 
 	@Override
 	public boolean checkLogSourceExist(String logsourceName) {
@@ -245,6 +252,8 @@ public class LogsourceServiceImpl implements LogSourceService{
 			logsources.add(logSources.get(i));
 		return logsources;
 	}
+
+
 
 
 }
