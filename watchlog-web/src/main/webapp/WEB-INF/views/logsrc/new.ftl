@@ -129,7 +129,6 @@
 																</td>
 																<td class="col-md-1"  style="padding:0px">
 																	    	  <select class=" form-control"   id="reg_regex_select_id"   name="reg_regex_con"     style="display: block;padding: 0px;margin: 0px;border: 0;width: 100%;border-radius: 0;line-height: 1;">
-																		      		<option value="AND">AND</option>
 																		      		<option value="OR" >OR</option>
 																		      </select>	<!-- /select -->															
 																</td>

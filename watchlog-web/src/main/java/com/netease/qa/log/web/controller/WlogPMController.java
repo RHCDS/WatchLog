@@ -113,7 +113,7 @@ public class WlogPMController {
 		public String deleteReport(@RequestParam(value = "proj") String projectid,
 				@RequestParam(value = "report_id") String reportid, RedirectAttributes model) {
 			// 成功和失败的重定向url
-			String ret = "/logsrc/pm_analyse?proj=" + projectid;
+			String ret = "redirect:/logsrc/pm_analyse?proj=" + projectid;
 
 			if (MathUtil.isEmpty(reportid)) {
 				model.addFlashAttribute("status", -1);
@@ -127,6 +127,7 @@ public class WlogPMController {
 				model.addFlashAttribute("message", ConstCN.INNER_ERROR);
 				return ret;
 			}
+			
 			model.addFlashAttribute("status", 0);
 			model.addFlashAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);
 			return ret;

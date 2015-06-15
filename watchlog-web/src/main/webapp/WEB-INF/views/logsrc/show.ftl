@@ -40,6 +40,7 @@
 								</div><!-- 模态框（Modal） -->
 							</form>			
 			
+				<!-- 日志详情页面 导航条-->
 				<div class="row"  style="border-bottom: solid 1px #eee;  height: 35px; ">
 						<div class="col-md-6 pull-left">  
 								 <a href="/logsrc/manage?proj=${pid}">  返回 >   </a>
@@ -51,16 +52,7 @@
 						</div>
 				</div>
 			
-			
-				<!--div class="row" style="border-bottom: solid 1px #eee;">
-						<div class="col-md-2">
-							<h4> <small style="font-size: 15px;font-weight: bold;">日志源名称</small></h4>
-						</div>
-						<div class="col-md-10"> 
-							<h4> <small>${logsrc_name}</small></h4>
-						</div>
-				</div-->
-			
+						
 				<div class="row" style=" border-bottom: solid 1px #eee;">
 						<div class="col-md-2">
 							<h4> <small style="font-size: 15px;font-weight: bold;">日志源位置</small></h4>
@@ -134,7 +126,7 @@
 										<h4> <small>过滤关键字	<span class="glyphicon glyphicon-question-sign"  aria-hidden="true"></small></h4>
 								</div><!-- /row -->
 								<div  class="row">
-										<table  class="table table-bordered">
+										<table  class="table table-bordered wratb">
 											<tbody>
 													<#list filter_keyword_arr as f>
 														<tr>

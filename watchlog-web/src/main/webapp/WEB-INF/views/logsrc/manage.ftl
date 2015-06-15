@@ -1,27 +1,11 @@
 <#import "../layout/defaultLayout.ftl" as layout>
 <@layout.myLayout>
-  <!--div>
-          controller:  ${controller}<br/>
-          action: ${action}<br/>
-		
-		<#list RequestParameters?keys as key>
-		    ${key} = ${RequestParameters[key]}<br/>
-		</#list>    
-</div>
 
-<button id="test" class="btn btn-primary"  onclick="test()">test</button>
-<div id="result">empty</div>
-</br-->
-
-<!-- select   id="result"  style="width:100%" onchange="window.location.href=this.options[selectedIndex].value" ></select-->
-   
 
   <#if RequestParameters.proj?exists >
   	<#assign pid = RequestParameters.proj>
     <div class="container">
     
-
- 	
  	  
 		<form  id="destroy_logsrc_form" action="/logsrc/destroy"  method="post"   class="form-horizontal" role="form"   accept-charset="UTF-8"   data-remote="true">     	  
 			<!-- 模态框（Modal）for: 删除日志源 二次确认对话框 -->
@@ -53,7 +37,6 @@
 	    <div id="toolbar">
 		      <a class="btn btn-primary" href="/logsrc/new?proj=${pid}" role="button">创建日志源</a>
 		      <button id="remove" class="btn btn-primary"  onclick="delete_logsrc_table()" > 删除日志源 </button>
-	        	<!--button id="remove" class="btn btn-primary"  onclick="destroyLogsrc()" > 删除日志源 </button-->
 	         	<button  class="btn btn-primary"  onclick="startMonitorLogsrc()" > 开始监控 </button>
 	         	<button  class="btn btn-primary"  onclick="stopMonitorLogsrc()" > 停止监控 </button>
 	    </div>
@@ -78,7 +61,6 @@
                  <th data-field="logsrc_file" data-sortable="true"  data-formatter="logsrcfileFormatter" >日志文件名称</th>
                  <th data-field="status"   data-formatter="statusFormatter"  data-sortable="true" >监控状态</th>
                  <th data-field="update_time" data-sortable="true" >更新时间</th>
-                 <th data-field="creator" data-sortable="true" >创建人</th>
                   <th data-field="operate"    data-formatter="operateFormatter" ">操作</th>
             </tr>
             </thead>

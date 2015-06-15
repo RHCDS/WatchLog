@@ -166,13 +166,7 @@
 																	<#if j==0> 
 																		<td class="col-md-1"  style="padding:0px"> 
 																		    	  <select class=" form-control"   id="reg_regex_select_id"   name="reg_regex_con"     style="display: block;padding: 0px;margin: 0px;border: 0;width: 100%;border-radius: 0;line-height: 1;">
-																			    	  		<#if reg_regex_flag=="OR">
-																					      		<option value="OR"   selected="true" >OR</option>
-																					      		<option value="AND"   >AND</option>	
-																					      	<#else>
-																					      		<option value="AND"   selected="true" >AND</option>
-																					      		<option value="OR"   >OR</option>				
-																			    	  		</#if>
+																		    	  			<option value="OR"   selected="true" >OR</option>
 																			      </select>	<!-- /select -->															
 																	</td>																		
 																	<#else>

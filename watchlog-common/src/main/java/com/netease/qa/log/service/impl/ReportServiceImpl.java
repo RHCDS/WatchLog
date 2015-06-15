@@ -41,7 +41,7 @@ public class ReportServiceImpl implements ReportService{
 	@Override
 	public int deleteReport(int reportid) {
 		try {
-			logSourceDao.delete(reportid);
+			reportDao.delete(reportid);
 			return 1;
 		} catch (Exception e) {
 			logger.error("error", e);

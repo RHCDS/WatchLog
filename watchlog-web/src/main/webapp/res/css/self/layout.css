@@ -7,7 +7,8 @@
      color: #666;
      background: #FFF;
      padding: 17px 0 18px 0;
-     border-top: 1px solid #ddd;
+     margin-top: 150px;
+     padding-top: 1px solid #ddd;
  }
 
  header {
@@ -31,3 +32,12 @@
      padding-top: 60px;
  }*/
          
+/*表格文字过长自动换行*/         
+table.wratb {
+    table-layout: fixed;
+    word-wrap: break-word;
+}   
+
+table.removebd>tbody>tr>td{
+ 	border: 0px;
+}     

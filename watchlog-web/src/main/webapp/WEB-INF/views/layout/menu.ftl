@@ -33,20 +33,10 @@
       
       <div class="pull-right  col-md-2">
           		<select   id="project_select"  style="width:100%" onchange="window.location.href=this.options[selectedIndex].value" >
-          			
     		</select>
     	</div>
     			
       </div><!-- /.navbar-collapse -->
-      
-      <!-- p>
-          controller:  ${controller}
-          action: ${action}
-		
-		<#list RequestParameters?keys as key>
-		    ${key} = ${RequestParameters[key]}
-		</#list>    
-	</p-->
       
   </div><!-- /.container-fluid -->
 </nav>

@@ -28,15 +28,15 @@
 														</tr>		
 														<#list rt_table as data>
 															<tr>
-																<td class="col-sm-4">${data['datetime']}</td>
+																<td class="col-sm-4">${data['date_time']}</td>
 																<td class="col-sm-6">
-																	<#if  data['logtc']?has_content>
-																			<#list data['logtc'] as x>
+																	<#if  data['error_tc']?has_content>
+																			<#list data['error_tc'] as x>
 																					<a title="${x['type']}"   href ="#" >${x['count']},</a>
 																			 </#list>
 																	 </#if>
 																 </td>																	
-																<td class="col-sm-2">${data['totalcount']}</td>
+																<td class="col-sm-2">${data['total_count']}</td>
 															</tr>																 
 													</#list>																	
 											</tbody>
@@ -48,44 +48,33 @@
 				<!-- 右侧： 日志源详情-->
 				<div class="col-sm-4"    style="/*border:solid 1px blue; */ padding-left: 30px;">
 						<div class="row" style=" border-bottom: solid 1px #eee; margin-bottom:10px;">
-									<p style="font-size: 15px;font-weight: bold;">日志源位置</p>
+									<p style="font-size: 15px;font-weight: bold;">日志源配置</p>
 						</div>
 						
-							<div class="row"    style="height:25px;">
-								<div class="col-sm-4">
-									<p>服务器地址：</p>
-								</div>
-								<div class="col-sm-8"> 
-									 <p>${host_name}</p>
-								</div>			
-						</div>
-						
-							<div class="row"    style="height:25px;">
-								<div class="col-sm-4">
-									<p>日志文件路径：</p>
-								</div>
-								<div class="col-sm-8"> 
-									 <p>${logsrc_path}</p>
-								</div>			
-						</div>						
-						
-							<div class="row"    style="height:25px;">
-								<div class="col-sm-4">
-									<p>日志文件名：</p>
-								</div>
-								<div class="col-sm-8"> 
-									 <p>${logsrc_file}</p>
-								</div>			
-						</div>					
-						
-							<div class="row"    style="height:25px;">
-								<div class="col-sm-4">
-									<p>起始地址：</p>
-								</div>
-								<div class="col-sm-8"> 
-									 <p>${start_regex}</p>
-								</div>			
-						</div>						
+										<div class="row" >
+												<div class="col-sm-12"> 
+																<table  class="table wratb  removebd">
+																	<tbody>
+																				<tr>
+																					<td class="col-sm-4">服务器地址：</td>
+																					<td class="col-sm-8">${host_name}</td>
+																				</tr>		
+																				<tr>
+																					<td class="col-sm-4">日志文件路径：</td>
+																					<td class="col-sm-8">${logsrc_path}</td>
+																				</tr>		
+																				<tr>
+																					<td class="col-sm-4">日志文件名：</td>
+																					<td class="col-sm-8">${logsrc_file}</td>
+																				</tr>																																																											
+																				<tr>
+																					<td class="col-sm-4">起始地址：</td>
+																					<td class="col-sm-8">${start_regex}</td>
+																				</tr>											
+																	</tbody>
+																</table>
+												</div><!-- /col-sm-12 -->			
+										</div><!-- /row -->						
 						
 				<#if  filter_keyword?contains("_AND_")>
 						<#assign filter_keyword_flag = "AND">
@@ -109,7 +98,7 @@
 				
 				<div class="row" >
 						<div class="col-sm-12"> 
-										<table  class="table table-bordered">
+										<table  class="table table-bordered wratb">
 											<tbody>
 													<#list filter_keyword_arr as f>
 														<tr>
@@ -144,7 +133,7 @@
 				
 				<div class="row" >
 						<div class="col-sm-12"> 
-										<table  class="table table-bordered">
+										<table  class="table table-bordered wratb">
 											<tbody>
 													<#list reg_regex_arr as r>
 														<tr>

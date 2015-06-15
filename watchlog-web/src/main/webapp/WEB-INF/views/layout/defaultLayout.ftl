@@ -3,7 +3,6 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="author" content="Martin Bean" />
     <title>日志分析系统</title>
        <!--  jquery  -->    
      <script src="/res/js/jquery-1.11.3.min.js"></script>
@@ -19,6 +18,13 @@
 	<!-- table plugin -->
 	     <link href="/res/css/plugin/table/bootstrap-table.min.css" rel="stylesheet" />
 		<script src="/res/js/plugin/table/bootstrap-table.min.js"></script>	 
+		
+		<!--datetime picker -->
+	 <#if controller == "WlogPM">
+		<link href="/res/css/plugin/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />	 
+	 	<script src="/res/js/plugin/datetimepicker/moment.min.js"></script>
+		 <script src="/res/js/plugin/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+	 </#if>		
 
      <!--  self defined  -->    
 	 <link rel="stylesheet" href="/res/css/self/layout.css" />
@@ -32,7 +38,13 @@
 	 
 	 <#if controller == "WlogRT">
 	  	<link rel="stylesheet" href="/res/css/self/logsrc_rt.css" />
-	 </#if>	 
+	 </#if>	
+	 
+	 <#if controller == "WlogPM">
+	  	<link rel="stylesheet" href="/res/css/self/logsrc_pm.css" />
+		 <script src="/res/js/self/pm_table.js"></script>
+		 <script src="/res/js/self/pm_crud.js"></script>
+	 </#if>
 	 
 	 
 

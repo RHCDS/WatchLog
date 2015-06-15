@@ -87,6 +87,8 @@
 	  }
  }
 
+ 
+ // 操作
  function operateFormatter(value, row, index){
 
 	  if(row.id==undefined){
