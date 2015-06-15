@@ -71,7 +71,7 @@ public class LogsourceServiceImpl implements LogSourceService{
 		result.put("linestart", logSource.getLineStartRegex());
 		result.put("filterkeyword", logSource.getLineFilterKeyword());
 		result.put("typeregex", logSource.getLineTypeRegex());
-		result.put("creator", logSource.getLogSourceCreatorName());
+		result.put("creator", logSource.getLogSourceCreatorId());
 		result.put("status", logSource.getLogSourceStatus());
 		logger.debug(result.toJSONString());
 		return result;
@@ -81,6 +81,13 @@ public class LogsourceServiceImpl implements LogSourceService{
 	@Override
 	public LogSource getByLogSourceId(int logSourceid) {
 		return logSourceDao.findByLogSourceId(logSourceid);
+	}
+	
+	
+
+	@Override
+	public LogSource getByLogSourceName(String logname) {
+		return logSourceDao.findByLogSourceName(logname);
 	}
 	
 
@@ -176,7 +183,7 @@ public class LogsourceServiceImpl implements LogSourceService{
 			record.put("logsrc_file", logSource.getFilePattern());
 			record.put("status", logSource.getLogSourceStatus());
 			record.put("update_time", MathUtil.parse2Str(logSource.getModifyTime()));
-			record.put("creator", logSource.getLogSourceCreatorName());
+			record.put("creator", logSource.getLogSourceCreatorId());
 			records.add(record);
 			i++;
 		}
@@ -212,7 +219,7 @@ public class LogsourceServiceImpl implements LogSourceService{
 			record.put("logsrc_file", logSource.getFilePattern());
 			record.put("status", logSource.getLogSourceStatus());
 			record.put("update_time", MathUtil.parse2Str(logSource.getModifyTime()));
-			record.put("creator", logSource.getLogSourceCreatorName());
+			record.put("creator", logSource.getLogSourceCreatorId());
 			records.add(record);
 			i++;
 		}
@@ -245,6 +252,8 @@ public class LogsourceServiceImpl implements LogSourceService{
 			logsources.add(logSources.get(i));
 		return logsources;
 	}
+
+
 
 
 }

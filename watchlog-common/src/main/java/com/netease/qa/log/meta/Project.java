@@ -5,7 +5,6 @@ public class Project {
 	
 	private int projectId;
 	private String projectName;
-	private String projectEngName;
 	private Timestamp createTime;
 	private Timestamp modifyTime;
 	private int timeAccuracy;
@@ -24,14 +23,6 @@ public class Project {
 	
 	public void setProjectName(String projectName) {
 		this.projectName = projectName;
-	}
-	
-	public String getProjectEngName() {
-		return projectEngName;
-	}
-	
-	public void setProjectEngName(String projectEngName) {
-		this.projectEngName = projectEngName;
 	}
 	
 	public Timestamp getCreateTime() {
@@ -63,7 +54,7 @@ public class Project {
 		
 		StringBuilder sb = new StringBuilder();
 		sb.append("{projectId:").append(projectId).append(",projectName:").append(projectName)
-			.append("{projectEngName:").append(projectEngName).append(",timeAccuracy:").append(timeAccuracy);
+			.append(",timeAccuracy:").append(timeAccuracy);
 		return sb.toString();
 	}
 	

@@ -16,7 +16,7 @@ public interface ProjectDao {
     
     public Project findByProjectId(int projectId);
     
-    public Project findByName(String name_eng);
+    public Project findByName(String name);
     
     public List<Project> getAllProjects();
     
