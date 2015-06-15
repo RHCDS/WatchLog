@@ -78,7 +78,7 @@ public class ReadServiceAPI {
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
 
-		JSONObject jsonObject = readService.queryTimeRecords(Integer.parseInt(id), startTime, endTime,
+		JSONObject jsonObject = readService.queryTimeRecords(Integer.parseInt(id), startTime, endTime, "sample_time", "desc",
 				Integer.parseInt(limit), Integer.parseInt(offset));
 		if (jsonObject == null) {
 			NotFoundRequestException nr = new NotFoundRequestException(Const.INNER_ERROR);
@@ -124,7 +124,7 @@ public class ReadServiceAPI {
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
 
-		JSONObject jsonObject = readService.queryErrorRecords(Integer.parseInt(id), startTime, endTime,
+		JSONObject jsonObject = readService.queryErrorRecordsWithTimeDetail(Integer.parseInt(id), startTime, endTime, "exception_count", "desc",
 				Integer.parseInt(limit), Integer.parseInt(offset));
 		if (jsonObject == null) {
 			NotFoundRequestException nr = new NotFoundRequestException(Const.INNER_ERROR);

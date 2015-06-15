@@ -9,13 +9,22 @@
 		exception_id as exceptionId,
 		exception_count as exceptionCount
 	</sql>
-	
-	<sql id="allColumn_sum">
-        exception_data_id as exceptionDataId,
-        log_source_id as logSourceId,
+    
+    <sql id="time_count">
         sample_time as sampleTime,
+        sum(exception_count) as exceptionCount
+    </sql>
+    
+      <sql id="exception_count">
         exception_id as exceptionId,
         sum(exception_count) as exceptionCount
+    </sql>
+    
+    <sql id="record">
+        aaa.sample_time as sampleTime,
+        aaa.exception_id as exceptionIds,
+        aaa.exception_count as exceptionCounts,
+        bbb.total_count as totalCount
     </sql>
     
 	<insert id="insert" parameterType="com.netease.qa.log.meta.ExceptionData"
@@ -34,25 +43,66 @@
 		<include refid="allColumn" />
 		from exception_data where exception_data_id=#{exceptionDataId}
 	</select>
-	
-    <select id="findByLogSourceIdAndTime" resultType="com.netease.qa.log.meta.ExceptionData">
-        select
-        <include refid="allColumn_sum" /> 
-        from exception_data where log_source_id=${param1} and sample_time 
-        between ${param2} and ${param3} group by log_source_id, sample_time, exception_id  
-        order by ${param4} desc limit ${param5} offset ${param6} 
+   
+    <!--实时分析/ 聚合分析页面，时间维度聚合，返回所有数据 -->
+    <select id="findTimeRecordsByLogSourceIdAndTime" resultType="com.netease.qa.log.meta.ExceptionDataRecord">
+         select  
+         <include refid="record" />
+         from 
+                (select b.sample_time sample_time, group_concat(b.exception_id) exception_id, group_concat(b.sub_count) exception_count 
+                     from (
+                        select sample_time,exception_id,sum(exception_count) sub_count 
+                            from exception_data where log_source_id=${param1} 
+                            and sample_time between ${param2} and ${param3} 
+                            group by sample_time,exception_id) b group by b.sample_time
+                ) aaa,
+            (select sample_time,sum(exception_count) total_count from exception_data  where log_source_id=${param1}
+             and sample_time between ${param2} and ${param3}  
+             group by sample_time ) bbb
+        where aaa.sample_time = bbb.sample_time order by ${param4}  ${param5}  limit ${param6}  offset ${param7}  ;
     </select>
     
-    <select id="findByExceptionId" parameterType="java.lang.Integer"
-        resultType="com.netease.qa.log.meta.ExceptionData">
+     <!-- 实时分析/ 聚合分析页面，时间维度聚合，返回总数据量 -->
+    <select id="getTimeRecordsCountByLogSourceIdAndTime" resultType="java.lang.Integer">
+         select count(a.sample_time) from 
+                (select distinct sample_time from exception_data where log_source_id=${param1} 
+                and sample_time between ${param2} and ${param3} 
+                group by log_source_id, sample_time ) a;
+    </select>
+   
+   
+      <!-- 聚合分析页面，异常维度聚合，返回所有数据 -->
+    <select id="findErrorRecordsByLogSourceIdAndTime" resultType="com.netease.qa.log.meta.ExceptionData">
+         select  
+         <include refid="exception_count" />
+         from exception_data where log_source_id=${param1} and sample_time between ${param2} and ${param3}  
+         group by exception_id order by ${param4}  ${param5}  limit ${param6}  offset ${param7} ;
+    </select>
+   
+     <!-- 聚合分析页面，异常维度聚合，返回总数据量 -->
+    <select id="getErrorRecordsCountByLogSourceIdAndTime" resultType="java.lang.Integer">
+        select count(a.exception_id) from 
+                (select distinct exception_id from exception_data where log_source_id=${param1} 
+                and sample_time between ${param2} and ${param3}  
+                group by exception_id) a;
+    </select>  
+   
+   
+    <!-- 聚合分析-异常类型详情"更多"页面 -->
+    <select id="findErrorRecordsByLogSourceIdAndExceptionIdAndTime" resultType="com.netease.qa.log.meta.ExceptionData">
         select
-        <include refid="allColumn" />
-        from exception_data where exception_id=#{exceptionId}
+        <include refid="time_count" /> 
+        from exception_data  where log_source_id=${param1} and exception_id =${param2} 
+        and sample_time between ${param3} and ${param4} 
+        group by sample_time order by ${param5}  ${param6}  limit ${param7}  offset ${param8};
+    </select>
+    
+    <!-- 聚合分析-异常类型详情"更多"页面，返回总数据量 -->
+    <select id="getErrorRecordsCountByLogSourceIdAndExceptionIdAndTime" resultType="java.lang.Integer">
+            select count(a.sample_time) from 
+                (select distinct sample_time from exception_data  where log_source_id=${param1}  and exception_id =${param2}  
+                 and sample_time between ${param3} and ${param4} 
+                 group by sample_time) a;  
     </select>
     
 </mapper>
-
-
-
-
-

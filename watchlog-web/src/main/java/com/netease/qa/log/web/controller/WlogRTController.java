@@ -70,7 +70,7 @@ public class WlogRTController {
 			} catch (ParseException e1) {
 				e1.printStackTrace();
 			}
-			JSONObject result = readService.queryTimeRecords(Integer.parseInt(logsrcid), startTime, endTime, 15, 0);
+			JSONObject result = readService.queryTimeRecords(Integer.parseInt(logsrcid), startTime, endTime, "sample_time", "desc", 15, 0);
 			JSONArray records = result.getJSONArray("record");
 			JSONObject record = new JSONObject();
 			JSONObject error = new JSONObject();
