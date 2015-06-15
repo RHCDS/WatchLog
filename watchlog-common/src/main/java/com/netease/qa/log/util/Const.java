@@ -29,4 +29,9 @@ public class Const {
     public static final String RESPONSE_NOTSUCCESSFUL = "response not successfully";
     
     public static final String FILITER_TYPE = "type_regex";
+    
+    
+    public static final long RT_SHOW_TIME = 30; //实时分析页面前端显示间隔，s
+    public static final long RT_SHOW_NUM = 150; //实时分析页面显示记录条数
+    
 }

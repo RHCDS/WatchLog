@@ -18,6 +18,7 @@ import com.netease.qa.log.meta.dao.ExceptionDataDao;
 import com.netease.qa.log.meta.dao.LogSourceDao;
 import com.netease.qa.log.meta.dao.UkExceptionDataDao;
 import com.netease.qa.log.service.ReadService;
+import com.netease.qa.log.util.Const;
 import com.netease.qa.log.util.MathUtil;
 
 @Service
@@ -34,10 +35,56 @@ public class ReadServiceImpl implements ReadService {
 	@Resource
 	private LogSourceDao logSourceDao;
 
-
 	@Override
 	public int getTimeCountByLogSourceIdAndTime(int logSourceId, long startTime, long endTime) {
 		return exceptionDataDao.getTimeRecordsCountByLogSourceIdAndTime(logSourceId, startTime, endTime); 
+	}
+	
+	
+	@Override
+	public JSONObject queryLatestTimeRecords(int logSourceId, long currentTime) {
+		
+		//TODO 时间戳取整
+		
+		JSONObject result = new JSONObject();
+		result.put("projectid", logSourceDao.findByLogSourceId(logSourceId).getProjectId());
+		result.put("logsourceid", logSourceId);
+		
+		JSONArray records = new JSONArray();
+		for(int i = 0; i < Const.RT_SHOW_NUM; i++){
+			long endTime = currentTime - Const.RT_SHOW_TIME * i;
+			long startTime = endTime - Const.RT_SHOW_TIME;
+			try{
+				ExceptionDataRecord exceptionDataRecord = exceptionDataDao.findSummaryByLogSourceIdAndTime(logSourceId, startTime, endTime);
+				
+				JSONObject record = new JSONObject();
+				JSONArray details = new JSONArray();
+				logger.info("start"+ startTime + " " + endTime + " "+exceptionDataRecord);
+				record.put("time", MathUtil.parse2Str(endTime));
+				record.put("totalcount", exceptionDataRecord.getTotalCount());
+			
+				if(exceptionDataRecord.getTotalCount() > 0){
+					String [] eids = exceptionDataRecord.getExceptionIds().split(",");
+					String [] ecounts = exceptionDataRecord.getExceptionCounts().split(",");
+					for(int j = 0; j < eids.length; j++){
+						int exceptionId = Integer.valueOf(eids[j].trim());
+						String type = exceptionDao.findByExceptionId(exceptionId).getExceptionType();
+						
+						JSONObject detail = new JSONObject();
+						detail.put("exceptionType", type);
+						detail.put("count", ecounts[j]);
+						details.add(detail);
+					}
+				}
+				record.put("detail", details);
+				records.add(record);
+			}catch (Exception e) {
+				logger.error("error", e);
+				return null;
+			}
+		}
+		result.put("record", records);
+		return result;
 	}
 	
 	

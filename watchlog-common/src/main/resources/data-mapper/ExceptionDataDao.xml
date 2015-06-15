@@ -44,7 +44,26 @@
 		from exception_data where exception_data_id=#{exceptionDataId}
 	</select>
    
-    <!--实时分析/ 聚合分析页面，时间维度聚合，返回所有数据 -->
+   <!-- 实时分析页面，返回起止时间内汇总数据，只有一条。 -->
+  <select id="findSummaryByLogSourceIdAndTime" resultType="com.netease.qa.log.meta.ExceptionDataRecord">
+         select  
+         <include refid="record" />
+         from 
+                (select b.sample_time sample_time, group_concat(b.exception_id) exception_id, group_concat(b.sub_count) exception_count 
+                     from (
+                        select sample_time,exception_id,sum(exception_count) sub_count 
+                            from exception_data where log_source_id=${param1} 
+                            and sample_time between ${param2} and ${param3} 
+                            group by exception_id  order by sample_time) b 
+                ) aaa,
+            (select sample_time,sum(exception_count) total_count from exception_data  where log_source_id=${param1}
+             and sample_time between ${param2} and ${param3} order by sample_time
+            ) bbb
+        where aaa.sample_time = bbb.sample_time;
+    </select> 
+   
+   
+    <!-- 聚合分析页面，时间维度聚合，返回所有数据 -->
     <select id="findTimeRecordsByLogSourceIdAndTime" resultType="com.netease.qa.log.meta.ExceptionDataRecord">
          select  
          <include refid="record" />
@@ -62,7 +81,7 @@
         where aaa.sample_time = bbb.sample_time order by ${param4}  ${param5}  limit ${param6}  offset ${param7}  ;
     </select>
     
-     <!-- 实时分析/ 聚合分析页面，时间维度聚合，返回总数据量 -->
+     <!-- 聚合分析页面，时间维度聚合，返回总数据量 -->
     <select id="getTimeRecordsCountByLogSourceIdAndTime" resultType="java.lang.Integer">
          select count(a.sample_time) from 
                 (select distinct sample_time from exception_data where log_source_id=${param1} 

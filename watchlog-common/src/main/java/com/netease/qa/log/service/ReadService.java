@@ -4,6 +4,8 @@ import com.alibaba.fastjson.JSONObject;
 
 public interface ReadService {
 
+	public JSONObject queryLatestTimeRecords(int logSourceId, long currentTime);
+
 	public JSONObject queryTimeRecords(int logSourceId, long startTime, long endTime, String orderBy, String order, int limit, int offset);
 	
 	public int getTimeCountByLogSourceIdAndTime(int logSourceId, long startTime, long endTime);

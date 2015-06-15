@@ -15,6 +15,17 @@ public interface ExceptionDataDao {
     
     
     /**
+     * 返回起止时间内汇总数据
+     * +--------------+-----------------+-------------+
+		| exception_id | exception_count | total_count |
+		+--------------+-----------------+-------------+
+		| 45,46,47     | 3941,6393,2602  |       12936 |
+		+--------------+-----------------+-------------+
+     */
+    public ExceptionDataRecord findSummaryByLogSourceIdAndTime(int logSourceId, long startTime, long endTime);
+    
+    
+    /**
      * 时间维度聚合，返回所有数据,
      * from_unixtime(aaa.sample_time) | sample_time | exception_id | exception_count | total_count |
 		-------------------------------+-------------+--------------+-----------------+-------------+
