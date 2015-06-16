@@ -45,12 +45,14 @@ public class WlogPMController {
 	public String pm_analyse(@RequestParam(value = "proj", required = false) String projectid, Model model) {
 		model.addAttribute("controller", "WlogPM" );		
 		model.addAttribute("action", "pm_analyse" );
-		ArrayList<LogSource> logsources = logSourceService.selectAllByProjectId(Integer.parseInt(projectid));
 		ArrayList<String> logs = new ArrayList<String>();
-		for (int i = 0; i < logsources.size(); i++) {
-			logs.add(logsources.get(i).getLogSourceId() + "#" + logsources.get(i).getLogSourceName());
+		if(projectid != null){
+			ArrayList<LogSource> logsources = logSourceService.selectAllByProjectId(Integer.parseInt(projectid));
+			for (int i = 0; i < logsources.size(); i++) {
+				logs.add(logsources.get(i).getLogSourceId() + "#" + logsources.get(i).getLogSourceName());
+			}
 		}
-		model.addAttribute("logs", logs);
+		model.addAttribute("logs", logs);			
 		return "logsrc/pm_analyse";
 	}
 	

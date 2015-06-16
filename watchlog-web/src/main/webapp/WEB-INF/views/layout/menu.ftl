@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-default mid-menu">
   <div class="container">
     <!-- Brand and toggle get grouped for better mobile display -->
     <div class="navbar-header">
@@ -12,20 +12,20 @@
 
     <!-- Collect the nav links, forms, and other content for toggling -->
     <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-      <ul class="nav navbar-nav">
+      <ul class="nav navbar-nav" id="log_menu">
       
       <!-- 获取project.id -->
       <#if RequestParameters.proj?exists >
       	<#assign proj=RequestParameters.proj>
-	      	<li <#if controller == "WlogManage">class="active"</#if>  ><a href="/logsrc/manage?proj=${proj}">日志源管理</a></li>
-	        <li <#if controller == "WlogRT">class="active"</#if>  ><a href="/logsrc/rt_analyse?proj=${proj}">实时分析</a></li>
-	  		<li <#if controller == "WlogPM">class="active"</#if>  ><a href="/logsrc/pm_analyse?proj=${proj}">日志聚合分析</a></li>        
-	  		<li><a href="#">报警管理</a></li>        
+	      	<li <#if controller == "WlogManage">class="active"</#if>  ><a   class="text-menu"   href="/logsrc/manage?proj=${proj}">日志源管理</a></li>
+	        <li <#if controller == "WlogRT">class="active"</#if>  ><a    class="text-menu"   href="/logsrc/rt_analyse?proj=${proj}">实时分析</a></li>
+	  		<li <#if controller == "WlogPM">class="active"</#if>  ><a    class="text-menu"  href="/logsrc/pm_analyse?proj=${proj}">日志聚合分析</a></li>        
+	  		<li><a    class="text-menu"   href="#">报警管理</a></li>        
       	<#else>
-	      	<li <#if controller == "WlogManage">class="active"</#if>  ><a href="/logsrc/manage">日志源管理</a></li>
-	        <li <#if controller == "WlogRT">class="active"</#if>  ><a href="/logsrc/rt_analyse">实时分析</a></li>
-	  		<li <#if controller == "WlogPM">class="active"</#if>  ><a href="/logsrc/pm_analyse">日志聚合分析</a></li>        
-	  		<li><a href="#">报警管理</a></li>              	
+	      	<li <#if controller == "WlogManage">class="active"</#if>  ><a    class="text-menu"   href="/logsrc/manage">日志源管理</a></li>
+	        <li <#if controller == "WlogRT">class="active"</#if>  ><a    class="text-menu"   href="/logsrc/rt_analyse">实时分析</a></li>
+	  		<li <#if controller == "WlogPM">class="active"</#if>  ><a    class="text-menu"   href="/logsrc/pm_analyse">日志聚合分析</a></li>        
+	  		<li><a     class="text-menu"  href="#" >报警管理</a></li>              	
       	</#if>
       	 
       	

@@ -63,13 +63,13 @@ var report_id = getParam( 'report_id' );
  } );  //document
   
   // 异常分布情况 (Error type & count) 显示格式 :  数字+hover信息
-  function pmdisterrorFormatter(row, value, index){
+  function pmdisterrorFormatter(value, row, index){
 	  var each_val = "";
 	  var content_arr = [];
 
 	  // 遍历数字，拼接type和count到超链接
-	  for(i=0; i<row.length; i++){
-		  each_val = "<a title="+row[i]['type']+ ">"+row[i]['count']+" </a>";
+	  for(i=0; i<value.length; i++){
+		  each_val = "<a title="+value[i]['type']+ ">"+value[i]['count']+" </a>";
 		  content_arr.push(each_val);
 	  }
 	  var  content_str = content_arr.join(' , ');

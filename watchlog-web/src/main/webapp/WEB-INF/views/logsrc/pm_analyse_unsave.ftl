@@ -12,7 +12,7 @@
 								<div class="modal fade" id="pm_analyse_store_modal" tabindex="-1" role="dialog"    aria-labelledby="myModalLabel" aria-hidden="true">
 									   <div class="modal-dialog">
 												      <div class="modal-content">
-												      		<input type="hidden" id="report_id" name="report_id"  />
+												      		<input type="hidden" id="log_id" name="log_id"  />
 												      		<input type="hidden" id="proj" name="proj"  />
 												      		 <!-- header  -->
 													         <div class="modal-header">
@@ -46,7 +46,7 @@
 														<td class="col-sm-4"> <a href="/logsrc/pm_analyse?proj=${pid}"> 返回 &#62; </a>	&#160;&#160;<small>${logsrc_name}</small></td>
 														<td class="col-sm-3">开始时间：${start_time}</td>
 														<td class="col-sm-3">结束时间：${end_time}</td>
-														<td class="col-sm-2"><button id="remove" class="btn btn-primary  btn-sm"  onclick="pm_analyse_store(${report_id}, ${pid})" > 保存</button></td>
+														<td class="col-sm-2"><button id="remove" class="btn btn-primary  btn-sm"  onclick="pm_analyse_store(${log_id}, ${pid})" > 保存</button></td>
 													</tr>		
 										</tbody>
 									</table>

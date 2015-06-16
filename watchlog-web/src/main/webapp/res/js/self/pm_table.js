@@ -22,12 +22,13 @@
 	  	
 	  	// 开始时间datatimepicker
         $('#pm_start_time_datetimepicker').datetimepicker({
-		    format: 'YYYY-MM-DD HH:mm'   
+		   // format: 'YYYY-MM-DD HH:mm'
+        	  format: 'YYYY-MM-DD HH:mm:ss'   
         });
         
         // 结束时间datatimepicker
         $('#pm_end_time_datetimepicker').datetimepicker({
-		    format: 'YYYY-MM-DD HH:mm'   
+		    format: 'YYYY-MM-DD HH:mm:ss'   
         });        
 	  	
 	  	

@@ -23,68 +23,74 @@
   
   // 日志源名称显示   
  function logsrcnameFormatter(value, row, index) {
-//	  console.log(value);
-//	  console.log(row);
-//	  console.log(index);
-	//  console.log(row.id);
-	  
-	  if(row.id==undefined){
-		return "-";	  
+  
+	  if(value!=undefined){
+		     var maxwidth = 10; 
+		     value_show = value;
+		     if (value.length > maxwidth) {
+		    	 value_show = value.substring(0, maxwidth) + '...'
+		     }
+		  return  '<a class="like" title=' + value +' href="/logsrc/' + row.id + '?proj=' + pid + '" >' + value_show + '</a>';		  
 	  }
-	     var maxwidth = 10; 
-	     value_show = value;
-	     if (value.length > maxwidth) {
-	    	 value_show = value.substring(0, maxwidth) + '...'
-	     }
-	  return  '<a class="like" title=' + value +' href="/logsrc/' + row.id + '?proj=' + pid + '" >' + value_show + '</a>';
+
  }
  
  // 服务器地址显示：限制长度截断+hover显示所有文字
  function hostnameFormatter(value, row, index){
-     var maxwidth = 20; 
-     value_show = value;
-     if (value.length > maxwidth) {
-    	 value_show = value.substring(0, maxwidth) + '...'
-     }
-	  return' <a class="table_text_limit" title='+value+'>'+value_show+'</a>';
+	  if(value!=undefined){
+			     var maxwidth = 20; 
+			     value_show = value;
+			     if (value.length > maxwidth) {
+			    	 value_show = value.substring(0, maxwidth) + '...'
+			     }
+				  return' <a class="table_text_limit" title='+value+'>'+value_show+'</a>';
+		  }
+	  
+
  }
  
  // 日志源地址显示：限制长度截断+hover显示所有文字
  function logsrcpathFormatter(value, row, index){
-     var maxwidth = 30; 
-     value_show = value;
-     if (value.length > maxwidth) {
-    	 value_show = value.substring(0, maxwidth) + '...'
-     }
-	  return' <a class="table_text_limit" title='+value+'>'+value_show+'</a>';
+	  if(value!=undefined){
+			     var maxwidth = 30; 
+			     value_show = value;
+			     if (value.length > maxwidth) {
+			    	 value_show = value.substring(0, maxwidth) + '...'
+			     }
+				  return' <a class="table_text_limit" title='+value+'>'+value_show+'</a>';		  
+		  }
+	  
+
  }
  
  function logsrcfileFormatter(value, row, index){
-     var maxwidth = 20; 
-     value_show = value;
-     if (value.length > maxwidth) {
-    	 value_show = value.substring(0, maxwidth) + '...'
-     }
-	  return' <a class="table_text_limit" title='+value+'>'+value_show+'</a>';
+	  if(value!=undefined){
+		     var maxwidth = 20; 
+		     value_show = value;
+		     if (value.length > maxwidth) {
+		    	 value_show = value.substring(0, maxwidth) + '...'
+		     }
+			  return' <a class="table_text_limit" title='+value+'>'+value_show+'</a>';
+	  }
  }
  
  function statusFormatter(value, row, index){
-	  if(row.id==undefined){
-		return "-";	  
+	  if(value !=undefined){
+			  if (value==0){
+				  return '未开始'
+			  }
+			  else if(value == 1){
+				  return '<font color="red">监控中</red>'
+			  }
+			  else if(value == 2){
+				  return '监控结束'
+			  }	  
+			  else{
+				  return '其他'
+			  }
 	  }
 	  
-	  if (value==0){
-		  return '未开始'
-	  }
-	  else if(value == 1){
-		  return '<font color="red">监控中</red>'
-	  }
-	  else if(value == 2){
-		  return '监控结束'
-	  }	  
-	  else{
-		  return '其他'
-	  }
+
  }
 
  
@@ -96,10 +102,6 @@
 		  }
 	  else{
 		  return [
-		          // 调试功能
-	//	            '<a class="debug" href="javascript:void(0)" title="调试" disabled>',
-	//	            '<i class="glyphicon glyphicon-cog"></i>',
-	//	            '</a>  ',
 		          	// 复制日志源功能
 //		            '<a class="copy" href="javascript:void(0)"  title="复制"  onclick=logsrc_copy('+row.id+')>',
 //		            '<i class="glyphicon glyphicon-file"></i>',
@@ -159,25 +161,6 @@
 
 	
 	
-//      //  删除日志源
-//      function destroyLogsrc(){
-//          var ids = getIdSelections();
-//         // console.log(ids); //tmp log
-//          $('#logtable').bootstrapTable('remove', {
-//              field: 'id',
-//              values: ids
-//          });
-//      	$.ajax({
-//      		type: 'POST',
-//    		url: '/logsrc/destroy',
-//    		data:{ ids: ids.toString(),
-//    					proj: pid},
-//    		success :function(data){
-//    			$('#result').html(data);
-//    		}
-//    	})
-//      }
-//      
       
       // 开始监控
       function startMonitorLogsrc(){

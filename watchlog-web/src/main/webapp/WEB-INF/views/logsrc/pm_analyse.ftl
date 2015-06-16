@@ -17,7 +17,7 @@
 													  				 <h5><p class="text-left" style="font-size: 15px;font-weight: bold;">日志源</p></h5>
 													  	</div>
 													 <div class="col-sm-2">
-																	  <select   id="pm_logsrc_select"   name="report_id" class="form-control">
+																	  <select   id="pm_logsrc_select"   name="log_id" class="form-control">
 																	  			<option value= 0> 请选择日志源</option>
 																				<#list logs as log_str>
 																						<#assign lg_arr=log_str?split("#")>
@@ -33,7 +33,7 @@
 													  	</div>									  
 				 										<div class="col-sm-2">									  				
 													                <div class='input-group date' id='pm_start_time_datetimepicker'>
-														                    <input type='text'   id="pm_start_time_id"  class="form-control    input-sm"   placeholder="开始时间"/>
+														                    <input type='text'   id="pm_start_time_id"   name="start_time" class="form-control    input-sm"   placeholder="开始时间"/>
 														                    <span class="input-group-addon">
 														                        <span class="glyphicon glyphicon-calendar"></span>
 														                    </span>
@@ -45,7 +45,7 @@
 													  	</div>											  
 													  <div class="col-sm-2">
 													                <div class='input-group date' id='pm_end_time_datetimepicker'>
-														                    <input type='text'     id="pm_end_time_id"  class="form-control    input-sm"   placeholder="结束时间" />
+														                    <input type='text'     id="pm_end_time_id"   name="end_time" class="form-control    input-sm"   placeholder="结束时间" />
 														                    <span class="input-group-addon">
 														                        <span class="glyphicon glyphicon-calendar"></span>
 														                    </span>
@@ -109,7 +109,7 @@
         
 <#elseif  !RequestParameters.proj?exists >
 	   <div class="container  alert alert-warning"> 请先选择右上角项目</div>
-<#elseif ! logs?has_content>
+<#elseif !logs?has_content>
 	<div class="container  alert alert-warning">该项目没有日志源</div>
 <#else>
 	<div class="container  alert alert-warning">其他位置错误，请联系管理员</div>

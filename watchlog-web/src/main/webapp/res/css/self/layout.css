@@ -19,6 +19,26 @@
    
  }
  
+.top-head-nav {
+	color: rgb(11, 6, 247);
+}
+
+#log_menu>.active>a{
+border-bottom: 2px solid #fff;
+padding-bottom: 5px;
+
+	
+}
+ 
+ .mid-menu{
+ 		background-color: #699;
+ 		border-color: #699;
+ }
+ 
+ .text-menu{
+	color: #fff !important; 
+	background-color: #699  !important; 
+ }
  
  .wrapper {
      min-height: 100%;
