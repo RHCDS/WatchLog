@@ -14,6 +14,12 @@ function getParam( name )
 
 var pid = getParam( 'proj' );
 var report_id = getParam( 'report_id' );
+var log_id = getParam( 'log_id' );
+var start_time = getParam( 'start_time' );
+var end_time = getParam( 'end_time' );
+var start_time_ct = start_time.replace(/\%20/g, ' ');
+var end_time_ct = end_time.replace(/\%20/g, ' ');
+
 
   $(document).ready(function() {
 	  // 异常分布情况 - 更多 表格
@@ -28,6 +34,9 @@ var report_id = getParam( 'report_id' );
 					  			return {
 					  				proj : pid,
 					  				report_id: report_id,
+					  				log_id : log_id,
+					  				start_time : start_time_ct,
+					  				end_time : end_time_ct,
 					  				limit: p.limit,
 					  				offset : p.offset,
 					  				sort: p.sort,
@@ -49,6 +58,9 @@ var report_id = getParam( 'report_id' );
 				  			return {
 				  				proj : pid,
 				  				report_id: report_id,
+				  				log_id : log_id,
+				  				start_time : start_time,
+				  				end_time : end_time,				  				
 				  				limit: p.limit,
 				  				offset : p.offset,
 				  				sort: p.sort,

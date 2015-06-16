@@ -11,7 +11,7 @@
 		            <thead>
 		            <tr>
 		                <th data-field="date_time"   data-sortable="true"    > 采样时间</th>
-		                <th data-field="error_tc" data-sortable="true" data-formatter="pmdisterrorFormatter"   > Error type & count</th>
+		                <th data-field="error_tc"  data-formatter="pmdisterrorFormatter"   > Error type & count</th>
 		                 <th data-field="total_count" data-sortable="true"  > Total count </th>
 		            </tr>
 		            </thead>

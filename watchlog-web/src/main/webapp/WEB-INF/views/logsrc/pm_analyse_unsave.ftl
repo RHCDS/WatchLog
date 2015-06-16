@@ -226,7 +226,7 @@
 												<table  class="table table-bordered">
 													<tbody>
 																<tr>
-																	<th class="col-sm-4">采样时间</th>
+																	<th class="col-sm-4">Error Type</th>
 																	<th class="col-sm-7">Error type & count </th>
 																	<th class="col-sm-1">Total  count</th>
 																</tr>		

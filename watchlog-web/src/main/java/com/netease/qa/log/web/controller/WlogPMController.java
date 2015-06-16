@@ -267,9 +267,9 @@ public class WlogPMController {
 	@RequestMapping(value = "/logsrc/pm_analyse/error_dist_table", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> distTable(@RequestParam(value = "proj", required = false) String projectid,
 			@RequestParam(value = "report_id", required = false, defaultValue = "0") String reportid,
-			@RequestParam(value = "log_id", required = false, defaultValue = "0") String logsourceid,
-			@RequestParam(value = "start_time", required = false, defaultValue = "0") String starttime,
-			@RequestParam(value = "end_time", required = false, defaultValue = "0") String endtime,
+			@RequestParam(value = "log_id", required = false) String logsourceid,
+			@RequestParam(value = "start_time", required = false) String starttime,
+			@RequestParam(value = "end_time", required = false) String endtime,
 			@RequestParam(value = "limit", required = false) String limit,
 			@RequestParam(value = "offset", required = false) String offset,
 			@RequestParam(value = "sort", required = false, defaultValue = "date_time") String sort,
@@ -306,24 +306,42 @@ public class WlogPMController {
 			result.put("rows", rows);
 			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 		}
-		Report report = reportService.getReportById(Integer.parseInt(reportid));
-		String startTime = MathUtil.parse2Str(report.getStartTime());
-		String endTime = MathUtil.parse2Str(report.getEndTime());
-		Long start = null;
-		Long end = null;
-		try {
-			start = MathUtil.parse2Long(startTime);
-			end = MathUtil.parse2Long(endTime);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
 		String field = "sampleTime";
 		if (sort.equals("total_count"))
 			field = "totalCount";
-		total = readService.getTimeCountByLogSourceIdAndTime(report.getLogSourceId(), start, end);
-		JSONObject resultByTime = readService.queryTimeRecords(report.getLogSourceId(), start, end, field, order,
-				Integer.parseInt(limit), Integer.parseInt(offset));
-		rows = resultByTime.getJSONArray("record");
+		// 未保存的report，的更多页面
+		if (Integer.parseInt(reportid) == 0) {
+			String start_time = starttime.replaceAll("%20", " ");
+			String end_time = endtime.replaceAll("%20", " ");
+			Long start = null;
+			Long end = null;
+			try {
+				start = MathUtil.parse2Long(start_time);
+				end = MathUtil.parse2Long(end_time);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			total = readService.getTimeCountByLogSourceIdAndTime(Integer.parseInt(logsourceid), start, end);
+			JSONObject resultByTime = readService.queryTimeRecords(Integer.parseInt(logsourceid), start, end, field,
+					order, Integer.parseInt(limit), Integer.parseInt(offset));
+			rows = resultByTime.getJSONArray("record");
+		} else {
+			Report report = reportService.getReportById(Integer.parseInt(reportid));
+			String startTime = MathUtil.parse2Str(report.getStartTime());
+			String endTime = MathUtil.parse2Str(report.getEndTime());
+			Long start = null;
+			Long end = null;
+			try {
+				start = MathUtil.parse2Long(startTime);
+				end = MathUtil.parse2Long(endTime);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			total = readService.getTimeCountByLogSourceIdAndTime(report.getLogSourceId(), start, end);
+			JSONObject resultByTime = readService.queryTimeRecords(report.getLogSourceId(), start, end, field, order,
+					Integer.parseInt(limit), Integer.parseInt(offset));
+			rows = resultByTime.getJSONArray("record");
+		}
 		result.put("message", ConstCN.RESPONSE_SUCCESSFUL);
 		result.put("total", total);
 		result.put("rows", rows);
@@ -337,7 +355,10 @@ public class WlogPMController {
 
 	@RequestMapping(value = "/logsrc/pm_analyse/error_type_table", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> typeTable(@RequestParam(value = "proj", required = false) String projectid,
-			@RequestParam(value = "report_id", required = false) String reportid,
+			@RequestParam(value = "report_id", required = false, defaultValue = "0") String reportid,
+			@RequestParam(value = "log_id", required = false) String logsourceid,
+			@RequestParam(value = "start_time", required = false) String starttime,
+			@RequestParam(value = "end_time", required = false) String endtime,
 			@RequestParam(value = "limit", required = false) String limit,
 			@RequestParam(value = "offset", required = false) String offset,
 			@RequestParam(value = "sort", required = false, defaultValue = "exceptionCount") String sort,
@@ -346,14 +367,14 @@ public class WlogPMController {
 		JSONObject result = new JSONObject();
 		JSONArray rows = new JSONArray();
 		int total = 0;
-		if (MathUtil.isEmpty(projectid, reportid, limit, offset, sort, order)) {
+		if (MathUtil.isEmpty(projectid, limit, offset, sort, order)) {
 			message = ConstCN.NULL_PARAM;
 			result.put("message", message);
 			result.put("total", total);
 			result.put("rows", rows);
 			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 		}
-		if (!MathUtil.isInteger(projectid) || !MathUtil.isInteger(reportid)) {
+		if (!MathUtil.isInteger(projectid)) {
 			message = ConstCN.ID_MUST_BE_NUM;
 			result.put("message", message);
 			result.put("total", total);
@@ -374,22 +395,40 @@ public class WlogPMController {
 			result.put("rows", rows);
 			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 		}
-		Report report = reportService.getReportById(Integer.parseInt(reportid));
-		String startTime = MathUtil.parse2Str(report.getStartTime());
-		String endTime = MathUtil.parse2Str(report.getEndTime());
-		Long start = null;
-		Long end = null;
-		try {
-			start = MathUtil.parse2Long(startTime);
-			end = MathUtil.parse2Long(endTime);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
 		String field = "exceptionCount";
-		total = readService.getErrorTypeCountByLogSourceId(report.getLogSourceId(), start, end);
-		JSONObject resultByType = readService.queryErrorRecordsWithTimeDetail(report.getLogSourceId(), start, end,
-				field, order, Integer.parseInt(limit), Integer.parseInt(offset));
-		rows = resultByType.getJSONArray("error");
+		// 未保存的report，查看更多异常类型
+		if (Integer.parseInt(reportid) == 0) {
+			String start_time = starttime.replaceAll("%20", " ");
+			String end_time = endtime.replaceAll("%20", " ");
+			Long start = null;
+			Long end = null;
+			try {
+				start = MathUtil.parse2Long(start_time);
+				end = MathUtil.parse2Long(end_time);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			total = readService.getErrorTypeCountByLogSourceId(Integer.parseInt(logsourceid), start, end);
+			JSONObject resultByType = readService.queryErrorRecordsWithTimeDetail(Integer.parseInt(logsourceid), start,
+					end, field, order, Integer.parseInt(limit), Integer.parseInt(offset));
+			rows = resultByType.getJSONArray("error");
+		} else {
+			Report report = reportService.getReportById(Integer.parseInt(reportid));
+			String startTime = MathUtil.parse2Str(report.getStartTime());
+			String endTime = MathUtil.parse2Str(report.getEndTime());
+			Long start = null;
+			Long end = null;
+			try {
+				start = MathUtil.parse2Long(startTime);
+				end = MathUtil.parse2Long(endTime);
+			} catch (ParseException e) {
+				e.printStackTrace();
+			}
+			total = readService.getErrorTypeCountByLogSourceId(report.getLogSourceId(), start, end);
+			JSONObject resultByType = readService.queryErrorRecordsWithTimeDetail(report.getLogSourceId(), start, end,
+					field, order, Integer.parseInt(limit), Integer.parseInt(offset));
+			rows = resultByType.getJSONArray("error");
+		}
 		result.put("message", ConstCN.RESPONSE_SUCCESSFUL);
 		result.put("total", total);
 		result.put("rows", rows);
@@ -408,6 +447,7 @@ public class WlogPMController {
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "limit", required = false) String limit,
 			@RequestParam(value = "offset", required = false) String offset, Model model) {
+		System.out.println("reportid:" + reportid + "log_id:" + logsourceid + ";start:" + startTime + ";end:" + endTime);
 		
 		String message = "";
 		JSONObject result = new JSONObject();
