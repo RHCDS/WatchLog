@@ -212,8 +212,8 @@ public class WlogPMController {
 		JSONObject resultByTime = readService.queryTimeRecords(Integer.parseInt(logsrcId), start, end, "sample_time",
 				"desc", 10, 0);
 		model.addAttribute("pm_error_dist_table", resultByTime.getJSONArray("record"));
-		JSONObject resultByError = readService.queryErrorRecords(Integer.parseInt(logsrcId), start, end,
-				"sample_time", "desc", 5, 0);
+		JSONObject resultByError = readService.queryErrorRecords(Integer.parseInt(logsrcId), start, end, "sample_time",
+				"desc", 5, 0);
 		model.addAttribute("pm_error_type_table", resultByError.getJSONArray("error"));
 		return "logsrc/pm_analyse_unsave";
 	}
@@ -249,11 +249,13 @@ public class WlogPMController {
 		JSONObject resultByTime = readService.queryTimeRecords(report.getLogSourceId(), start, end, "sample_time",
 				"desc", 10, 0);
 		model.addAttribute("pm_error_dist_table", resultByTime.getJSONArray("record"));
-//		System.out.println("pm_error_dist_table:" + resultByTime.getJSONArray("record"));
-		JSONObject resultByError = readService.queryErrorRecords(report.getLogSourceId(), start, end,
-				"sample_time", "desc", 5, 0);
+		// System.out.println("pm_error_dist_table:" +
+		// resultByTime.getJSONArray("record"));
+		JSONObject resultByError = readService.queryErrorRecords(report.getLogSourceId(), start, end, "sample_time",
+				"desc", 5, 0);
 		model.addAttribute("pm_error_type_table", resultByError.getJSONArray("error"));
-//		System.out.println("pm_error_type_table:" + resultByError.getJSONArray("error").toString());
+		// System.out.println("pm_error_type_table:" +
+		// resultByError.getJSONArray("error").toString());
 		return "logsrc/pm_analyse_saved";
 	}
 
@@ -388,6 +390,83 @@ public class WlogPMController {
 		result.put("message", ConstCN.RESPONSE_SUCCESSFUL);
 		result.put("total", total);
 		result.put("rows", rows);
+		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/logsrc/pm_analyse/error_type_total_table", method = RequestMethod.GET)
+	public ResponseEntity<JSONObject> getSortedSample(
+			@RequestParam(value = "report_id", required = false, defaultValue = "0") String reportid,
+			@RequestParam(value = "log_id", required = false) String logsourceid,
+			@RequestParam(value = "start_time", required = false) String startTime,
+			@RequestParam(value = "end_time", required = false) String endTime,
+			@RequestParam(value = "exp_id", required = false) String exceptionid,
+			@RequestParam(value = "total_count", required = false) String totalCount,
+			@RequestParam(value = "sort", required = false, defaultValue = "date_time") String sort,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
+			@RequestParam(value = "limit", required = false) String limit,
+			@RequestParam(value = "offset", required = false) String offset, Model model) {
+		String message = "";
+		JSONObject result = new JSONObject();
+		JSONObject detail = new JSONObject();
+		JSONArray rows = new JSONArray();
+		int total = Integer.parseInt(totalCount);
+		if (MathUtil.isEmpty(exceptionid, sort, order, limit, offset)) {
+			message = ConstCN.NULL_PARAM;
+			result.put("message", message);
+			result.put("total", total);
+			result.put("rows", rows);
+			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+		}
+		if (!MathUtil.isInteger(logsourceid) || !MathUtil.isInteger(exceptionid)) {
+			message = ConstCN.ID_MUST_BE_NUM;
+			result.put("message", message);
+			result.put("total", total);
+			result.put("rows", rows);
+			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+		}
+		if (!MathUtil.isInteger(limit) || !MathUtil.isInteger(offset)) {
+			message = ConstCN.LIMIT_AND_OFFSET_MUST_BE_NUM;
+			result.put("message", message);
+			result.put("total", total);
+			result.put("rows", rows);
+			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+		}
+		String field = "sampleTime";
+		if (sort.equals("total_count"))
+			field = "exceptionCount";
+		// 是未保存的report
+		if (Integer.parseInt(reportid) == 0) {
+			Long start = null;
+			Long end = null;
+			try {
+				start = MathUtil.parse2Long(startTime);
+				end = MathUtil.parse2Long(endTime);
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			detail = readService.queryDetailByErrorType(Integer.parseInt(logsourceid), Integer.parseInt(exceptionid),
+					start, end, field, order, Integer.parseInt(limit), Integer.parseInt(offset));
+		} else {
+			// 已保存的report
+			Report report = reportService.getReportById(Integer.parseInt(reportid));
+			Timestamp start_time = report.getStartTime();
+			Timestamp end_time = report.getEndTime();
+			Long start = null;
+			Long end = null;
+			try {
+				start = MathUtil.parse2Long(MathUtil.parse2Str(start_time));
+				end = MathUtil.parse2Long(MathUtil.parse2Str(end_time));
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			detail = readService.queryDetailByErrorType(report.getLogSourceId(), Integer.parseInt(exceptionid), start,
+					end, field, order, Integer.parseInt(limit), Integer.parseInt(offset));
+		}
+		result.put("message", ConstCN.RESPONSE_SUCCESSFUL);
+		result.put("total", total);
+		result.put("rows", detail.getJSONArray("details"));
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 

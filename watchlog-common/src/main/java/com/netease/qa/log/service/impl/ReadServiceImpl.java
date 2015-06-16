@@ -254,4 +254,21 @@ public class ReadServiceImpl implements ReadService {
 		return result;
 	}
 
+	@Override
+	public JSONObject queryDetailByErrorType(int logSourceId, int exceptionId, long startTime, long endTime,
+			String sort, String order, int limit, int offset) {
+		JSONObject result = new JSONObject();
+		JSONArray details = new JSONArray();
+		List<ExceptionData> tmp = exceptionDataDao.findErrorRecordsByLogSourceIdAndExceptionIdAndTime(logSourceId,
+				exceptionId, startTime, endTime, sort, order, limit, offset);
+		for(ExceptionData e : tmp){
+			JSONObject detail = new JSONObject();
+			detail.put("date_time", MathUtil.parse2Str(e.getSampleTime()));
+			detail.put("total_count", e.getExceptionCount());
+			details.add(detail);
+		}
+		result.put("details", details);
+		return result;
+	}
+
 }
