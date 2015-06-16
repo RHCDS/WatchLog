@@ -66,7 +66,7 @@ function get_saved_error_type_total(report_id, exp_id, total_count){
 	$("#saved_error_type_total_modal").modal('show');
 	  // 表格分页设置
   	$('#saved_error_type_total_table').bootstrapTable({
-  		url : "/logsrc/error_type_total_table",
+  		url : "/logsrc/pm_analyse/error_type_total_table",
   		sortName : "date_time",
   		sortOrder: "desc",
   		pageList: "[10, 25, 50, 100, All]",
@@ -90,7 +90,7 @@ function get_unsave_error_type_total(log_id, exp_id, total_count, start_time, en
 	$("#unsave_error_type_total_modal").modal('show');
 	  // 表格分页设置
   	$('#unsave_error_type_total_table').bootstrapTable({
-  		url : "/logsrc/error_type_total_table",
+  		url : "/logsrc/pm_analyse/error_type_total_table",
   		sortName : "date_time",
   		sortOrder: "desc",
   		pageList: "[10, 25, 50, 100, All]",

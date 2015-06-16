@@ -266,7 +266,10 @@ public class WlogPMController {
 
 	@RequestMapping(value = "/logsrc/pm_analyse/error_dist_table", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> distTable(@RequestParam(value = "proj", required = false) String projectid,
-			@RequestParam(value = "report_id", required = false) String reportid,
+			@RequestParam(value = "report_id", required = false, defaultValue = "0") String reportid,
+			@RequestParam(value = "log_id", required = false, defaultValue = "0") String logsourceid,
+			@RequestParam(value = "start_time", required = false, defaultValue = "0") String starttime,
+			@RequestParam(value = "end_time", required = false, defaultValue = "0") String endtime,
 			@RequestParam(value = "limit", required = false) String limit,
 			@RequestParam(value = "offset", required = false) String offset,
 			@RequestParam(value = "sort", required = false, defaultValue = "date_time") String sort,
@@ -405,6 +408,7 @@ public class WlogPMController {
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "limit", required = false) String limit,
 			@RequestParam(value = "offset", required = false) String offset, Model model) {
+		
 		String message = "";
 		JSONObject result = new JSONObject();
 		JSONObject detail = new JSONObject();
@@ -417,7 +421,7 @@ public class WlogPMController {
 			result.put("rows", rows);
 			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 		}
-		if (!MathUtil.isInteger(logsourceid) || !MathUtil.isInteger(exceptionid)) {
+		if (!MathUtil.isInteger(exceptionid)) {
 			message = ConstCN.ID_MUST_BE_NUM;
 			result.put("message", message);
 			result.put("total", total);
