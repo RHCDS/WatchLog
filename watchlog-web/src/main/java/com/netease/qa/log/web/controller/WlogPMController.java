@@ -212,15 +212,9 @@ public class WlogPMController {
 		JSONObject resultByTime = readService.queryTimeRecords(Integer.parseInt(logsrcId), start, end, "sample_time",
 				"desc", 10, 0);
 		model.addAttribute("pm_error_dist_table", resultByTime.getJSONArray("record"));
-		// System.out.println("pm_error_dist_table:" +
-		// resultByTime.getJSONArray("record"));
-		JSONObject resultByError = readService.queryErrorRecordsWithTimeDetail(Integer.parseInt(logsrcId), start, end,
+		JSONObject resultByError = readService.queryErrorRecords(Integer.parseInt(logsrcId), start, end,
 				"sample_time", "desc", 5, 0);
 		model.addAttribute("pm_error_type_table", resultByError.getJSONArray("error"));
-		// System.out.println("pm_error_type_table:" +
-		// resultByError.getJSONArray("error").toString());
-		// model.addAttribute("status", 0);
-		// model.addAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);
 		return "logsrc/pm_analyse_unsave";
 	}
 
@@ -230,6 +224,7 @@ public class WlogPMController {
 		Report report = reportService.getReportById(Integer.parseInt(reportid));
 		model.addAttribute("controller", "WlogPM");
 		model.addAttribute("action", "pm_analyse_unsave");
+		model.addAttribute("log_id", report.getLogSourceId());
 		model.addAttribute("report_id", Integer.parseInt(reportid));
 		String startTime = MathUtil.parse2Str(report.getStartTime());
 		String endTime = MathUtil.parse2Str(report.getEndTime());
@@ -254,11 +249,11 @@ public class WlogPMController {
 		JSONObject resultByTime = readService.queryTimeRecords(report.getLogSourceId(), start, end, "sample_time",
 				"desc", 10, 0);
 		model.addAttribute("pm_error_dist_table", resultByTime.getJSONArray("record"));
-		//System.out.println("pm_error_dist_table:" + resultByTime.getJSONArray("record"));
-		JSONObject resultByError = readService.queryErrorRecordsWithTimeDetail(report.getLogSourceId(), start, end,
+//		System.out.println("pm_error_dist_table:" + resultByTime.getJSONArray("record"));
+		JSONObject resultByError = readService.queryErrorRecords(report.getLogSourceId(), start, end,
 				"sample_time", "desc", 5, 0);
 		model.addAttribute("pm_error_type_table", resultByError.getJSONArray("error"));
-		//System.out.println("pm_error_type_table:" + resultByError.getJSONArray("error").toString());
+//		System.out.println("pm_error_type_table:" + resultByError.getJSONArray("error").toString());
 		return "logsrc/pm_analyse_saved";
 	}
 

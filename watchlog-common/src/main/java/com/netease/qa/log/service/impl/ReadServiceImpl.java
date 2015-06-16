@@ -49,11 +49,9 @@ public class ReadServiceImpl implements ReadService {
 	public JSONObject queryLatestTimeRecords(int logSourceId, long currentTime) {
 		//时间精度取整： xx:xx:00 、xx:xx:30两种精度
 		Long formatCurrentTime = currentTime / Const.RT_SHOW_TIME * Const.RT_SHOW_TIME; 
-		
 		JSONObject result = new JSONObject();
 		result.put("projectid", logSourceDao.findByLogSourceId(logSourceId).getProjectId());
 		result.put("logsourceid", logSourceId);
-		
 		JSONArray records = new JSONArray();
 		for(int i = 0; i < Const.RT_SHOW_NUM; i++){
 			long endTime = formatCurrentTime - Const.RT_SHOW_TIME * i;
@@ -69,15 +67,15 @@ public class ReadServiceImpl implements ReadService {
 						String type = exceptionDao.findByExceptionId(exceptionId).getExceptionType();
 						
 						JSONObject detail = new JSONObject();
-						detail.put("exceptionType", type);
+						detail.put("type", type);
 						detail.put("count", ecounts[j]);
 						details.add(detail);
 					}
 				}
 				JSONObject record = new JSONObject();
-				record.put("time", MathUtil.parse2Str(endTime));
-				record.put("totalcount", exceptionDataRecord.getTotalCount());
-				record.put("detail", details);
+				record.put("date_time", MathUtil.parse2Str(endTime));
+				record.put("total_count", exceptionDataRecord.getTotalCount());
+				record.put("error_tc", details);
 				records.add(record);
 			}catch (Exception e) {
 				logger.error("error", e);
@@ -152,9 +150,10 @@ public class ReadServiceImpl implements ReadService {
 		for(ExceptionData exceptionData : exceptionDatas){
 			JSONObject error = new JSONObject();
 			com.netease.qa.log.meta.Exception exception = exceptionDao.findByExceptionId(exceptionData.getExceptionId());
-			error.put("type", exception.getExceptionType());
-			error.put("demo", exception.getExceptionDemo());
-			error.put("totalcount", exceptionData.getExceptionCount());
+			error.put("exp_id", exception.getExceptionId());
+			error.put("error_type", exception.getExceptionType());
+			error.put("error_example", exception.getExceptionDemo());
+			error.put("total_count", exceptionData.getExceptionCount());
 			errors.add(error);
 		}
 		result.put("error", errors);
