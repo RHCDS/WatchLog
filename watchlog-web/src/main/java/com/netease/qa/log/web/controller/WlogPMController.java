@@ -64,7 +64,7 @@ public class WlogPMController {
 			@RequestParam(value = "sort", required = false, defaultValue = "create_time") String sort,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "limit", required = false) String limit,
-			@RequestParam(value = "offset", required = false) String offset) {
+			@RequestParam(value = "offset", required = false) String offset, Model model) {
 		String message = "";
 		int recordsTotal = 0;
 		JSONObject result = new JSONObject();
@@ -141,7 +141,8 @@ public class WlogPMController {
 			@RequestParam(value = "start_time", required = false) String startTime,
 			@RequestParam(value = "end_time", required = false) String endTime, RedirectAttributes model) {
 		String ret_succ = "redirect:/logsrc/pm_analyse?proj=" + projectid;
-		String ret_fail = "redirect:/logsrc/pm_analyse_unsave?log_id=" + logsrcId + "&proj=" + projectid;
+		String ret_fail = "redirect:/logsrc/pm_analyse_unsave?log_id=" + logsrcId + "&proj=" + projectid
+				+ "&start_time=" + startTime + "&end_time" + endTime;
 		if (MathUtil.isEmpty(projectid, logsrcId, startTime, endTime)) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
@@ -181,7 +182,7 @@ public class WlogPMController {
 		model.addAttribute("action", "pm_analyse_unsave");
 		if (MathUtil.isEmpty(projectid, logsrcId, startTime, endTime)) {
 			model.addAttribute("status", -1);
-			model.addAttribute("message", ConstCN.NULL_PARAM);		
+			model.addAttribute("message", ConstCN.NULL_PARAM);
 			return "logsrc/pm_analyse_unsave";
 		}
 		model.addAttribute("log_id", Integer.parseInt(logsrcId));
@@ -189,7 +190,7 @@ public class WlogPMController {
 		model.addAttribute("end_time", endTime);
 		if (!MathUtil.isInteger(projectid)) {
 			model.addAttribute("status", -1);
-			model.addAttribute("message", ConstCN.ID_MUST_BE_NUM);					
+			model.addAttribute("message", ConstCN.ID_MUST_BE_NUM);
 			return "logsrc/pm_analyse_unsave";
 		}
 		LogSource logSource = logSourceService.getByLogSourceId(Integer.parseInt(logsrcId));
@@ -211,19 +212,21 @@ public class WlogPMController {
 		JSONObject resultByTime = readService.queryTimeRecords(Integer.parseInt(logsrcId), start, end, "sample_time",
 				"desc", 10, 0);
 		model.addAttribute("pm_error_dist_table", resultByTime.getJSONArray("record"));
-		//System.out.println("pm_error_dist_table:" + resultByTime.getJSONArray("record"));
+		// System.out.println("pm_error_dist_table:" +
+		// resultByTime.getJSONArray("record"));
 		JSONObject resultByError = readService.queryErrorRecordsWithTimeDetail(Integer.parseInt(logsrcId), start, end,
 				"sample_time", "desc", 5, 0);
 		model.addAttribute("pm_error_type_table", resultByError.getJSONArray("error"));
-		//System.out.println("pm_error_type_table:" + resultByError.getJSONArray("error").toString());
-		//model.addAttribute("status", 0);
-		//model.addAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);		
+		// System.out.println("pm_error_type_table:" +
+		// resultByError.getJSONArray("error").toString());
+		// model.addAttribute("status", 0);
+		// model.addAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);
 		return "logsrc/pm_analyse_unsave";
 	}
-	
+
 	@RequestMapping(value = "/logsrc/pm_analyse_saved", method = RequestMethod.GET)
 	public String getReport(@RequestParam(value = "proj", required = false) String projectid,
-			@RequestParam(value = "report_id", required = false) String reportid,Model model){
+			@RequestParam(value = "report_id", required = false) String reportid, Model model) {
 		Report report = reportService.getReportById(Integer.parseInt(reportid));
 		model.addAttribute("controller", "WlogPM");
 		model.addAttribute("action", "pm_analyse_unsave");
@@ -257,6 +260,140 @@ public class WlogPMController {
 		model.addAttribute("pm_error_type_table", resultByError.getJSONArray("error"));
 		System.out.println("pm_error_type_table:" + resultByError.getJSONArray("error").toString());
 		return "logsrc/pm_analyse_saved";
+	}
+
+	@RequestMapping(value = "/logsrc/pm_analyse/error_dist_more", method = RequestMethod.GET)
+	public String moreDist(Model model) {
+		return "logsrc/pm_analyse_error_dist_more";
+	}
+
+	@RequestMapping(value = "/logsrc/pm_analyse/error_dist_table", method = RequestMethod.GET)
+	public ResponseEntity<JSONObject> distTable(@RequestParam(value = "proj", required = false) String projectid,
+			@RequestParam(value = "report_id", required = false) String reportid,
+			@RequestParam(value = "limit", required = false) String limit,
+			@RequestParam(value = "offset", required = false) String offset,
+			@RequestParam(value = "sort", required = false, defaultValue = "sample_time") String sort,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order, Model model) {
+		String message = "";
+		JSONObject result = new JSONObject();
+		JSONArray rows = new JSONArray();
+		int total = 0;
+		if (MathUtil.isEmpty(projectid, reportid, limit, offset, sort, order)) {
+			message = ConstCN.NULL_PARAM;
+			result.put("message", message);
+			result.put("total", total);
+			result.put("rows", rows);
+			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+		}
+		if (!MathUtil.isInteger(projectid) || !MathUtil.isInteger(reportid)) {
+			message = ConstCN.ID_MUST_BE_NUM;
+			result.put("message", message);
+			result.put("total", total);
+			result.put("rows", rows);
+			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+		}
+		if (!MathUtil.isInteger(limit) || !MathUtil.isInteger(offset)) {
+			message = ConstCN.LIMIT_AND_OFFSET_MUST_BE_NUM;
+			result.put("message", message);
+			result.put("total", total);
+			result.put("rows", rows);
+			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+		}
+		if (!projectService.checkProjectExsit(Integer.parseInt(projectid))) {
+			message = ConstCN.PROJECT_NOT_EXSIT;
+			result.put("message", message);
+			result.put("total", total);
+			result.put("rows", rows);
+			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+		}
+		Report report = reportService.getReportById(Integer.parseInt(reportid));
+		String startTime = MathUtil.parse2Str(report.getStartTime());
+		String endTime = MathUtil.parse2Str(report.getEndTime());
+		Long start = null;
+		Long end = null;
+		try {
+			start = MathUtil.parse2Long(startTime);
+			end = MathUtil.parse2Long(endTime);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		String field = "sampleTime";
+		if (sort.equals("totalCount"))
+			field = "totalCount";
+		total = readService.getTimeCountByLogSourceIdAndTime(report.getLogSourceId(), start, end);
+		JSONObject resultByTime = readService.queryTimeRecords(report.getLogSourceId(), start, end, field, order,
+				Integer.parseInt(limit), Integer.parseInt(offset));
+		rows = resultByTime.getJSONArray("record");
+		result.put("message", ConstCN.RESPONSE_SUCCESSFUL);
+		result.put("total", total);
+		result.put("rows", rows);
+		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/logsrc/pm_analyse/error_type_more", method = RequestMethod.GET)
+	public String moreErrorType(Model model) {
+		return "logsrc/pm_analyse_error_type_more";
+	}
+
+	@RequestMapping(value = "/logsrc/pm_analyse/error_type_table", method = RequestMethod.GET)
+	public ResponseEntity<JSONObject> typeTable(@RequestParam(value = "proj", required = false) String projectid,
+			@RequestParam(value = "report_id", required = false) String reportid,
+			@RequestParam(value = "limit", required = false) String limit,
+			@RequestParam(value = "offset", required = false) String offset,
+			@RequestParam(value = "sort", required = false, defaultValue = "exceptionCount") String sort,
+			@RequestParam(value = "order", required = false, defaultValue = "desc") String order, Model model) {
+		String message = "";
+		JSONObject result = new JSONObject();
+		JSONArray rows = new JSONArray();
+		int total = 0;
+		if (MathUtil.isEmpty(projectid, reportid, limit, offset, sort, order)) {
+			message = ConstCN.NULL_PARAM;
+			result.put("message", message);
+			result.put("total", total);
+			result.put("rows", rows);
+			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+		}
+		if (!MathUtil.isInteger(projectid) || !MathUtil.isInteger(reportid)) {
+			message = ConstCN.ID_MUST_BE_NUM;
+			result.put("message", message);
+			result.put("total", total);
+			result.put("rows", rows);
+			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+		}
+		if (!MathUtil.isInteger(limit) || !MathUtil.isInteger(offset)) {
+			message = ConstCN.LIMIT_AND_OFFSET_MUST_BE_NUM;
+			result.put("message", message);
+			result.put("total", total);
+			result.put("rows", rows);
+			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+		}
+		if (!projectService.checkProjectExsit(Integer.parseInt(projectid))) {
+			message = ConstCN.PROJECT_NOT_EXSIT;
+			result.put("message", message);
+			result.put("total", total);
+			result.put("rows", rows);
+			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+		}
+		Report report = reportService.getReportById(Integer.parseInt(reportid));
+		String startTime = MathUtil.parse2Str(report.getStartTime());
+		String endTime = MathUtil.parse2Str(report.getEndTime());
+		Long start = null;
+		Long end = null;
+		try {
+			start = MathUtil.parse2Long(startTime);
+			end = MathUtil.parse2Long(endTime);
+		} catch (ParseException e) {
+			e.printStackTrace();
+		}
+		String field = "exceptionCount";
+		total = readService.getErrorTypeCountByLogSourceId(report.getLogSourceId(), start, end);
+		JSONObject resultByType = readService.queryErrorRecordsWithTimeDetail(report.getLogSourceId(), start, end,
+				field, order, Integer.parseInt(limit), Integer.parseInt(offset));
+		rows = resultByType.getJSONArray("error");
+		result.put("message", ConstCN.RESPONSE_SUCCESSFUL);
+		result.put("total", total);
+		result.put("rows", rows);
+		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 
 }

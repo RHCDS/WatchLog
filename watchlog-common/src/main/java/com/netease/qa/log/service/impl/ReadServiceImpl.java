@@ -40,6 +40,10 @@ public class ReadServiceImpl implements ReadService {
 		return exceptionDataDao.getTimeRecordsCountByLogSourceIdAndTime(logSourceId, startTime, endTime); 
 	}
 	
+	@Override
+	public int getErrorTypeCountByLogSourceId(int logSourceId, long startTime, long endTime) {
+		return exceptionDataDao.getErrorRecordsCountByLogSourceIdAndTime(logSourceId, startTime, endTime);
+	}
 	
 	@Override
 	public JSONObject queryLatestTimeRecords(int logSourceId, long currentTime) {
@@ -224,5 +228,7 @@ public class ReadServiceImpl implements ReadService {
 		result.put("unknowns", unknowns);
 		return result;
 	}
+
+
 
 }
