@@ -32,6 +32,6 @@ public class Const {
     
     
     public static final long RT_SHOW_TIME = 30; //实时分析页面前端显示间隔，s
-    public static final long RT_SHOW_NUM = 150; //实时分析页面显示记录条数
+    public static final long RT_SHOW_NUM = 15; //实时分析页面显示记录条数
     
 }

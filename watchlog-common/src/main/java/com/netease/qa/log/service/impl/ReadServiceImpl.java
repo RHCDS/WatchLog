@@ -43,8 +43,8 @@ public class ReadServiceImpl implements ReadService {
 	
 	@Override
 	public JSONObject queryLatestTimeRecords(int logSourceId, long currentTime) {
-		
-		//TODO 时间戳取整
+		//时间精度取整： xx:xx:00 、xx:xx:30两种精度
+		Long formatCurrentTime = currentTime / Const.RT_SHOW_TIME * Const.RT_SHOW_TIME; 
 		
 		JSONObject result = new JSONObject();
 		result.put("projectid", logSourceDao.findByLogSourceId(logSourceId).getProjectId());
@@ -52,17 +52,11 @@ public class ReadServiceImpl implements ReadService {
 		
 		JSONArray records = new JSONArray();
 		for(int i = 0; i < Const.RT_SHOW_NUM; i++){
-			long endTime = currentTime - Const.RT_SHOW_TIME * i;
-			long startTime = endTime - Const.RT_SHOW_TIME;
+			long endTime = formatCurrentTime - Const.RT_SHOW_TIME * i;
+			long startTime = endTime - Const.RT_SHOW_TIME + 1; //mysql between包含前后区间值，此处取前开后闭，以防止重复数据。  
 			try{
 				ExceptionDataRecord exceptionDataRecord = exceptionDataDao.findSummaryByLogSourceIdAndTime(logSourceId, startTime, endTime);
-				
-				JSONObject record = new JSONObject();
 				JSONArray details = new JSONArray();
-				logger.info("start"+ startTime + " " + endTime + " "+exceptionDataRecord);
-				record.put("time", MathUtil.parse2Str(endTime));
-				record.put("totalcount", exceptionDataRecord.getTotalCount());
-			
 				if(exceptionDataRecord.getTotalCount() > 0){
 					String [] eids = exceptionDataRecord.getExceptionIds().split(",");
 					String [] ecounts = exceptionDataRecord.getExceptionCounts().split(",");
@@ -76,6 +70,9 @@ public class ReadServiceImpl implements ReadService {
 						details.add(detail);
 					}
 				}
+				JSONObject record = new JSONObject();
+				record.put("time", MathUtil.parse2Str(endTime));
+				record.put("totalcount", exceptionDataRecord.getTotalCount());
 				record.put("detail", details);
 				records.add(record);
 			}catch (Exception e) {
