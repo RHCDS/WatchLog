@@ -1,6 +1,8 @@
 package com.netease.qa.log.service.impl;
 
+
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -92,11 +94,11 @@ public class ReportServiceImpl implements ReportService{
 		return records;
 	}
 
-	@Override
-	public boolean checkReportByTime(int logsourceid, Timestamp start, Timestamp end) {
-		Report report = reportDao.findByTime(logsourceid, start, end);
-		return report != null;
-	}
+//	@Override
+//	public boolean checkReportByTime(int logsourceid, Timestamp start, Timestamp end) {
+//		Report report = reportDao.findByTime(logsourceid, start, end);
+//		return report != null;
+//	}
 
 	
 }

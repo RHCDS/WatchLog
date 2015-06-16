@@ -51,7 +51,8 @@ public class MathUtil {
 		SimpleDateFormat sdf = new SimpleDateFormat(Const.TIME_FORMAT);
 		Timestamp time = null;
 		try {
-			time = new Timestamp(sdf.parse(str).getTime());
+			Date date = sdf.parse(str);
+			time = new Timestamp(date.getTime());
 		} catch (ParseException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

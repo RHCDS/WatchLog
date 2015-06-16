@@ -1,6 +1,7 @@
 package com.netease.qa.log.meta.dao;
 
 import java.sql.Timestamp;
+import java.util.Date;
 import java.util.List;
 
 import com.netease.qa.log.meta.Report;
@@ -20,5 +21,5 @@ public interface ReportDao {
 	
 	public List<Report> getSortedByProjectId(int projectId, String field, String order, int limit, int offset);
 	
-	public Report findByTime(int projectId, Timestamp start, Timestamp end);
+	public Report findByTime(int logsrcid, Timestamp start, Timestamp end);
 }

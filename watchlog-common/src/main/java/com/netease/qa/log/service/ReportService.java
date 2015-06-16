@@ -14,7 +14,6 @@ public interface ReportService {
  	public int getTotalCountByProjectId(int projectid);
  	
  	public JSONArray getReportListSortedByProjectid(int project, String field, String order, int limit, int offset);
- 	
- 	public boolean checkReportByTime(int logsourceid, Timestamp start, Timestamp end);
+ 
 
 }

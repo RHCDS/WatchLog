@@ -42,12 +42,5 @@
 	      <include refid="allColumn" />
 	      from report where project_id=${param1} order by ${param2} ${param3} limit ${param4} offset ${param5}
 	</select>
-	
-	<select id="findByTime" resultType="com.netease.qa.log.meta.LogSource">
-	    select
-		<include refid="allColumn" />
-		from report where log_source_id=#{0} and start_time=#{1} and end_time=#{2} limit 1
-	</select>
-	
 	</mapper>
 	
