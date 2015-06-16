@@ -14,6 +14,8 @@
 												      <div class="modal-content">
 												      		<input type="hidden" id="log_id" name="log_id"  />
 												      		<input type="hidden" id="proj" name="proj"  />
+												      		<input type="hidden" id="start_time" name="start_time"  />
+												      		<input type="hidden" id="end_time" name="end_time"  />
 												      		 <!-- header  -->
 													         <div class="modal-header">
 														            <button type="button" class="close"    data-dismiss="modal" aria-hidden="true">   &times;  </button>
@@ -46,7 +48,7 @@
 														<td class="col-sm-4"> <a href="/logsrc/pm_analyse?proj=${pid}"> 返回 &#62; </a>	&#160;&#160;<small>${logsrc_name}</small></td>
 														<td class="col-sm-3">开始时间：${start_time}</td>
 														<td class="col-sm-3">结束时间：${end_time}</td>
-														<td class="col-sm-2"><button id="remove" class="btn btn-primary  btn-sm"  onclick="pm_analyse_store(${log_id}, ${pid})" > 保存</button></td>
+														<td class="col-sm-2"><button id="remove" class="btn btn-primary  btn-sm"  onclick="pm_analyse_store(${log_id}, ${pid},'${start_time}','${end_time}')" > 保存</button></td>
 													</tr>		
 										</tbody>
 									</table>

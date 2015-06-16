@@ -220,13 +220,13 @@ public class WlogPMController {
 		JSONObject resultByTime = readService.queryTimeRecords(Integer.parseInt(logsrcId), start, end, "sample_time",
 				"desc", 10, 0);
 		model.addAttribute("pm_error_dist_table", resultByTime.getJSONArray("record"));
-		System.out.println("pm_error_dist_table:" + resultByTime.getJSONArray("record"));
+		//System.out.println("pm_error_dist_table:" + resultByTime.getJSONArray("record"));
 		JSONObject resultByError = readService.queryErrorRecordsWithTimeDetail(Integer.parseInt(logsrcId), start, end,
 				"sample_time", "desc", 5, 0);
 		model.addAttribute("pm_error_type_table", resultByError.getJSONArray("error"));
-		System.out.println("pm_error_type_table:" + resultByError.getJSONArray("error").toString());
-		model.addAttribute("status", 0);
-		model.addAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);		
+		//System.out.println("pm_error_type_table:" + resultByError.getJSONArray("error").toString());
+		//model.addAttribute("status", 0);
+		//model.addAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);		
 		return "logsrc/pm_analyse_unsave";
 	}
 	

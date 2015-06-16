@@ -43,9 +43,12 @@ $(document).ready(function() {
 
 
 //  点击保存聚合分析，弹出对话框
-function pm_analyse_store(log_id,pid){
+function pm_analyse_store(log_id, pid, start_time, end_time){
 	 $('#log_id').val(log_id);  //post请求参数  聚合报告id 
 	 $('#proj').val(pid);  //post请求参数 proj
+	 $('#start_time').val(start_time);  //post请求参数 start_time
+	 $('#end_time').val(end_time);  //post请求参数 end_time
+	 
 	$('#pm_analyse_store_modal').modal('show');  //弹窗modal			
 }
 
