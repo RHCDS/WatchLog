@@ -196,7 +196,7 @@
 												      		<input type="hidden" id="proj" name="proj"  />
 												      		 <!-- header  -->
 													         <div class="modal-header">
-														            <button type="button" class="close"    data-dismiss="modal" aria-hidden="true"  >   &times;  </button>
+														            <button type="button" class="close"    data-dismiss="modal" aria-hidden="true"  onclick="window.location.reload();" >   &times;  </button>
 														            <h4 class="modal-title" id="myModalLabel">    异常类型详情 Total count    </h4>
 													         </div>												      		
 													         <!-- body  -->
