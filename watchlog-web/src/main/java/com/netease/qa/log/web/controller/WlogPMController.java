@@ -254,11 +254,11 @@ public class WlogPMController {
 		JSONObject resultByTime = readService.queryTimeRecords(report.getLogSourceId(), start, end, "sample_time",
 				"desc", 10, 0);
 		model.addAttribute("pm_error_dist_table", resultByTime.getJSONArray("record"));
-		System.out.println("pm_error_dist_table:" + resultByTime.getJSONArray("record"));
+		//System.out.println("pm_error_dist_table:" + resultByTime.getJSONArray("record"));
 		JSONObject resultByError = readService.queryErrorRecordsWithTimeDetail(report.getLogSourceId(), start, end,
 				"sample_time", "desc", 5, 0);
 		model.addAttribute("pm_error_type_table", resultByError.getJSONArray("error"));
-		System.out.println("pm_error_type_table:" + resultByError.getJSONArray("error").toString());
+		//System.out.println("pm_error_type_table:" + resultByError.getJSONArray("error").toString());
 		return "logsrc/pm_analyse_saved";
 	}
 

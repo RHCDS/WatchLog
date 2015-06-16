@@ -62,7 +62,7 @@
 		            '<i class=" glyphicon glyphicon-trash"></i>',
 		            '</a>  ',	            
 		            // 查看详情
-		           '<a class="pmshow" href="/logsrc/pm_analyse/' + row.report_id + '?proj=' + pid + '" >',
+		           '<a class="pmshow" href="/logsrc/pm_analyse_saved?report_id=' + row.report_id + '&proj=' + pid + '" >',
 		            '<i class="  glyphicon glyphicon-align-left"></i>',
 		            '</a>'
 		        ].join('');

@@ -42,7 +42,7 @@
 														<td class="col-sm-4"> <a href="/logsrc/pm_analyse?proj=${pid}"> 返回 &#62; </a>	&#160;&#160;<small>${logsrc_name}</small></td>
 														<td class="col-sm-3">开始时间：${start_time}</td>
 														<td class="col-sm-3">结束时间：${end_time}</td>
-														<td class="col-sm-2"><button id="remove" class="btn btn-primary  btn-sm"  onclick="pm_analyse_single_destroy(${report_id}, ${pid})" > 删除当前报告</button></td>
+														<td class="col-sm-2"><button id="remove" class="btn btn-danger  btn-sm"  onclick="pm_analyse_single_destroy(${report_id}, ${pid})" > 删除当前报告</button></td>
 													</tr>		
 										</tbody>
 									</table>
@@ -53,6 +53,10 @@
 			<div  class="row">  <!-- row 异常分布情况 + 日志源详情-->
 						<!-- 异常分布表格-->
 						<div class="col-sm-7"    style="/*border:solid 1px yellow*/">
+												<div class="row" style=" border-bottom: solid 1px #eee; margin-bottom:10px;">
+															<p style="font-size: 15px;font-weight: bold;">异常分布情况</p>
+												</div><!-- row -->			
+																		
 												<table  class="table table-bordered">
 													<tbody>
 																<tr>
