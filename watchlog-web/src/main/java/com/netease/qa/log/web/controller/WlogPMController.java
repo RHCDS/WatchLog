@@ -135,35 +135,28 @@ public class WlogPMController {
 		return ret;
 	}
 
-	@RequestMapping(value = "/logsrc/pm_analyse/****", method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> addReport(@RequestParam(value = "proj", required = false) String projectid,
+	@RequestMapping(value = "/logsrc/pm_analyse/store", method = RequestMethod.POST)
+	public String addReport(@RequestParam(value = "proj", required = false) String projectid,
 			@RequestParam(value = "log_id", required = false) String logsrcId,
 			@RequestParam(value = "start_time", required = false) String startTime,
 			@RequestParam(value = "end_time", required = false) String endTime, RedirectAttributes model) {
-		
-		
-		String ret = "redirect:/logsrc/pm_analyse_unsave?log_id=" + logsrcId + "&proj=" + projectid;
-		JSONObject json = new JSONObject();
+		String ret_succ = "redirect:/logsrc/pm_analyse?proj=" + projectid;
+		String ret_fail = "redirect:/logsrc/pm_analyse_unsave?log_id=" + logsrcId + "&proj=" + projectid;
 		if (MathUtil.isEmpty(projectid, logsrcId, startTime, endTime)) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
-			json.put("message", ConstCN.NULL_PARAM);
-			return new ResponseEntity<JSONObject>(json, HttpStatus.OK);
+			return ret_fail;
 		}
 		if (!MathUtil.isInteger(projectid)) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.ID_MUST_BE_NUM);
-			json.put("message", ConstCN.ID_MUST_BE_NUM);
-			return new ResponseEntity<JSONObject>(json, HttpStatus.OK);
+			return ret_fail;
 		}
-		// 是否需要判断report插入，重复
-		Timestamp start = MathUtil.parse2Time(startTime);
-		Timestamp end = MathUtil.parse2Time(endTime);
 		Report report = new Report();
 		report.setProjectId(Integer.parseInt(projectid));
 		report.setLogSourceId(Integer.parseInt(logsrcId));
-		report.setStartTime(start);
-		report.setEndTime(end);
+		report.setStartTime(MathUtil.parse2Time(startTime));
+		report.setEndTime(MathUtil.parse2Time(endTime));
 		report.setCreatorId(1);
 		report.setTitle("default");
 		report.setComment("default");
@@ -171,13 +164,11 @@ public class WlogPMController {
 		if (result == 0) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.INNER_ERROR);
-			json.put("message", ConstCN.INNER_ERROR);
-			return new ResponseEntity<JSONObject>(json, HttpStatus.OK);
+			return ret_fail;
 		} else {
 			model.addFlashAttribute("status", 0);
 			model.addFlashAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);
-			json.put("message", ConstCN.RESPONSE_SUCCESSFUL);
-			return new ResponseEntity<JSONObject>(json, HttpStatus.OK);
+			return ret_succ;
 		}
 	}
 
