@@ -195,6 +195,27 @@
 			</div>		
 			
 			<div  class="row">  <!-- row 异常类型详情-->
+								<!-- 模态框（Modal） -->
+								<div class="modal fade" id="unsave_error_type_total_modal"  tabindex="-1" role="dialog"    aria-labelledby="myModalLabel" aria-hidden="true">
+									   <div class="modal-dialog">
+												      <div class="modal-content">
+												      		<input type="hidden" id="report_id" name="report_id"  />
+												      		<input type="hidden" id="proj" name="proj"  />
+
+													         <!-- body  -->
+													         <div class="modal-body">
+																           <table id="unsave_error_type_total_table"    data-toggle="toolbar"     data-height="500"     data-side-pagination="server"    data-pagination="true"      data-search="false">
+																            <thead>
+																            <tr>
+																                <th data-field="date_time"   data-sortable="true"    > 采样时间</th>
+																                 <th data-field="total_count" data-sortable="true"  > Total count </th>
+																            </tr>
+																            </thead>
+																        </table>													            	
+													         </div>
+												      </div><!-- /.modal-content -->
+										</div><!-- /.modal-dialog -->
+								</div><!-- 模态框（Modal） -->
 						<!-- 异常分布表格-->
 						<div class="col-sm-12"    style="/*border:solid 1px yellow*/">
 												<table  class="table table-bordered">
@@ -208,7 +229,8 @@
 																	<tr>
 																		<td class="col-sm-4">${data['error_type']}</td>
 																		<td class="col-sm-7">${data['error_example']}	 </td>																	
-																		<td class="col-sm-1">${data['total_count']}</td>
+																		<td class="col-sm-1"><a  href="javascript:void(0)"  
+																		onclick="get_unsave_error_type_total(${log_id}, ${data['exp_id']}, ${data['total_count']}, '${start_time}','${end_time}')">${data['total_count']}</a></td>																		
 																	</tr>																 
 															</#list>																	
 													</tbody>

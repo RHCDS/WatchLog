@@ -61,18 +61,12 @@ function pm_analyse_single_destroy(report_id,pid){
 }
 
 
-// 点击 saved 类型 total
-function get_error_type_total(report_id, exp_id, total_count){
-	console.log("get_error_type_total");
-	console.log("report_id: " + report_id);
-	console.log("exp_id: " + exp_id);
-	console.log("total_count: " + total_count);
-	
-	$("#get_error_type_total_modal").modal('show');
-	
+// 点击 saved 聚合报告 异常类型 total 弹窗
+function get_saved_error_type_total(report_id, exp_id, total_count){
+	$("#saved_error_type_total_modal").modal('show');
 	  // 表格分页设置
-  	$('#error_type_total_table').bootstrapTable({
-  		url : "/logsrc/saved_error_type_total_table",
+  	$('#saved_error_type_total_table').bootstrapTable({
+  		url : "/logsrc/error_type_total_table",
   		sortName : "date_time",
   		sortOrder: "desc",
   		pageList: "[10, 25, 50, 100, All]",
@@ -88,9 +82,33 @@ function get_error_type_total(report_id, exp_id, total_count){
   			}
   		}
   	});//  表格end
-  	
-  	
-  	
+}
+
+
+//点击 unsave 聚合报告 异常类型 total 弹窗
+function get_unsave_error_type_total(log_id, exp_id, total_count, start_time, end_time){
+	$("#unsave_error_type_total_modal").modal('show');
+	  // 表格分页设置
+  	$('#unsave_error_type_total_table').bootstrapTable({
+  		url : "/logsrc/error_type_total_table",
+  		sortName : "date_time",
+  		sortOrder: "desc",
+  		pageList: "[10, 25, 50, 100, All]",
+  		queryParams: function(p){
+  			return {
+  				log_id : log_id,
+  				start_time: start_time,
+  				end_time : end_time,
+  				exp_id: exp_id,
+  				total_count : total_count,
+  				limit: p.limit,
+  				offset : p.offset,
+  				sort: p.sort,
+  				order: p.order
+  			}
+  		}
+  	});//  表格end
+	
 }
 
 
