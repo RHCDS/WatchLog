@@ -5,7 +5,7 @@
 $(document).ready(function() {	
 
 	//生成聚合报告 
-		$('#destroy_pm_logsrc_single_form').submit(function(){ //listen for submit event
+		$('#get_pm_repost_single_form').submit(function(){ //listen for submit event
 					// 日志源id  :  selected值 
 					var logsrc_id=$('#pm_logsrc_select').val();  
 					if(logsrc_id == 0){

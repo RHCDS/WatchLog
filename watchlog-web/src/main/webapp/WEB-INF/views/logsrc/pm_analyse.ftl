@@ -10,7 +10,7 @@
     <div class="container">
 
 							<!-- 生成聚合报告导航表单-->
-    						<form  id="destroy_pm_logsrc_single_form" action="/logsrc/pm_analyse/create_report"     method="post"   class="form-horizontal" role="form"   accept-charset="UTF-8"   data-remote="true"> 
+    						<form  id="get_pm_repost_single_form" action="/logsrc/pm_analyse_unsave"     method="get"   class="form-horizontal" role="form"   accept-charset="UTF-8"   data-remote="true"> 
 											
 											<div class="row">
 													  <div class="col-sm-1">
@@ -53,7 +53,7 @@
 													  </div>
 				
 													  <div class="col-sm-2">
-													  				  <button  class="btn btn-primary  btn-sm"  >  生成聚合报告 </button>
+													  				  <button  class="btn btn-primary  btn-sm"  >  查看聚合报告 </button>
 													  </div>  
 											</div> <!-- row end-->   
 											</br>
