@@ -94,11 +94,10 @@ public class ReportServiceImpl implements ReportService{
 		return records;
 	}
 
-//	@Override
-//	public boolean checkReportByTime(int logsourceid, Timestamp start, Timestamp end) {
-//		Report report = reportDao.findByTime(logsourceid, start, end);
-//		return report != null;
-//	}
-
+	@Override
+	public Report getReportById(int reportid) {
+		Report report = reportDao.findByReportId(reportid);
+		return report;
+	}
 	
 }

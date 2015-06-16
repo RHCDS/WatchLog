@@ -106,8 +106,8 @@ public class ReadServiceImpl implements ReadService {
 		for(ExceptionDataRecord eRecord : exceptionDataRecords){
 			JSONObject record = new JSONObject();
 			JSONArray details = new JSONArray();
-			record.put("time", MathUtil.parse2Str(eRecord.getSampleTime()));
-			record.put("totalcount", eRecord.getTotalCount());
+			record.put("date_time", MathUtil.parse2Str(eRecord.getSampleTime()));
+			record.put("total_count", eRecord.getTotalCount());
 			
 			String [] eids = eRecord.getExceptionIds().split(",");
 			String [] ecounts = eRecord.getExceptionCounts().split(",");
@@ -116,11 +116,11 @@ public class ReadServiceImpl implements ReadService {
 				String type = exceptionDao.findByExceptionId(exceptionId).getExceptionType();
 				
 				JSONObject detail = new JSONObject();
-				detail.put("exceptionType", type);
+				detail.put("type", type);
 				detail.put("count", ecounts[i]);
 				details.add(detail);
 			}
-			record.put("detail", details);
+			record.put("error_tc", details);
 			records.add(record);
 		}
 		result.put("record", records);
@@ -178,9 +178,9 @@ public class ReadServiceImpl implements ReadService {
 		for(ExceptionData exceptionData : exceptionDatas){
 			JSONObject error = new JSONObject();
 			com.netease.qa.log.meta.Exception exception = exceptionDao.findByExceptionId(exceptionData.getExceptionId());
-			error.put("type", exception.getExceptionType());
-			error.put("demo", exception.getExceptionDemo());
-			error.put("totalcount", exceptionData.getExceptionCount());
+			error.put("error_type", exception.getExceptionType());
+			error.put("error_example", exception.getExceptionDemo());
+			error.put("total_count", exceptionData.getExceptionCount());
 			JSONArray details = new JSONArray();
 			List<ExceptionData> tmp = exceptionDataDao.findErrorRecordsByLogSourceIdAndExceptionIdAndTime(logSourceId,
 					exceptionData.getExceptionId(), startTime, endTime, "sample_time", "desc", 99999, 0);

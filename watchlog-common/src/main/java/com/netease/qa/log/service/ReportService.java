@@ -15,5 +15,6 @@ public interface ReportService {
  	
  	public JSONArray getReportListSortedByProjectid(int project, String field, String order, int limit, int offset);
  
+ 	public Report getReportById(int reportid);
 
 }
