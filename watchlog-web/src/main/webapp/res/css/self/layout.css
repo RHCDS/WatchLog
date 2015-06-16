@@ -33,6 +33,7 @@ padding-bottom: 5px;
  .mid-menu{
  		background-color: #699;
  		border-color: #699;
+ 		border-radius: 0px;
  }
  
  .text-menu{
@@ -61,3 +62,19 @@ table.wratb {
 table.removebd>tbody>tr>td{
  	border: 0px;
 }     
+
+
+.cn {
+  display: table-cell;
+  width: 500px;
+  height: 500px;
+  vertical-align: middle;
+  text-align: center;
+}
+
+div.inner {
+  display: inline-block;
+  width: 200px;
+  height: 200px;
+  text-align: left;
+}

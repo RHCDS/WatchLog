@@ -21,7 +21,7 @@ var report_id = getParam( 'report_id' );
 					  // 聚合分析 - 异常分布情况 表格
 					  	$('#pm_error_dist_table').bootstrapTable({
 					  		url : "/logsrc/pm_analyse/error_dist_table",
-					  		sortName : "sample_time",
+					  		sortName : "date_time",
 					  		sortOrder: "desc",
 					  		pageList: "[10,50, 100, All]",
 					  		queryParams: function(p){
@@ -42,7 +42,7 @@ var report_id = getParam( 'report_id' );
 				  // 聚合分析 - 异常分布情况 表格
 				  	$('#pm_error_type_table').bootstrapTable({
 				  		url : "/logsrc/pm_analyse/error_type_table",
-				  		sortName : "sample_time",
+				  		sortName : "total_count",
 				  		sortOrder: "desc",
 				  		pageList: "[10,50, 100, All]",
 				  		queryParams: function(p){

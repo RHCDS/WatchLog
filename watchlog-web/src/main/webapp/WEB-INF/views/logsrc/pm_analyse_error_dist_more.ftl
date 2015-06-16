@@ -10,7 +10,7 @@
 		           <table id="pm_error_dist_table"    data-toggle="toolbar"     data-height="500"     data-side-pagination="server"            data-pagination="true"      data-search="false">
 		            <thead>
 		            <tr>
-		                <th data-field="sample_time"   data-sortable="true"    > 采样时间</th>
+		                <th data-field="date_time"   data-sortable="true"    > 采样时间</th>
 		                <th data-field="error_tc" data-sortable="true" data-formatter="pmdisterrorFormatter"   > Error type & count</th>
 		                 <th data-field="total_count" data-sortable="true"  > Total count </th>
 		            </tr>
