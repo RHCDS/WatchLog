@@ -86,7 +86,7 @@
 												</table>
 												<#if log_id?exists>
 														<!-- 更多-->
-														<div class="row pull-right"  style="margin-right: 0px;"><a target="_blank" href="/logsrc/pm_analyse/error_dist_more?report_id=${log_id}&proj=${pid}">更多&#62;&#62;</a></div>
+														<div class="row pull-right"  style="margin-right: 0px;"><a target="_blank" href="/logsrc/pm_analyse/error_dist_more?log_id=${log_id}&proj=${pid}&start_time=${start_time}&end_time=${end_time}">更多&#62;&#62;</a></div>
 												</#if>			
 																	
 						</div><!--  col-sm-7 -->
@@ -237,7 +237,7 @@
 												</table>
 												<#if log_id?exists>
 														<!-- 更多-->
-														<div class="row pull-right" style="margin-right: 0px;"><a target="_blank" href="/logsrc/pm_analyse/error_type_more?report_id=${log_id}&proj=${pid}">更多&#62;&#62;</a></div>												
+														<div class="row pull-right" style="margin-right: 0px;"><a target="_blank" href="/logsrc/pm_analyse/error_type_more?log_id=${log_id}&proj=${pid}&start_time=${start_time}&end_time=${end_time}">更多&#62;&#62;</a></div>												
 												</#if>
 						</div><!--  col-sm-12 -->		
 				</div> <!-- row 异常分布情况 + 日志源详情-->									

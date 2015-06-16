@@ -189,12 +189,16 @@
 			<div  class="row">  <!-- row 异常类型详情-->
   	
 								<!-- 模态框（Modal） -->
-								<div class="modal fade" id="saved_error_type_total_modal"  tabindex="-1" role="dialog"    aria-labelledby="myModalLabel" aria-hidden="true">
+								<div class="modal fade" id="saved_error_type_total_modal"  tabindex="-1" role="dialog"    aria-labelledby="myModalLabel" aria-hidden="true"   data-backdrop="static">
 									   <div class="modal-dialog">
 												      <div class="modal-content">
 												      		<input type="hidden" id="report_id" name="report_id"  />
 												      		<input type="hidden" id="proj" name="proj"  />
-
+												      		 <!-- header  -->
+													         <div class="modal-header">
+														            <button type="button" class="close"    data-dismiss="modal" aria-hidden="true"  >   &times;  </button>
+														            <h4 class="modal-title" id="myModalLabel">    异常类型详情 Total count    </h4>
+													         </div>												      		
 													         <!-- body  -->
 													         <div class="modal-body">
 																           <table id="saved_error_type_total_table"    data-toggle="toolbar"     data-height="500"     data-side-pagination="server"    data-pagination="true"      data-search="false">
