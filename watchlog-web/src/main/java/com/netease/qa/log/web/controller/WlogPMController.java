@@ -140,6 +140,8 @@ public class WlogPMController {
 			@RequestParam(value = "log_id", required = false) String logsrcId,
 			@RequestParam(value = "start_time", required = false) String startTime,
 			@RequestParam(value = "end_time", required = false) String endTime, RedirectAttributes model) {
+		
+		
 		String ret = "redirect:/logsrc/pm_analyse_unsave?log_id=" + logsrcId + "&proj=" + projectid;
 		JSONObject json = new JSONObject();
 		if (MathUtil.isEmpty(projectid, logsrcId, startTime, endTime)) {
@@ -183,23 +185,34 @@ public class WlogPMController {
 	public String viewReport(@RequestParam(value = "proj", required = false) String projectid,
 			@RequestParam(value = "log_id", required = false) String logsrcId,
 			@RequestParam(value = "start_time", required = false) String startTime,
-			@RequestParam(value = "end_time", required = false) String endTime, RedirectAttributes model) {
-		String ret_fail = "redirect:/logsrc/pm_analyse?proj=" + projectid;
-		if (MathUtil.isEmpty(projectid, logsrcId, startTime, endTime)) {
-			model.addFlashAttribute("status", -1);
-			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
-			return ret_fail;
-		}
-		if (!MathUtil.isInteger(projectid)) {
-			model.addFlashAttribute("status", -1);
-			model.addFlashAttribute("message", ConstCN.ID_MUST_BE_NUM);
-			return ret_fail;
-		}
+			@RequestParam(value = "end_time", required = false) String endTime, Model model) {
+		//String ret_fail = "redirect:/logsrc/pm_analyse?proj=" + projectid;
+		
+		System.out.println("pm_analyse_unsave");
 		model.addAttribute("controller", "WlogPM");
 		model.addAttribute("action", "pm_analyse_unsave");
+		
+		
+		if (MathUtil.isEmpty(projectid, logsrcId, startTime, endTime)) {
+//			model.addFlashAttribute("status", -1);
+//			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
+			return "logsrc/pm_analyse_unsave";
+			//return ret_fail;
+		}
+		
 		model.addAttribute("log_id", Integer.parseInt(logsrcId));
 		model.addAttribute("start_time", startTime);
 		model.addAttribute("end_time", endTime);
+		
+		
+		if (!MathUtil.isInteger(projectid)) {
+//			model.addFlashAttribute("status", -1);
+//			model.addFlashAttribute("message", ConstCN.ID_MUST_BE_NUM);
+			//return ret_fail;
+			return "logsrc/pm_analyse_unsave";
+		}
+
+
 		LogSource logSource = logSourceService.getByLogSourceId(Integer.parseInt(logsrcId));
 		model.addAttribute("logsrc_name", logSource.getLogSourceName());
 		model.addAttribute("host_name", logSource.getHostname());
@@ -221,9 +234,10 @@ public class WlogPMController {
 		model.addAttribute("pm_error_dist_table", resultByTime.getJSONArray("record"));
 		JSONObject resultByError = readService.queryErrorRecordsWithTimeDetail(Integer.parseInt(logsrcId), start, end, "sample_time", "desc", 5, 0);
 		model.addAttribute("pm_eror_type_table", resultByError.getJSONArray("error"));
-		model.addFlashAttribute("status", 0);
-		model.addFlashAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);
+//		model.addFlashAttribute("status", 0);
+//		model.addFlashAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);
 		return "logsrc/pm_analyse_unsave";
+		
 	}
 
 }
