@@ -189,12 +189,16 @@ public class WlogPMController {
 		model.addAttribute("controller", "WlogPM");
 		model.addAttribute("action", "pm_analyse_unsave");
 		if (MathUtil.isEmpty(projectid, logsrcId, startTime, endTime)) {
+			model.addAttribute("status", -1);
+			model.addAttribute("message", ConstCN.NULL_PARAM);		
 			return "logsrc/pm_analyse_unsave";
 		}
 		model.addAttribute("log_id", Integer.parseInt(logsrcId));
 		model.addAttribute("start_time", startTime);
 		model.addAttribute("end_time", endTime);
 		if (!MathUtil.isInteger(projectid)) {
+			model.addAttribute("status", -1);
+			model.addAttribute("message", ConstCN.ID_MUST_BE_NUM);					
 			return "logsrc/pm_analyse_unsave";
 		}
 		LogSource logSource = logSourceService.getByLogSourceId(Integer.parseInt(logsrcId));
@@ -216,11 +220,13 @@ public class WlogPMController {
 		JSONObject resultByTime = readService.queryTimeRecords(Integer.parseInt(logsrcId), start, end, "sample_time",
 				"desc", 10, 0);
 		model.addAttribute("pm_error_dist_table", resultByTime.getJSONArray("record"));
-//		System.out.println("pm_error_dist_table:" + resultByTime.getJSONArray("record"));
+		System.out.println("pm_error_dist_table:" + resultByTime.getJSONArray("record"));
 		JSONObject resultByError = readService.queryErrorRecordsWithTimeDetail(Integer.parseInt(logsrcId), start, end,
 				"sample_time", "desc", 5, 0);
 		model.addAttribute("pm_error_type_table", resultByError.getJSONArray("error"));
-//		System.out.println("pm_error_type_table:" + resultByError.getJSONArray("error").toString());
+		System.out.println("pm_error_type_table:" + resultByError.getJSONArray("error").toString());
+		model.addAttribute("status", 0);
+		model.addAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);		
 		return "logsrc/pm_analyse_unsave";
 	}
 	

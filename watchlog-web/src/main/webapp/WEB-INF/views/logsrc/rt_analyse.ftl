@@ -38,25 +38,25 @@
 									</div>
 							</div>										
 								
-										<div  class="row">
-												<table  class="table table-bordered">
-													<tbody>
+										<div  class='row'>
+												<table  class='table table-bordered'>
+													<tbody id='rt_refresh_body'>
 																<tr>
-																	<th class="col-sm-4">采样时间</th>
-																	<th class="col-sm-6">Error type & count </th>
-																	<th class="col-sm-2">Total  count</th>
+																	<th class='col-sm-4'>采样时间</th>
+																	<th class='col-sm-6'>Error type & count </th>
+																	<th class='col-sm-2'>Total  count</th>
 																</tr>		
 																<#list rt_table as data>
-																	<tr>
-																		<td class="col-sm-4">${data['date_time']}</td>
-																		<td class="col-sm-6">
+																	<tr  >
+																		<td class='col-sm-4'>${data['date_time']}</td>
+																		<td class='col-sm-6'>
 																			<#if  data['error_tc']?has_content>
 																					<#list data['error_tc'] as x>
-																							<a title="${x['type']}"   href ="#" >${x['count']},</a>
+																							<a title='${x['type']}'   href ='#' >${x['count']},</a>
 																					 </#list>
 																			 </#if>
 																		 </td>																	
-																		<td class="col-sm-2">${data['total_count']}</td>
+																		<td class='col-sm-2'>${data['total_count']}</td>
 																	</tr>																 
 															</#list>																	
 													</tbody>
