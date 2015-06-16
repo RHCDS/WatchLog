@@ -267,7 +267,7 @@ public class WlogPMController {
 			@RequestParam(value = "report_id", required = false) String reportid,
 			@RequestParam(value = "limit", required = false) String limit,
 			@RequestParam(value = "offset", required = false) String offset,
-			@RequestParam(value = "sort", required = false, defaultValue = "sample_time") String sort,
+			@RequestParam(value = "sort", required = false, defaultValue = "date_time") String sort,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order, Model model) {
 		String message = "";
 		JSONObject result = new JSONObject();
@@ -313,7 +313,7 @@ public class WlogPMController {
 			e.printStackTrace();
 		}
 		String field = "sampleTime";
-		if (sort.equals("totalCount"))
+		if (sort.equals("total_count"))
 			field = "totalCount";
 		total = readService.getTimeCountByLogSourceIdAndTime(report.getLogSourceId(), start, end);
 		JSONObject resultByTime = readService.queryTimeRecords(report.getLogSourceId(), start, end, field, order,

@@ -58,7 +58,39 @@ function pm_analyse_single_destroy(report_id,pid){
 	 $('#report_id').val(report_id);  //post请求参数 聚合报告id 
 	 $('#proj').val(pid);  //post请求参数 proj
 	$('#destroy_pm_report_single_modal').modal('show');  //弹窗modal				
+}
+
+
+// 点击 saved 类型 total
+function get_error_type_total(report_id, exp_id, total_count){
+	console.log("get_error_type_total");
+	console.log("report_id: " + report_id);
+	console.log("exp_id: " + exp_id);
+	console.log("total_count: " + total_count);
 	
+	$("#get_error_type_total_modal").modal('show');
+	
+	  // 表格分页设置
+  	$('#error_type_total_table').bootstrapTable({
+  		url : "/logsrc/saved_error_type_total_table",
+  		sortName : "date_time",
+  		sortOrder: "desc",
+  		pageList: "[10, 25, 50, 100, All]",
+  		queryParams: function(p){
+  			return {
+  				report_id : report_id,
+  				exp_id: exp_id,
+  				total_count : total_count,
+  				limit: p.limit,
+  				offset : p.offset,
+  				sort: p.sort,
+  				order: p.order
+  			}
+  		}
+  	});//  表格end
+  	
+  	
+  	
 }
 
 
