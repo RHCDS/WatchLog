@@ -51,6 +51,12 @@ public class ReadServiceImpl implements ReadService {
 	}
 
 	@Override
+	public int getErrorRecordsCountByLogSourceIdAndExceptionIdAndTime(int logSourceId, int exceptionId, long startTime,
+			long endTime) {
+	return exceptionDataDao.getErrorRecordsCountByLogSourceIdAndExceptionIdAndTime(logSourceId, exceptionId, startTime, endTime);
+	}
+
+	@Override
 	public JSONObject queryLatestTimeRecords(int logSourceId, long currentTime) {
 		//时间精度取整： xx:xx:00 、xx:xx:30两种精度
 		Long formatCurrentTime = currentTime / Const.RT_SHOW_TIME * Const.RT_SHOW_TIME; 
@@ -270,5 +276,6 @@ public class ReadServiceImpl implements ReadService {
 		result.put("details", details);
 		return result;
 	}
+
 
 }

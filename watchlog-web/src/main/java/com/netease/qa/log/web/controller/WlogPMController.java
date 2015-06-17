@@ -139,7 +139,9 @@ public class WlogPMController {
 	public String addReport(@RequestParam(value = "proj", required = false) String projectid,
 			@RequestParam(value = "log_id", required = false) String logsrcId,
 			@RequestParam(value = "start_time", required = false) String startTime,
-			@RequestParam(value = "end_time", required = false) String endTime, RedirectAttributes model) {
+			@RequestParam(value = "end_time", required = false) String endTime, 
+			@RequestParam(value = "title", required = false) String title, RedirectAttributes model) {
+		System.out.println("title:" + title);
 		String ret_succ = "redirect:/logsrc/pm_analyse?proj=" + projectid;
 		String ret_fail = "redirect:/logsrc/pm_analyse_unsave?log_id=" + logsrcId + "&proj=" + projectid
 				+ "&start_time=" + startTime + "&end_time" + endTime;
@@ -159,7 +161,7 @@ public class WlogPMController {
 		report.setStartTime(MathUtil.parse2Time(startTime));
 		report.setEndTime(MathUtil.parse2Time(endTime));
 		report.setCreatorId(1);
-		report.setTitle("default");
+		report.setTitle(title);
 		report.setComment("default");
 		int result = reportService.createReport(report);
 		if (result == 0) {
@@ -442,18 +444,18 @@ public class WlogPMController {
 			@RequestParam(value = "start_time", required = false) String startTime,
 			@RequestParam(value = "end_time", required = false) String endTime,
 			@RequestParam(value = "exp_id", required = false) String exceptionid,
-			@RequestParam(value = "total_count", required = false) String totalCount,
 			@RequestParam(value = "sort", required = false, defaultValue = "date_time") String sort,
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "limit", required = false) String limit,
 			@RequestParam(value = "offset", required = false) String offset, Model model) {
-		System.out.println("reportid:" + reportid + "log_id:" + logsourceid + ";start:" + startTime + ";end:" + endTime);
-		
+		System.out
+				.println("reportid:" + reportid + "log_id:" + logsourceid + ";start:" + startTime + ";end:" + endTime);
+
 		String message = "";
 		JSONObject result = new JSONObject();
 		JSONObject detail = new JSONObject();
 		JSONArray rows = new JSONArray();
-		int total = Integer.parseInt(totalCount);
+		int total = 0;
 		if (MathUtil.isEmpty(exceptionid, sort, order, limit, offset)) {
 			message = ConstCN.NULL_PARAM;
 			result.put("message", message);
@@ -475,6 +477,7 @@ public class WlogPMController {
 			result.put("rows", rows);
 			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 		}
+
 		String field = "sampleTime";
 		if (sort.equals("total_count"))
 			field = "exceptionCount";
@@ -489,6 +492,8 @@ public class WlogPMController {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			total = readService.getErrorRecordsCountByLogSourceIdAndExceptionIdAndTime(Integer.parseInt(logsourceid),
+					Integer.parseInt(exceptionid), start, end);
 			detail = readService.queryDetailByErrorType(Integer.parseInt(logsourceid), Integer.parseInt(exceptionid),
 					start, end, field, order, Integer.parseInt(limit), Integer.parseInt(offset));
 		} else {
@@ -505,6 +510,8 @@ public class WlogPMController {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
+			total = readService.getErrorRecordsCountByLogSourceIdAndExceptionIdAndTime(report.getLogSourceId(),
+					Integer.parseInt(exceptionid), start, end);
 			detail = readService.queryDetailByErrorType(report.getLogSourceId(), Integer.parseInt(exceptionid), start,
 					end, field, order, Integer.parseInt(limit), Integer.parseInt(offset));
 		}
@@ -513,5 +520,4 @@ public class WlogPMController {
 		result.put("rows", detail.getJSONArray("details"));
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
-
 }

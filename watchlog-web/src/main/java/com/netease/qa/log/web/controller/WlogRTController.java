@@ -3,6 +3,7 @@ package com.netease.qa.log.web.controller;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
+
 import javax.annotation.Resource;
 
 import org.springframework.http.HttpStatus;
@@ -17,6 +18,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.netease.qa.log.meta.LogSource;
 import com.netease.qa.log.service.LogSourceService;
 import com.netease.qa.log.service.ReadService;
+import com.netease.qa.log.util.ConstCN;
 import com.netease.qa.log.util.MathUtil;
 
 @Controller
@@ -54,7 +56,7 @@ public class WlogRTController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		JSONObject result = new JSONObject(); 
+		JSONObject result = new JSONObject();
 		if (Integer.parseInt(logsrcid) == 0) {
 			LogSource logSource = logsources.get(0);
 			model.addAttribute("logsrc_name", logSource.getLogSourceName());
@@ -78,6 +80,38 @@ public class WlogRTController {
 		}
 		model.addAttribute("rt_table", result.getJSONArray("record"));
 		return "logsrc/rt_analyse";
+	}
+	
+	@RequestMapping(value = "/logsrc/rt_analyse/refresh", method = RequestMethod.GET)
+	public ResponseEntity<JSONObject> refreshTable(@RequestParam(value = "proj", required = false) String projectid,
+			@RequestParam(value = "log_id", required = false, defaultValue = "0") String logsrcid, Model model){
+		JSONObject result = new JSONObject();
+		if(MathUtil.isEmpty(projectid, logsrcid)){
+			result.put("status", -1);
+			result.put("message", ConstCN.NULL_PARAM);
+			result.put("data", new JSONObject());
+            return new ResponseEntity<JSONObject>(result, HttpStatus.OK);	
+		}
+		if(!MathUtil.isInteger(projectid) || !MathUtil.isInteger(logsrcid)){
+			result.put("status", -1);
+			result.put("message", ConstCN.ID_MUST_BE_NUM);
+			result.put("data", new JSONObject());
+            return new ResponseEntity<JSONObject>(result, HttpStatus.OK);		
+		}
+		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+		String time = MathUtil.parse2Str(currentTime);
+		long current = 0;
+		try {
+			current = MathUtil.parse2Long(time);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		JSONObject records = readService.queryLatestTimeRecords(Integer.parseInt(logsrcid), current);
+		result.put("status", -1);
+		result.put("message", ConstCN.RESPONSE_SUCCESSFUL);
+		result.put("data", records.getJSONArray("record"));
+		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);		
 	}
 
 }

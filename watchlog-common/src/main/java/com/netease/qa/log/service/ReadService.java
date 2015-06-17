@@ -13,6 +13,9 @@ public interface ReadService {
 
 	public int getErrorTypeCountByLogSourceId(int logSourceId, long startTime, long endTime);
 
+	public int getErrorRecordsCountByLogSourceIdAndExceptionIdAndTime(int logSourceId, int exceptionId, long startTime,
+			long endTime);
+
 	public JSONObject queryErrorRecords(int logSourceId, long startTime, long endTime, String orderBy, String order,
 			int limit, int offset);
 
