@@ -82,7 +82,7 @@ function pm_analyse_single_destroy(report_id,pid){
 
 
 // 点击 saved 聚合报告 异常类型 total 弹窗
-function get_saved_error_type_total(report_id, exp_id, total_count){
+function get_saved_error_type_total(report_id, exp_id){
 	$("#saved_error_type_total_modal").modal('show');
 	  // 表格分页设置
   	$('#saved_error_type_total_table').bootstrapTable({
@@ -94,7 +94,6 @@ function get_saved_error_type_total(report_id, exp_id, total_count){
   			return {
   				report_id : report_id,
   				exp_id: exp_id,
-  				total_count : total_count,
   				limit: p.limit,
   				offset : p.offset,
   				sort: p.sort,
@@ -106,7 +105,7 @@ function get_saved_error_type_total(report_id, exp_id, total_count){
 
 
 //点击 unsave 聚合报告 异常类型 total 弹窗
-function get_unsave_error_type_total(log_id, exp_id, total_count, start_time, end_time){
+function get_unsave_error_type_total(log_id, exp_id, start_time, end_time){
 	$("#unsave_error_type_total_modal").modal('show');
 	  // 表格分页设置
   	$('#unsave_error_type_total_table').bootstrapTable({
@@ -120,7 +119,6 @@ function get_unsave_error_type_total(log_id, exp_id, total_count, start_time, en
   				start_time: start_time,
   				end_time : end_time,
   				exp_id: exp_id,
-  				total_count : total_count,
   				limit: p.limit,
   				offset : p.offset,
   				sort: p.sort,

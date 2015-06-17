@@ -448,8 +448,6 @@ public class WlogPMController {
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "limit", required = false) String limit,
 			@RequestParam(value = "offset", required = false) String offset, Model model) {
-		System.out
-				.println("reportid:" + reportid + "log_id:" + logsourceid + ";start:" + startTime + ";end:" + endTime);
 
 		String message = "";
 		JSONObject result = new JSONObject();

@@ -196,7 +196,7 @@
 			
 			<div  class="row">  <!-- row 异常类型详情-->
 								<!-- 模态框（Modal） -->
-								<div class="modal fade" id="unsave_error_type_total_modal"  tabindex="-1" role="dialog"    aria-labelledby="myModalLabel" aria-hidden="true">
+								<div class="modal fade" id="unsave_error_type_total_modal"  tabindex="-1" role="dialog"    aria-labelledby="myModalLabel" aria-hidden="true"  data-backdrop="static">
 									   <div class="modal-dialog">
 												      <div class="modal-content">
 												      		<input type="hidden" id="report_id" name="report_id"  />
@@ -235,7 +235,7 @@
 																		<td class="col-sm-4">${data['error_type']}</td>
 																		<td class="col-sm-7">${data['error_example']}	 </td>																	
 																		<td class="col-sm-1"><a  href="javascript:void(0)"  
-																		onclick="get_unsave_error_type_total(${log_id}, ${data['exp_id']}, ${data['total_count']}, '${start_time}','${end_time}')">${data['total_count']}</a></td>																		
+																		onclick="get_unsave_error_type_total(${log_id}, ${data['exp_id']},  '${start_time}','${end_time}')">${data['total_count']}</a></td>																		
 																	</tr>																 
 															</#list>																	
 													</tbody>

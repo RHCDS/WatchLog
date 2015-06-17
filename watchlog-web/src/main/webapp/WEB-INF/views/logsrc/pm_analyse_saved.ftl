@@ -227,7 +227,7 @@
 																		<td class="col-sm-4">${data['error_type']}</td>
 																		<td class="col-sm-7">${data['error_example']}	 </td>																	
 																		<td class="col-sm-1"><a  href="javascript:void(0)"  
-																		onclick="get_saved_error_type_total(${report_id}, ${data['exp_id']}, ${data['total_count']})">${data['total_count']}</a></td>
+																		onclick="get_saved_error_type_total(${report_id}, ${data['exp_id']})">${data['total_count']}</a></td>
 																	</tr>																 
 															</#list>																	
 													</tbody>
