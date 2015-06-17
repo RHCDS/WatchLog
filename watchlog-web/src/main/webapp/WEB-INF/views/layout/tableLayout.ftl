@@ -3,7 +3,7 @@
 <html>
 		  <head>
 			    <meta charset="utf-8" />
-			    <title>日志分析系统</title>
+			    <title>更多</title>
 			       <!--  jquery  -->    
 			     <script src="/res/js/jquery-1.11.3.min.js"></script>
 			         
@@ -17,11 +17,7 @@
 					
 			     <!--  self defined  -->    
 				  <script src="/res/js/self/pm_more_table.js" ></script>
-				 
-	 
-	 						 		  
 		  </head>
-		  
   <body>
 	   	<div class="wrapper">
 		     <#if message?exists>	 <#include "notice.ftl"/> </#if> 	

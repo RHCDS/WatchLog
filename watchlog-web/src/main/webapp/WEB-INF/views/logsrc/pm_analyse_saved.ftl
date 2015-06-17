@@ -32,28 +32,28 @@
 										</div><!-- /.modal-dialog -->
 								</div><!-- 模态框（Modal） -->
 							</form>			
-  	
-  			<!-- 未保存聚合分析页面 导航条-->
-			<div class="row"   style="border-bottom: solid 1px #ddd;height: 45px;" >
-					<div class="col-sm-12"> 
-									<table  class="table wratb  removebd">
-										<tbody>
-													<tr>
-														<td class="col-sm-4"> <a href="/logsrc/pm_analyse?proj=${pid}"> 返回 &#62; </a>	&#160;&#160;<small>${logsrc_name}</small></td>
-														<td class="col-sm-3">开始时间：${start_time}</td>
-														<td class="col-sm-3">结束时间：${end_time}</td>
-														<td class="col-sm-2"><button id="remove" class="btn btn-danger  btn-xs"  onclick="pm_analyse_single_destroy(${report_id}, ${pid})" > &#160;&#160;删除当前报告&#160;&#160;</button></td>
-													</tr>		
-										</tbody>
-									</table>
-					</div><!-- /col-sm-12 -->			
-			</div><!-- /row -->			
-				
+				  	
+				  			<!-- 未保存聚合分析页面 导航条-->
+							<div class="row"   style="border-bottom: solid 1px #ddd;height: 45px;" >
+									<div class="col-sm-12"> 
+													<table  class="table wratb  removebd">
+														<tbody>
+																	<tr>
+																		<td class="col-sm-4"> <a href="/logsrc/pm_analyse?proj=${pid}"> 返回 &#62; </a>	&#160;&#160;<small>${logsrc_name}</small></td>
+																		<td class="col-sm-3">开始时间：${start_time}</td>
+																		<td class="col-sm-3">结束时间：${end_time}</td>
+																		<td class="col-sm-2"><button id="remove" class="btn btn-danger  btn-xs"  onclick="pm_analyse_single_destroy(${report_id}, ${pid})" > &#160;&#160;删除当前报告&#160;&#160;</button></td>
+																	</tr>		
+														</tbody>
+													</table>
+									</div><!-- /col-sm-12 -->			
+							</div><!-- /row -->			
+								
 				  	
 			<div  class="row">  <!-- row 异常分布情况 + 日志源详情-->
 						<!-- 异常分布表格-->
-						<div class="col-sm-7"    style="/*border:solid 1px yellow*/">
-												<div class="row" style=" border-bottom: solid 1px #eee; margin-bottom:10px;">
+						<div class="col-sm-7">
+												<div class="row detail-head-text">
 															<p style="font-size: 15px;font-weight: bold;">异常分布情况</p>
 												</div><!-- row -->			
 																		
@@ -90,8 +90,8 @@
 					
 					
 							<!-- 右侧： 日志源详情-->
-							<div class="col-sm-5"    style="/*border:solid 1px blue; */ padding-left: 30px;">
-									<div class="row" style=" border-bottom: solid 1px #eee; margin-bottom:10px;">
+							<div class="col-sm-5"    style="padding-left: 30px;">
+									<div class="row  detail-head-text">
 												<p style="font-size: 15px;font-weight: bold;">日志源配置</p>
 									</div><!-- row -->
 									
@@ -120,69 +120,66 @@
 												</div><!-- /col-sm-12 -->			
 										</div><!-- /row -->					
 																		
-		
-	
-									
-							<#if  filter_keyword?contains("_AND_")>
-									<#assign filter_keyword_flag = "AND">
-									<#assign filter_keyword_arr=filter_keyword?split("_AND_")>
-							<#elseif  filter_keyword?contains("_OR_")>				
-									<#assign filter_keyword_flag = "OR">
-									<#assign filter_keyword_arr=filter_keyword?split("_OR_")>
-							<#else>
-									<#assign filter_keyword_flag = "">
-									<#assign filter_keyword_arr=[filter_keyword]>
-							</#if>
+									<#if  filter_keyword?contains("_AND_")>
+											<#assign filter_keyword_flag = "AND">
+											<#assign filter_keyword_arr=filter_keyword?split("_AND_")>
+									<#elseif  filter_keyword?contains("_OR_")>				
+											<#assign filter_keyword_flag = "OR">
+											<#assign filter_keyword_arr=filter_keyword?split("_OR_")>
+									<#else>
+											<#assign filter_keyword_flag = "">
+											<#assign filter_keyword_arr=[filter_keyword]>
+									</#if>
 							
 									<div class="row"    style="height:25px;">
 												<div class="col-sm-12"> <p style="font-size: 15px;font-weight: bold;">Step 1:  过滤关键字</p>	</div><!-- /col-sm-12 -->		
 									</div><!-- row -->						
 							
-							<div class="row" >
-									<div class="col-sm-12"> 
-													<table  class="table table-bordered wratb">
-														<tbody>
-																<#list filter_keyword_arr as f>
-																	<tr>
-																		<td class="col-sm-6">${f}</td>
-																		<td class="col-sm-1">${filter_keyword_flag}</td>
-																	</tr>											
-																</#list>
-														</tbody>
-													</table>
-									</div><!-- /col-sm-12 -->			
-							</div><!-- /row -->
+									<div class="row" >
+											<div class="col-sm-12"> 
+															<table  class="table table-bordered wratb">
+																<tbody>
+																		<#list filter_keyword_arr as f>
+																			<tr>
+																				<td class="col-sm-6">${f}</td>
+																				<td class="col-sm-1">${filter_keyword_flag}</td>
+																			</tr>											
+																		</#list>
+																</tbody>
+															</table>
+											</div><!-- /col-sm-12 -->			
+									</div><!-- /row -->
 							
-							<#if  reg_regex?contains("_AND_")>
-									<#assign reg_regex_flag = "AND">
-									<#assign reg_regex_arr=reg_regex?split("_AND_")>
-							<#elseif  reg_regex?contains("_OR_")>				
-									<#assign reg_regex_flag = "OR">
-									<#assign reg_regex_arr=reg_regex?split("_OR_")>
-							<#else>
-									<#assign reg_regex_flag = "">
-									<#assign reg_regex_arr=[reg_regex]>
-							</#if>				
-							
+									<#if  reg_regex?contains("_AND_")>
+											<#assign reg_regex_flag = "AND">
+											<#assign reg_regex_arr=reg_regex?split("_AND_")>
+									<#elseif  reg_regex?contains("_OR_")>				
+											<#assign reg_regex_flag = "OR">
+											<#assign reg_regex_arr=reg_regex?split("_OR_")>
+									<#else>
+											<#assign reg_regex_flag = "">
+											<#assign reg_regex_arr=[reg_regex]>
+									</#if>				
+									
 									<div class="row"    style="height:25px;">
 											<div class="col-sm-12"> <p style="font-size: 15px;font-weight: bold;">Step 2:  正则表达式</p>	</div><!-- /col-sm-12 -->		
 									</div>						
-							
-							<div class="row" >
-									<div class="col-sm-12"> 
-													<table  class="table table-bordered wratb">
-														<tbody>
-																<#list reg_regex_arr as r>
-																	<tr>
-																		<td class="col-sm-6">${r}</td>
-																		<td class="col-sm-1">${reg_regex_flag}</td>
-																	</tr>											
-																</#list>
-														</tbody>
-													</table>
-									</div><!-- /col-sm-12 -->			
-							</div><!-- /row -->				
-					</div>	<!-- 右侧： 日志源详情-->
+									
+									<div class="row" >
+											<div class="col-sm-12"> 
+															<table  class="table table-bordered wratb">
+																<tbody>
+																		<#list reg_regex_arr as r>
+																			<tr>
+																				<td class="col-sm-6">${r}</td>
+																				<td class="col-sm-1">${reg_regex_flag}</td>
+																			</tr>											
+																		</#list>
+																</tbody>
+															</table>
+											</div><!-- /col-sm-12 -->			
+									</div><!-- /row -->				
+							</div>	<!-- 右侧： 日志源详情-->
 				
 		</div> <!-- row 异常分布情况 + 日志源详情-->			
 		
@@ -218,22 +215,23 @@
 												      </div><!-- /.modal-content -->
 										</div><!-- /.modal-dialog -->
 								</div><!-- 模态框（Modal） -->
+								
 						<!-- 异常分布表格-->
 						<div class="col-sm-12"    style="/*border:solid 1px yellow*/">
 												<table  class="table table-bordered">
 													<tbody>
 													<#if  pm_error_type_table?has_content>
 																<tr>
-																	<th class="col-sm-4">Error Type</th>
-																	<th class="col-sm-7">Error type & count </th>
-																	<th class="col-sm-1">Total  count</th>
+																		<th class="col-sm-4">Error Type</th>
+																		<th class="col-sm-7">Error type & count </th>
+																		<th class="col-sm-1">Total  count</th>
 																</tr>		
 																<#list pm_error_type_table as data>
 																	<tr>
-																		<td class="col-sm-4">${data['error_type']}</td>
-																		<td class="col-sm-7">${data['error_example']}	 </td>																	
-																		<td class="col-sm-1"><a  href="javascript:void(0)"  
-																		onclick="get_unsave_error_type_total(${log_id}, ${data['exp_id']},  '${start_time}','${end_time}')">${data['total_count']}</a></td>																		
+																			<td class="col-sm-4">${data['error_type']}</td>
+																			<td class="col-sm-7">${data['error_example']}	 </td>																	
+																			<td class="col-sm-1"><a  href="javascript:void(0)"  
+																			onclick="get_saved_error_type_total(${report_id},  ${data['exp_id']})">${data['total_count']}</a></td>																		
 																	</tr>																 
 															</#list>		
 													</#if>																	
@@ -253,7 +251,7 @@
 <#elseif  !RequestParameters.proj?exists >
 	   <div class="container  alert alert-warning"> 请先选择右上角项目</div>
 <#else>
-	<div class="container  alert alert-warning">其他位置错误，请联系管理员</div>
+		<div class="container  alert alert-warning">其他位置错误，请联系管理员</div>
 </#if>
     
 

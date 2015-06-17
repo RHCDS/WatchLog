@@ -78,3 +78,23 @@ div.inner {
   height: 200px;
   text-align: left;
 }
+
+ul li.font-13-gray{
+	font-size: 13px;
+	color: gray;
+}
+
+p.head-text{
+	font-size: 15px;
+	font-weight: bold;
+	padding-bottom: 9px;
+	border-bottom: solid 1px #ddd;
+}
+
+ul.home-stl{
+	background-color: #eee;
+	padding-top: 30px;
+	padding-bottom: 15px; 
+	height: 200px;
+}
+
