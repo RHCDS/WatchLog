@@ -87,25 +87,19 @@
 								</div><!-- 模态框（Modal） -->
 							</form>	    
     
-            <table id="pmtable"
-               data-toggle="toolbar"
-               data-height="500"
-               data-side-pagination="server"
-               data-pagination="true"
-               data-search="false">
-            <thead>
-            <tr>
-                <th data-field="report_id"  data-sortable="true"  data-visible="false">ID</th>
-                <th data-field="logsrc_name"   data-sortable="true"    data-formatter="pmlogsrcnameFormatter"  >日志源名称</th>
-                <th data-field="start_time" data-sortable="true"   >开始时间</th>
-                 <th data-field="end_time" data-sortable="true"  >结束时间 </th>
-                 <th data-field="create_time"    data-sortable="true" >创建时间</th>
-                 <th data-field="title" data-sortable="true" >备注名</th>
-                  <th data-field="operate"    data-formatter="pmoperateFormatter" >操作</th>
-            </tr>
-            </thead>
+            <table id="pmtable"    data-toggle="toolbar"  data-height="500" data-side-pagination="server"  data-pagination="true" data-search="false">
+		            <thead>
+				            <tr>
+						                <th data-field="report_id"  data-sortable="true"  data-visible="false">ID</th>
+						                <th data-field="logsrc_name"   data-sortable="true"    data-formatter="pmlogsrcnameFormatter"  >日志源名称</th>
+						                <th data-field="start_time" data-sortable="true"   >开始时间</th>
+						                 <th data-field="end_time" data-sortable="true"  >结束时间 </th>
+						                 <th data-field="create_time"    data-sortable="true" >创建时间</th>
+						                 <th data-field="title" data-sortable="true" >备注名</th>
+						                  <th data-field="operate"    data-formatter="pmoperateFormatter" >操作</th>
+				            </tr>
+		            </thead>
         </table>
-        
         
 <#elseif  !RequestParameters.proj?exists >
 	   <div class="container  alert alert-warning"> 请先选择右上角项目</div>

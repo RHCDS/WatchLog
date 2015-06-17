@@ -1,13 +1,5 @@
 <#import "../layout/defaultLayout.ftl" as layout>
 <@layout.myLayout>
-  <!-- div>
-          controller:  ${controller} <br/>
-          action: ${action}<br/>
-		
-		<#list RequestParameters?keys as key>
-		    ${key} = ${RequestParameters[key]}<br/>
-		</#list>    
-</div-->
 
   <#if RequestParameters.proj?exists >
   	<#assign pid = RequestParameters.proj>
@@ -47,8 +39,8 @@
 								<small>${logsrc_name}</small>
 						</div>
 						<div class="col-md-4 pull-right">  
-								 <a class="btn btn-primary btn-sm" href="/logsrc/${id}/edit?proj=${pid}" role="button">修改日志源</a>
-								  <button id="remove" class="btn btn-primary  btn-sm"  onclick="delete_logsrc_single(${id}, ${pid})" > 删除日志源 </button>
+								 <a class="btn btn-primary btn-xs"  style="margin-right: 15px;" href="/logsrc/${id}/edit?proj=${pid}" role="button">修改日志源</a>
+								  <button id="remove" class="btn btn-primary  btn-xs"  onclick="delete_logsrc_single(${id}, ${pid})" > 删除日志源 </button>
 						</div>
 				</div>
 			
@@ -96,16 +88,14 @@
 					<div class="row" >
 						<div class="col-md-2">
 							<h4> <small  style="padding-left: 60px;">起始标志：
-								<span class="glyphicon glyphicon-question-sign"  aria-hidden="true"></small></h4>
+								<span title='确定一行日志起始的正则表达式，如日志以"2015-03-09"格式的时间开头，则起始标志可设置为\\d{4}\\-\\d{2}\\-\\d{2}。默认用"非空格"作为一行日志的起始标志，即^\\S+.' 
+									class="glyphicon glyphicon-question-sign"  aria-hidden="true"></small></h4>
 						</div>
 						<div class="col-md-10"> 
 							<h4> <small>${start_regex}</small></h4>
 						</div>			
 				</div>
 					
-			
-						
-				
 				<#if  filter_keyword?contains("_AND_")>
 						<#assign filter_keyword_flag = "AND">
 						<#assign filter_keyword_arr=filter_keyword?split("_AND_")>
@@ -123,7 +113,8 @@
 						</div><!-- /col-md-2 -->
 						<div class="col-md-6"> 
 								<div class="row" >
-										<h4> <small>过滤关键字	<span class="glyphicon glyphicon-question-sign"  aria-hidden="true"></small></h4>
+										<h4> <small>过滤关键字	<span title='使用过滤关键字，可以从大量原始日志中过滤出有用的信息，交给分析模块处理。如"Error"，可以过滤出所有Error级别的异常日志。 多个关键字可以使用and连接，即日志同时包含这些关键字才能被筛选出。也可使用or连接。暂不支持复合条件'
+										 class="glyphicon glyphicon-question-sign"  aria-hidden="true"></small></h4>
 								</div><!-- /row -->
 								<div  class="row">
 										<table  class="table table-bordered wratb">
@@ -152,11 +143,12 @@
 				</#if>
 					<div class="row" >
 						<div class="col-md-2">
-								<h4> <small  style="padding-left: 60px;">Step1：</small></h4>
+								<h4> <small  style="padding-left: 60px;">Step2：</small></h4>
 						</div><!-- /col-md-2 -->
 						<div class="col-md-6"> 
 								<div class="row" >
-										<h4> <small>正则表达式	<span class="glyphicon glyphicon-question-sign"  aria-hidden="true"></small></h4>
+										<h4> <small>正则表达式	<span title='使用正则表达式，可以从一行日志中，精确抓取到日志中的特征字段。如(\\w+\\.)+(\\w)*Exception:.*?(($)|(\\\\t))可以匹配日志中任意的java异常，并提取出具体的异常类型。通过正则表达式，平台可以在分析报告中，统计出某个时间出现了哪些java异常，每种异常出现了多少次等信息。系统支持多个正则表达式，针对每一行日志，都会尝试匹配这些表达式。如果没有匹配到任何表达式，则该行日志的类型为“unknown”' 
+										 class="glyphicon glyphicon-question-sign"  aria-hidden="true"></small></h4>
 								</div><!-- /row -->
 								<div  class="row">
 										<table  class="table table-bordered">

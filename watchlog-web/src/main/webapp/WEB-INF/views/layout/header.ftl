@@ -4,8 +4,6 @@
 				    		 <div class="col-sm-2">
 				 					<a class="brand" href="#"><img src="/res/img/logo.jpg" /></a>
 				 			</div>
-				 					
 				 	</div>
 		</div>
-          
 	</header>

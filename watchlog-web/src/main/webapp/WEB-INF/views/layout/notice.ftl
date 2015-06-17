@@ -1,4 +1,3 @@
-
    <div class="container">
    		<#if status?exists && status == 0>
    				<div id="notice" class="row  alert alert-success"   role="alert"  style="padding-left: 30px; padding-right: 30px;">   ${message} </div>
