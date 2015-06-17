@@ -64,12 +64,11 @@ public class ReadServiceImpl implements ReadService {
 		result.put("projectid", logSourceDao.findByLogSourceId(logSourceId)
 				.getProjectId());
 		result.put("logsourceid", logSourceId);
-
 		JSONArray records = new JSONArray();
 		for (int i = 0; i < Const.RT_SHOW_NUM; i++) {
 			long endTime = formatCurrentTime - Const.RT_SHOW_TIME * i;
 			long startTime = endTime - Const.RT_SHOW_TIME + 1; // mysql
-																// between包含前后区间值，此处取前开后闭，以防止重复数据。
+		// between包含前后区间值，此处取前开后闭，以防止重复数据。
 			try {
 				ExceptionDataRecord exceptionDataRecord = exceptionDataDao
 						.findSummaryByLogSourceIdAndTime(logSourceId,

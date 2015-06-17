@@ -81,22 +81,22 @@ public class WlogRTController {
 		model.addAttribute("rt_table", result.getJSONArray("record"));
 		return "logsrc/rt_analyse";
 	}
-	
+
 	@RequestMapping(value = "/logsrc/rt_analyse/refresh", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> refreshTable(@RequestParam(value = "proj", required = false) String projectid,
-			@RequestParam(value = "log_id", required = false, defaultValue = "0") String logsrcid, Model model){
+			@RequestParam(value = "log_id", required = false, defaultValue = "0") String logsrcid, Model model) {
 		JSONObject result = new JSONObject();
-		if(MathUtil.isEmpty(projectid, logsrcid)){
+		if (MathUtil.isEmpty(projectid, logsrcid)) {
 			result.put("status", -1);
 			result.put("message", ConstCN.NULL_PARAM);
 			result.put("data", new JSONObject());
-            return new ResponseEntity<JSONObject>(result, HttpStatus.OK);	
+			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 		}
-		if(!MathUtil.isInteger(projectid) || !MathUtil.isInteger(logsrcid)){
+		if (!MathUtil.isInteger(projectid) || !MathUtil.isInteger(logsrcid)) {
 			result.put("status", -1);
 			result.put("message", ConstCN.ID_MUST_BE_NUM);
 			result.put("data", new JSONObject());
-            return new ResponseEntity<JSONObject>(result, HttpStatus.OK);		
+			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 		}
 		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 		String time = MathUtil.parse2Str(currentTime);
@@ -111,7 +111,7 @@ public class WlogRTController {
 		result.put("status", 0);
 		result.put("message", ConstCN.RESPONSE_SUCCESSFUL);
 		result.put("data", records.getJSONArray("record"));
-		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);		
+		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 
 }

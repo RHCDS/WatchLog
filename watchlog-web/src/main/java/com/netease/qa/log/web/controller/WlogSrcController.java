@@ -78,10 +78,8 @@ public class WlogSrcController {
 	@RequestMapping(value = "/destroy", method = RequestMethod.POST)
 	public String deleteLogSources(@RequestParam(value = "ids") String ids,
 			@RequestParam(value = "proj") String projectid, RedirectAttributes model) {
-
 		// 成功和失败的重定向url
 		String ret = "redirect:/logsrc/manage?proj=" + projectid;
-
 		if (MathUtil.isEmpty(ids)) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
@@ -254,7 +252,6 @@ public class WlogSrcController {
 			return "redirect:/logsrc/manage?proj=" + projectid;
 		}
 		LogSource logSource = logSourceService.getByLogSourceId(Integer.parseInt(logsourceId));
-
 		if (logSource == null) {
 			model.addAttribute("controller", "WlogManage");
 			model.addAttribute("action", "edit");
@@ -296,7 +293,6 @@ public class WlogSrcController {
 			@RequestParam(value = "logsourcecreatorname", required = false, defaultValue = "none") String creatorname,
 			RedirectAttributes model) {
 		String ret_succ = "redirect:/logsrc/manage?proj=" + projectid;
-
 		String ret_fail = "redirect:/logsrc/" + logsourceid + "/edit?proj=" + projectid;
 		if (MathUtil.isEmpty(logsourceid, logsourceName, projectid, hostname, path, filepattern, linestart,
 				filter_keyword_con, reg_regex_con, creatorname)) {
@@ -340,7 +336,6 @@ public class WlogSrcController {
 				return ret_fail;
 			}
 		}
-
 		LogSource logSource = logsource;
 		logSource.setLogSourceName(logsourceName);
 		logSource.setProjectId(Integer.parseInt(projectid));
@@ -360,7 +355,5 @@ public class WlogSrcController {
 			model.addFlashAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);
 			return ret_succ;
 		}
-
 	}
-
 }
