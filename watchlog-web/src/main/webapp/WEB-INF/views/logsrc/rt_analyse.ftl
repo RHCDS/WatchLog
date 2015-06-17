@@ -170,7 +170,7 @@
 				
 <#elseif  !RequestParameters.proj?exists >
 	   <div class="container  alert alert-warning"> 请先选择右上角项目</div>
-<#elseif ! logs?has_content>
+<#elseif !logs?has_content>
 	<div class="container  alert alert-warning">该项目没有日志源</div>
 <#else>
 	<div class="container  alert alert-warning">其他位置错误，请联系管理员</div>

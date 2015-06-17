@@ -43,7 +43,7 @@ public class WlogRTController {
 		}
 		model.addAttribute("logs", logs);
 		if (logsources.size() == 0)
-			return "";
+			return "logsrc/rt_analyse";
 		// 没有传logsrcid,默认第一个
 		Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 		String time = MathUtil.parse2Str(currentTime);
@@ -77,7 +77,6 @@ public class WlogRTController {
 			result = readService.queryLatestTimeRecords(logSource.getLogSourceId(), current);
 		}
 		model.addAttribute("rt_table", result.getJSONArray("record"));
-		System.out.println("record:" + result.getJSONArray("record"));
 		return "logsrc/rt_analyse";
 	}
 
