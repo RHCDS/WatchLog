@@ -113,7 +113,7 @@
 						<#assign filter_keyword_flag = "OR">
 						<#assign filter_keyword_arr=filter_keyword?split("_OR_")>
 				<#else>
-						<#assign filter_keyword_flag = "none">
+						<#assign filter_keyword_flag = "">
 						<#assign filter_keyword_arr=[filter_keyword]>
 				</#if>
 				
@@ -147,7 +147,7 @@
 						<#assign reg_regex_flag = "OR">
 						<#assign reg_regex_arr=reg_regex?split("_OR_")>
 				<#else>
-						<#assign reg_regex_flag = "none">
+						<#assign reg_regex_flag = "">
 						<#assign reg_regex_arr=[reg_regex]>
 				</#if>
 					<div class="row" >
