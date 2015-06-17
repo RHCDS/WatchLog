@@ -108,7 +108,7 @@ public class WlogRTController {
 			e.printStackTrace();
 		}
 		JSONObject records = readService.queryLatestTimeRecords(Integer.parseInt(logsrcid), current);
-		result.put("status", -1);
+		result.put("status", 0);
 		result.put("message", ConstCN.RESPONSE_SUCCESSFUL);
 		result.put("data", records.getJSONArray("record"));
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);		

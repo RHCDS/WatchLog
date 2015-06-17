@@ -31,10 +31,10 @@
 						<div class="col-sm-6" >
 							<div class="row"   style=" border-bottom: solid 1px #eee; margin-bottom:10px;">
 									<div class="col-md-10 pull-left">  
-												<p style="font-size: 15px;font-weight: bold;">实时分析结果&#160;&#160;<i class="glyphicon glyphicon-refresh"></i></p>
+												<p><font  style="font-size: 15px;font-weight: bold;">实时分析结果&#160;&#160;</font> <font style="font-size: 12px;">采样间隔30s</font></p>
 									</div>
 									<div class="col-md-2 pull-right">  
-											  <button id="remove" class="btn btn-warning  btn-xs"  onclick="rt_analyse_refresh()" >&#160; &#160; 刷新 &#160;&#160; </button>
+											  <button id="remove" class="btn btn-warning  btn-xs"  onclick="rt_analyse_refresh()" >&#160; <i class="glyphicon glyphicon-refresh"></i>&#160;刷新 &#160; </button>
 									</div>
 							</div>										
 								
@@ -121,8 +121,8 @@
 															<tbody>
 																	<#list filter_keyword_arr as f>
 																		<tr>
-																			<td class="col-sm-6">${f}</td>
-																			<td class="col-sm-1">${filter_keyword_flag}</td>
+																			<td class="col-sm-9">${f}</td>
+																			<td class="col-sm-3">${filter_keyword_flag}</td>
 																		</tr>											
 																	</#list>
 															</tbody>
@@ -156,8 +156,8 @@
 															<tbody>
 																	<#list reg_regex_arr as r>
 																		<tr>
-																			<td class="col-sm-6">${r}</td>
-																			<td class="col-sm-1">${reg_regex_flag}</td>
+																			<td class="col-sm-9">${r}</td>
+																			<td class="col-sm-3">${reg_regex_flag}</td>
 																		</tr>											
 																	</#list>
 															</tbody>

@@ -25,7 +25,7 @@
 													         <div class="modal-body" style="height: 80px;">
 																		<label for="host_name" class="col-sm-2 control-label"  style="text-align: center;color: gray;font-weight: 100;">备注 <font color="red">*</font>： &#160;&#160;</label>
 																	      <div class="col-sm-10">
-																	         		<input type="text" class="form-control"    id="report_comment_id"     name="report_comment"   placeholder="备注说明以便于区分">
+																	         		<input type="text" class="form-control"    id="title"     name="title"   placeholder="备注说明以便于区分">
 																	          		<div id="warn_report_comment"></div>
 																	      </div>
 													         </div>

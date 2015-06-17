@@ -25,8 +25,6 @@ function rt_analyse_refresh()
 	var pid = getParam( 'proj',select_url );
 	var log_id =  getParam( 'log_id', select_url);
 	console.log("rt_analyse_refresh");
-	console.log(pid);
-	console.log(log_id);
 	
 	// ajax 获取最新数据
 	var refresh_url =  '/logsrc/rt_analyse/refresh?proj=' + pid + '&log_id=' + log_id;

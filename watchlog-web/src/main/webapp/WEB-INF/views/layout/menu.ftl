@@ -16,15 +16,17 @@
       
       <!-- 获取project.id -->
       <#if RequestParameters.proj?exists >
-      	<#assign proj=RequestParameters.proj>
+      	<#assign proj=RequestParameters.proj>  
+      		<li <#if controller == "WlogHome">class="active"</#if>  ><a   class="text-menu"   href="/?proj=${proj}">首页</a></li>
 	      	<li <#if controller == "WlogManage">class="active"</#if>  ><a   class="text-menu"   href="/logsrc/manage?proj=${proj}">日志源管理</a></li>
 	        <li <#if controller == "WlogRT">class="active"</#if>  ><a    class="text-menu"   href="/logsrc/rt_analyse?proj=${proj}">实时分析</a></li>
-	  		<li <#if controller == "WlogPM">class="active"</#if>  ><a    class="text-menu"  href="/logsrc/pm_analyse?proj=${proj}">日志聚合分析</a></li>        
+	  		<li <#if controller == "WlogPM">class="active"</#if>  ><a    class="text-menu"  href="/logsrc/pm_analyse?proj=${proj}">聚合分析</a></li>        
 	  		<li <#if controller == "WlogAlarm">class="active"</#if> ><a     class="text-menu"  href="/logsrc/alarm?proj=${proj}" >报警管理</a></li>              	    
       	<#else>
+      		<li <#if controller == "WlogHome">class="active"</#if>  ><a   class="text-menu"   href="/">首页</a></li>
 	      	<li <#if controller == "WlogManage">class="active"</#if>  ><a    class="text-menu"   href="/logsrc/manage">日志源管理</a></li>
 	        <li <#if controller == "WlogRT">class="active"</#if>  ><a    class="text-menu"   href="/logsrc/rt_analyse">实时分析</a></li>
-	  		<li <#if controller == "WlogPM">class="active"</#if>  ><a    class="text-menu"   href="/logsrc/pm_analyse">日志聚合分析</a></li>        
+	  		<li <#if controller == "WlogPM">class="active"</#if>  ><a    class="text-menu"   href="/logsrc/pm_analyse">聚合分析</a></li>        
 	  		<li <#if controller == "WlogAlarm">class="active"</#if> ><a     class="text-menu"  href="/logsrc/alarm" >报警管理</a></li>              	
       	</#if>
       	 

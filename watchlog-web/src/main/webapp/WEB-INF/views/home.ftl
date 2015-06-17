@@ -11,7 +11,8 @@
 													<tbody>
 																<tr>
 																	<td class="col-sm-2">
-																						<p style="font-size: 15px;font-weight: bold;padding-bottom: 9px;border-bottom: solid 1px #ddd;">日志源配置</p>
+																						<p style="font-size: 15px;font-weight: bold;padding-bottom: 9px;border-bottom: solid 1px #ddd;">调试日志源</p>
+																						
 																						<ul style="background-color: #eee;padding-top: 30px;padding-bottom: 15px; height: 200px;">
 																								<li style="font-size: 13px;color: gray;">添加日志监控</li>
 																								<li style="font-size: 13px;color: gray;">自定义分析规则</li>
@@ -70,7 +71,18 @@
 													</tbody>
 												</table>
 								</div><!-- /col-sm-12 -->			
+				 	</div><!-- /row -->					    					 	
+				 	
+				    <div class="row"  style="margin-left: 30px; margin-top: 40px;">
+				    			<div  class="col-sm-7 pull-right" >
+				    			      <#if RequestParameters.proj?exists >
+				 							  <a class="btn  btn-lg"  style="color: #699;background-color: #fff;border-color: #08D355;" href="/logsrc/manage?proj=${RequestParameters.proj}" role="button"  style="margin-right: 10px;">开始使用</a>
+				    			        <#else>
+				 							  <a class="btn  btn-lg"  style="color: #699;background-color: #fff;border-color: #08D355;" href="/logsrc/manage" role="button"  style="margin-right: 10px;">开始使用</a>
+				    			        </#if>
+  								</div>
 				 	</div>		    					 	
+				 	
 		</div>
  
 </@layout.myLayout>

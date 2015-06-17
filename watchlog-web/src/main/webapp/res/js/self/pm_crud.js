@@ -1,10 +1,18 @@
 
+ //  手动转换datetime 为 timestamp        "2015-06-17 10:12:37" => 1434507157000
+function datetime2timestamp(datetime_str){        
+         var dt_arr=  datetime_str.split(' ');
+         var date_part_arr = dt_arr[0].split('-');
+         var time_part_arr = dt_arr[1].split(':');
+         var date = new Date(date_part_arr[0],  parseInt(date_part_arr[1], 10) - 1,  date_part_arr[2], time_part_arr[0],  time_part_arr[1], time_part_arr[2] );
+         return date.getTime(); 
+}
 
 	
 
 $(document).ready(function() {	
 
-	//生成聚合报告 
+		// 查看成聚合报告 
 		$('#get_pm_repost_single_form').submit(function(){ //listen for submit event
 					// 日志源id  :  selected值 
 					var logsrc_id=$('#pm_logsrc_select').val();  
@@ -35,9 +43,21 @@ $(document).ready(function() {
 					else{
 						 $("#pm_notice").html("");
 					}
+					
+					// 开始时间不能大于结束时间
+					if(  datetime2timestamp(start_time)  >   datetime2timestamp (end_time) ) {
+						$("#pm_notice").html("<font color='color'>  开始时间不能大于结束时间 </font></br>");
+						 return false;
+					}
+					else{
+						 $("#pm_notice").html("");
+					}					
+					
+					// 提交 查看聚合报告
 					$(this).append('<input type="hidden" name="proj" value='+pid+' /> ');   
 				   return true;
 			});// end 生成聚合报告 
+		
 		
 });  		// end document.ready
 
