@@ -102,12 +102,12 @@
 																					<#if i==0> 
 																						<td class="col-md-1"  style="padding:0px"> 
 																						    	  <select class=" form-control  log-item-regular-input"   id="filter_keyword_select_id"   name="filter_keyword_con" >
-																							    	  		<#if filter_keyword_flag=="OR">
-																									      		<option value="OR"   selected="true" >OR</option>
-																									      		<option value="AND"   >AND</option>	
-																									      	<#else>
+																							    	  		<#if filter_keyword_flag=="AND">
 																									      		<option value="AND"   selected="true" >AND</option>
-																									      		<option value="OR"   >OR</option>				
+																									      		<option value="OR"   >OR</option>																									    	  		
+																									      	<#else>
+																									      		<option value="OR"   selected="true" >OR</option>
+																									      		<option value="AND"   >AND</option>		
 																							    	  		</#if>
 																							      </select>	<!-- /select -->															
 																					</td>																		

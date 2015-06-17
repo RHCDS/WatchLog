@@ -87,8 +87,8 @@
 																				</td>
 																				<td class="col-md-1"  style="padding:0px">
 																					    	  <select class=" form-control log-item-regular-input"   id="filter_keyword_select_id"   name="filter_keyword_con"  >
-																						      		<option value="AND">AND</option>
 																						      		<option value="OR" >OR</option>
+																						      		<option value="AND">AND</option>
 																						      </select>	<!-- /select -->															
 																				</td>
 																		</tr><!-- /tr -->																																			
