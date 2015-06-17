@@ -24,7 +24,7 @@ public class Const {
     public static final String INVALID_TIME_FORMAT = "invalid time format, please use: " + TIME_FORMAT;
     public static final String INVALID_NAME ="invalid name format";
     public static final String NULL_PARAM = "lose some paramater";
-    
+    public static final String DEFAULT = "default";
     public static final String RESPONSE_SUCCESSFUL = "response successfully";
     public static final String RESPONSE_NOTSUCCESSFUL = "response not successfully";
     
@@ -33,5 +33,13 @@ public class Const {
     
     public static final long RT_SHOW_TIME = 30; //实时分析页面前端显示间隔，s
     public static final long RT_SHOW_NUM = 15; //实时分析页面显示记录条数
+    
+    public static final String ORDER_FIELD_SAMPLE_TIME = "sample_time";
+    public static final String ORDER_FIELD_SAMPLETIME = "sampleTime";
+    public static final String ORDER_FIELD_TOTALCOUNT = "totalCount";
+    public static final String ORDER_FIELD_EXCEPTIONCOUNT = "exceptionCount";
+    public static final String ORDER_DESC = "desc";
+    public static final String ORDER_ASC = "asc";
+    
     
 }

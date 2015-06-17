@@ -24,6 +24,7 @@ import com.netease.qa.log.service.LogSourceService;
 import com.netease.qa.log.service.ProjectService;
 import com.netease.qa.log.service.ReadService;
 import com.netease.qa.log.service.ReportService;
+import com.netease.qa.log.util.Const;
 import com.netease.qa.log.util.ConstCN;
 import com.netease.qa.log.util.MathUtil;
 
@@ -116,7 +117,6 @@ public class WlogPMController {
 			@RequestParam(value = "report_id") String reportid, RedirectAttributes model) {
 		// 成功和失败的重定向url
 		String ret = "redirect:/logsrc/pm_analyse?proj=" + projectid;
-
 		if (MathUtil.isEmpty(reportid)) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
@@ -129,7 +129,6 @@ public class WlogPMController {
 			model.addFlashAttribute("message", ConstCN.INNER_ERROR);
 			return ret;
 		}
-
 		model.addFlashAttribute("status", 0);
 		model.addFlashAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);
 		return ret;
@@ -139,9 +138,8 @@ public class WlogPMController {
 	public String addReport(@RequestParam(value = "proj", required = false) String projectid,
 			@RequestParam(value = "log_id", required = false) String logsrcId,
 			@RequestParam(value = "start_time", required = false) String startTime,
-			@RequestParam(value = "end_time", required = false) String endTime, 
+			@RequestParam(value = "end_time", required = false) String endTime,
 			@RequestParam(value = "title", required = false) String title, RedirectAttributes model) {
-		System.out.println("title:" + title);
 		String ret_succ = "redirect:/logsrc/pm_analyse?proj=" + projectid;
 		String ret_fail = "redirect:/logsrc/pm_analyse_unsave?log_id=" + logsrcId + "&proj=" + projectid
 				+ "&start_time=" + startTime + "&end_time" + endTime;
@@ -162,7 +160,7 @@ public class WlogPMController {
 		report.setEndTime(MathUtil.parse2Time(endTime));
 		report.setCreatorId(1);
 		report.setTitle(title);
-		report.setComment("default");
+		report.setComment(Const.DEFAULT);
 		int result = reportService.createReport(report);
 		if (result == 0) {
 			model.addFlashAttribute("status", -1);
@@ -211,11 +209,11 @@ public class WlogPMController {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		JSONObject resultByTime = readService.queryTimeRecords(Integer.parseInt(logsrcId), start, end, "sample_time",
-				"desc", 10, 0);
+		JSONObject resultByTime = readService.queryTimeRecords(Integer.parseInt(logsrcId), start, end,
+				Const.ORDER_FIELD_SAMPLE_TIME, Const.ORDER_DESC, 10, 0);
 		model.addAttribute("pm_error_dist_table", resultByTime.getJSONArray("record"));
-		JSONObject resultByError = readService.queryErrorRecords(Integer.parseInt(logsrcId), start, end, "sample_time",
-				"desc", 5, 0);
+		JSONObject resultByError = readService.queryErrorRecords(Integer.parseInt(logsrcId), start, end,
+				Const.ORDER_FIELD_SAMPLE_TIME, Const.ORDER_DESC, 5, 0);
 		model.addAttribute("pm_error_type_table", resultByError.getJSONArray("error"));
 		return "logsrc/pm_analyse_unsave";
 	}
@@ -248,16 +246,12 @@ public class WlogPMController {
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
-		JSONObject resultByTime = readService.queryTimeRecords(report.getLogSourceId(), start, end, "sample_time",
-				"desc", 10, 0);
+		JSONObject resultByTime = readService.queryTimeRecords(report.getLogSourceId(), start, end,
+				Const.ORDER_FIELD_SAMPLE_TIME, Const.ORDER_DESC, 10, 0);
 		model.addAttribute("pm_error_dist_table", resultByTime.getJSONArray("record"));
-		// System.out.println("pm_error_dist_table:" +
-		// resultByTime.getJSONArray("record"));
-		JSONObject resultByError = readService.queryErrorRecords(report.getLogSourceId(), start, end, "sample_time",
-				"desc", 5, 0);
+		JSONObject resultByError = readService.queryErrorRecords(report.getLogSourceId(), start, end,
+				Const.ORDER_FIELD_SAMPLE_TIME, Const.ORDER_DESC, 5, 0);
 		model.addAttribute("pm_error_type_table", resultByError.getJSONArray("error"));
-		// System.out.println("pm_error_type_table:" +
-		// resultByError.getJSONArray("error").toString());
 		return "logsrc/pm_analyse_saved";
 	}
 
@@ -308,9 +302,9 @@ public class WlogPMController {
 			result.put("rows", rows);
 			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 		}
-		String field = "sampleTime";
+		String field = Const.ORDER_FIELD_SAMPLETIME;
 		if (sort.equals("total_count"))
-			field = "totalCount";
+			field = Const.ORDER_FIELD_TOTALCOUNT;
 		// 未保存的report，的更多页面
 		if (Integer.parseInt(reportid) == 0) {
 			String start_time = starttime.replaceAll("%20", " ");
@@ -397,7 +391,7 @@ public class WlogPMController {
 			result.put("rows", rows);
 			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 		}
-		String field = "exceptionCount";
+		String field = Const.ORDER_FIELD_EXCEPTIONCOUNT;
 		// 未保存的report，查看更多异常类型
 		if (Integer.parseInt(reportid) == 0) {
 			String start_time = starttime.replaceAll("%20", " ");
@@ -448,7 +442,6 @@ public class WlogPMController {
 			@RequestParam(value = "order", required = false, defaultValue = "desc") String order,
 			@RequestParam(value = "limit", required = false) String limit,
 			@RequestParam(value = "offset", required = false) String offset, Model model) {
-
 		String message = "";
 		JSONObject result = new JSONObject();
 		JSONObject detail = new JSONObject();
@@ -475,10 +468,9 @@ public class WlogPMController {
 			result.put("rows", rows);
 			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 		}
-
-		String field = "sampleTime";
+		String field = Const.ORDER_FIELD_SAMPLETIME;
 		if (sort.equals("total_count"))
-			field = "exceptionCount";
+			field = Const.ORDER_FIELD_EXCEPTIONCOUNT;
 		// 是未保存的report
 		if (Integer.parseInt(reportid) == 0) {
 			Long start = null;
