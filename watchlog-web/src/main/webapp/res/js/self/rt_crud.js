@@ -24,8 +24,8 @@ function rt_analyse_refresh()
 	var select_url = $("#logsrc_list").children(".active").attr('href');
 	var pid = getParam( 'proj',select_url );
 	var log_id =  getParam( 'log_id', select_url);
-	console.log("rt_analyse_refresh");
-	
+	$("#rt_refresh_body").html("");
+
 	// ajax 获取最新数据
 	var refresh_url =  '/logsrc/rt_analyse/refresh?proj=' + pid + '&log_id=' + log_id;
 	$.ajax({
