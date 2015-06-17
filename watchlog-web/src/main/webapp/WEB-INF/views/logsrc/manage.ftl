@@ -33,10 +33,10 @@
 						</form>
 
 					    <div id="toolbar">
-						      <a class="btn btn-primary btn-sm" href="/logsrc/new?proj=${pid}" role="button"  class="margin-right-10">创建日志源</a>
-						      <button id="remove" class="btn btn-primary btn-sm"  onclick="delete_logsrc_table()"    class="margin-right-10"> 删除日志源 </button>
-					         	<button  class="btn btn-primary btn-sm"  onclick="startMonitorLogsrc()"    class="margin-right-10"> 开始监控 </button>
-					         	<button  class="btn btn-primary btn-sm"  onclick="stopMonitorLogsrc()"    class="margin-right-10" > 停止监控 </button>
+						      <a class="btn btn-primary btn-sm margin-right-10" href="/logsrc/new?proj=${pid}" role="button"  >创建日志源</a>
+						      <button id="remove" class="btn btn-primary btn-sm margin-right-10"  onclick="delete_logsrc_table()"   > 删除日志源 </button>
+					         	<button  class="btn btn-primary btn-sm margin-right-10"  onclick="startMonitorLogsrc()"    > 开始监控 </button>
+					         	<button  class="btn btn-primary btn-sm margin-right-10"  onclick="stopMonitorLogsrc()"     > 停止监控 </button>
 					    </div>
 				 
  						<div id="js_notice" class="row"   style="padding-left: 15px; padding-right: 15px;" > </div></br>
