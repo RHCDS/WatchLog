@@ -79,10 +79,10 @@ function check_pm_report_name(){
 		 $("#title_notice").html("<font color='red'> 聚合报告名称不能为空</font></br>");
 		 return false;
 	}
-	else if(/^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]{1,20}$/.test(report_title) == false){
+	else if(/^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]{1,255}$/.test(report_title) == false){
 		$('#title_notice').html("<font color='red'>不能以下划线开始和结尾;  <br>" +
 				"只能包含英文字母，数字，汉字; <br>" +
-				"长度不能超过20;</font>");
+				"长度不能超过255;</font>");
 		return false
 	}	
 	else{

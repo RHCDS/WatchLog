@@ -44,7 +44,7 @@ function check_create_logsrc(){
 		$('#warn_new_logsrc_name').html("<font color='red'>日志名不能为空</font>");
 		return false;
 	}
-	else if(/^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]{1,20}$/.test(logsrc_name) == false){
+	else if(/^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]{1,100}$/.test(logsrc_name) == false){
 		$('#warn_new_logsrc_name').html("<font color='red'>日志名不符合规范</font>");
 		return false
 	}
@@ -97,7 +97,7 @@ function check_update_logsrc(){
 		$('#warn_edit_logsrc_name').html("<font color='red'>日志名不能为空</font>");
 		return false;
 	}
-	else if(/^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]{1,20}$/.test(logsrc_name) == false){
+	else if(/^(?!_)(?!.*?_$)[a-zA-Z0-9_\u4e00-\u9fa5]{1,100}$/.test(logsrc_name) == false){
 		$('#warn_edit_logsrc_name').html("<font color='red'>日志名不符合规范</font>");
 		return false
 	}

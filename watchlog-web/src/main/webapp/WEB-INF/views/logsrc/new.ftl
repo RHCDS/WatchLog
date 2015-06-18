@@ -13,7 +13,7 @@
 								<label for="logsrc_name" class="col-sm-2 control-label"  style="text-align: left; font-size: medium; color: gray;">日志源名称 
 										<a title="不能以下划线_开始和结尾;  
 只能包含英文字母，数字，汉字;  
-长度最短为1,最长为20;"  style="color: gray;">
+长度最长为100;"  style="color: gray;">
 										<span class="glyphicon glyphicon-question-sign"  aria-hidden="true"><a>
 								</label>				
 						      <div class="col-sm-6">
