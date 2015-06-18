@@ -74,7 +74,7 @@ public class ReadServiceImpl implements ReadService {
 						.findSummaryByLogSourceIdAndTime(logSourceId,
 								startTime, endTime);
 				JSONArray details = new JSONArray();
-				if (exceptionDataRecord.getTotalCount() > 0) {
+				if (exceptionDataRecord != null && exceptionDataRecord.getTotalCount() > 0) {
 					String[] eids = exceptionDataRecord.getExceptionIds()
 							.split(",");
 					String[] ecounts = exceptionDataRecord.getExceptionCounts()
