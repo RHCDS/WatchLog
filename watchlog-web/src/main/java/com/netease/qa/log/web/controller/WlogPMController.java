@@ -153,6 +153,11 @@ public class WlogPMController {
 			model.addFlashAttribute("message", ConstCN.ID_MUST_BE_NUM);
 			return ret_fail;
 		}
+		if (!MathUtil.isTitle(title)) {
+			model.addFlashAttribute("status", -1);
+			model.addFlashAttribute("message", ConstCN.INVALID_NAME);
+			return ret_fail;
+		}
 		Report report = new Report();
 		report.setProjectId(Integer.parseInt(projectid));
 		report.setLogSourceId(Integer.parseInt(logsrcId));

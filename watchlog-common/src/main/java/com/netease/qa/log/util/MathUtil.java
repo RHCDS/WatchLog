@@ -21,11 +21,17 @@ public class MathUtil {
 	}
 	
 	public static final boolean isName(String str){
-		//只含有汉字、数字、字母、下划线,并且不能以下划线开头和结尾,长度1-20之间
+		//只含有汉字、数字、字母、下划线,并且不能以下划线开头和结尾,长度1-100之间
 		boolean isName = str.matches("^(?!_)(?!.*?_$)[0-9a-zA-Z_\u4e00-\u9fa5]{1,100}$");
 		return isName;
 	}
-
+	
+	public static final boolean isTitle(String str){
+		//只含有汉字、数字、字母、下划线,并且不能以下划线开头和结尾,长度1-255之间
+		boolean isName = str.matches("^(?!_)(?!.*?_$)[0-9a-zA-Z_\u4e00-\u9fa5]{1,255}$");
+		return isName;
+	}
+	
 	public static Long parse2Long(String time) throws ParseException {
 		SimpleDateFormat format = new SimpleDateFormat(Const.TIME_FORMAT);
 		Date date = format.parse(time);
