@@ -112,6 +112,10 @@
 																<table  class="table wratb  removebd">
 																	<tbody>
 																				<tr>
+																					<td class="col-sm-4">日志源名称：</td>
+																					<td class="col-sm-8">${logsrc_name}</td>
+																				</tr>																	
+																				<tr>
 																					<td class="col-sm-4">服务器地址：</td>
 																					<td class="col-sm-8">${host_name}</td>
 																				</tr>		

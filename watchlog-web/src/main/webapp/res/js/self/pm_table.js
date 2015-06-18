@@ -37,11 +37,11 @@
   
   
   //聚合报告名称显示   
-  function pmlogsrcnameFormatter(value, row, index) {
+  function pmreportnameFormatter(value, row, index) {
  	  if(row.report_id==undefined){
  		return "-";	  
  	  }
- 	     var maxwidth = 15; 
+ 	     var maxwidth = 20; 
  	     value_show = value;
  	     if (value.length > maxwidth) {
  	    	 value_show = value.substring(0, maxwidth) + '...'
@@ -49,6 +49,18 @@
  	  return  '<a class="like" title=' + value +' href="/logsrc/pm_analyse_saved?report_id=' + row.report_id + '&proj=' + pid + '" >' + value_show + '</a>';
   }
   
+  // 聚合报告日志源名称显示
+  function pmlogsrcnameFormatter(value, row, index){
+ 	  if(row.report_id==undefined){
+ 	 		return "-";	  
+ 	 	  }
+ 	 	     var maxwidth = 15; 
+ 	 	     value_show = value;
+ 	 	     if (value.length > maxwidth) {
+ 	 	    	 value_show = value.substring(0, maxwidth) + '...'
+ 	 	     }
+ 	 	     return value_show;
+  }
   
   // 操作
   function pmoperateFormatter(value, row, index){
