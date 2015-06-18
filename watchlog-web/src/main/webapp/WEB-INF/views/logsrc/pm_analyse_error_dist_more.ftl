@@ -7,7 +7,7 @@
 							<div class="col-sm-12"> <p style="font-size: 15px;font-weight: bold;">异常分布情况</p>	</div><!-- /col-sm-12 -->		
 					</div>		
 					
-		           <table id="pm_error_dist_table"    data-toggle="toolbar"     data-height="500"     data-side-pagination="server"            data-pagination="true"      data-search="false">
+		           <table id="pm_error_dist_table"    data-toggle="toolbar"        data-side-pagination="server"            data-pagination="true"      data-search="false">
 				            <thead>
 						            <tr>
 						                <th data-field="date_time"   data-sortable="true"    > 采样时间</th>

@@ -29,7 +29,9 @@ var end_time_ct = end_time.replace(/\%20/g, ' ');
 					  		url : "/logsrc/pm_analyse/error_dist_table",
 					  		sortName : "date_time",
 					  		sortOrder: "desc",
-					  		pageList: "[10,50, 100, All]",
+					  		height: "800",
+					  		pageList: "[20, 40, 80, 100]",  
+					  		pageSize: "20",  // 默认展示条目个数
 					  		queryParams: function(p){
 					  			return {
 					  				proj : pid,
@@ -53,21 +55,23 @@ var end_time_ct = end_time.replace(/\%20/g, ' ');
 				  		url : "/logsrc/pm_analyse/error_type_table",
 				  		sortName : "total_count",
 				  		sortOrder: "desc",
-				  		pageList: "[10,50, 100, All]",
+				  		height: "800",
+				  		pageList: "[20, 40, 80, 100]",
+				  		pageSize: "20",
 				  		queryParams: function(p){
 				  			return {
 				  				proj : pid,
 				  				report_id: report_id,
 				  				log_id : log_id,
-				  				start_time : start_time,
-				  				end_time : end_time,				  				
+				  				start_time : start_time_ct,
+				  				end_time : end_time_ct,
 				  				limit: p.limit,
 				  				offset : p.offset,
 				  				sort: p.sort,
 				  				order: p.order
 				  			}
 				  		}
-				  	});//  表格end		  
+				  	});//  表格end		    
 	  }
 	  
 

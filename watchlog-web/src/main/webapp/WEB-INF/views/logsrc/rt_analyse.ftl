@@ -7,7 +7,7 @@
   	 	<div class="container">
   	 	
 						<!-- 左侧： 日志源名称列表-->
-						<div class="col-sm-2"  style="/*border:solid 1px red;*/padding-left:0px; padding-right:0px;">
+						<div class="col-sm-2"  style="padding-left:0px; padding-right:0px;">
 								<div id="logsrc_list"  class=" btn-group-vertical  col-sm-12 " role="group" >
 										<#assign i=0>
 										<#list logs as log_str>
@@ -28,13 +28,13 @@
 						
 						
 						<!-- 中间： 实时表格-->
-						<div class="col-sm-6" >
-							<div class="row"   style=" border-bottom: solid 1px #eee; margin-bottom:10px;">
-									<div class="col-md-10 pull-left">  
+						<div class="col-sm-5" >
+							<div class="row"   style=" border-bottom: solid 1px #eee; margin-bottom:10px; padding-bottom: 8px;">
+									<div class="col-sm-9 pull-left">  
 												<p><font  style="font-size: 15px;font-weight: bold;">实时分析结果&#160;&#160;</font> <font style="font-size: 12px;">采样间隔30s</font></p>
 									</div>
-									<div class="col-md-2 pull-right">  
-											  <button id="remove" class="btn btn-warning  btn-xs"  onclick="rt_analyse_refresh()" >&#160; <i class="glyphicon glyphicon-refresh"></i>&#160;刷新 &#160; </button>
+									<div class="col-sm-3 pull-right">  
+											  <button id="remove" class="btn btn-warning  btn-sm"  onclick="rt_analyse_refresh()" ><i class="glyphicon glyphicon-refresh"></i>刷新 </button>
 									</div>
 							</div>										
 								
@@ -50,11 +50,13 @@
 																	<tr  >
 																		<td class='col-sm-4'>${data['date_time']}</td>
 																		<td class='col-sm-6'>
-																			<#if  data['error_tc']?has_content>
-																					<#list data['error_tc'] as x>
-																							<a title='${x['type']}'   href ='#' >${x['count']},</a>
-																					 </#list>
-																			 </#if>
+																				<#list data['error_tc'] as dt>
+																						<#if dt_has_next>
+																								<a title="${dt['type']}"   href ="#" >&#160;${dt['count']}&#160;</a>,
+																						<#else>
+																								<a title="${dt['type']}"   href ="#" >&#160;${dt['count']}</a>
+																						</#if>
+																				 </#list>																			 
 																		 </td>																	
 																		<td class='col-sm-2'>${data['total_count']}</td>
 																	</tr>																 
@@ -66,7 +68,7 @@
 							
 							
 						<!-- 右侧： 日志源详情-->
-						<div class="col-sm-4"    style="/*border:solid 1px blue; */ padding-left: 30px;">
+						<div class="col-sm-4 log_info_border">
 										<div class="row" style=" border-bottom: solid 1px #eee; margin-bottom:10px;">
 													<p style="font-size: 15px;font-weight: bold;">日志源配置</p>
 										</div>

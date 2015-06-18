@@ -45,7 +45,7 @@
 													  	</div>											  
 													  <div class="col-sm-2">
 													                <div class='input-group date' id='pm_end_time_datetimepicker'>
-														                    <input type='text'     id="pm_end_time_id"   name="end_time" class="form-control    input-sm"   placeholder="结束时间" />
+														                    <input type='text'    id="pm_end_time_id"   name="end_time" class="form-control    input-sm"   placeholder="结束时间" />
 														                    <span class="input-group-addon">
 														                        <span class="glyphicon glyphicon-calendar"></span>
 														                    </span>

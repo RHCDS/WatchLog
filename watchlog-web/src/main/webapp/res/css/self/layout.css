@@ -98,3 +98,9 @@ ul.home-stl{
 	height: 200px;
 }
 
+div.log_info_border{
+	padding-left: 30px; 
+	border: solid 1px #ddd; 
+	margin-left: 20px; 
+	padding-top: 8px;	
+}

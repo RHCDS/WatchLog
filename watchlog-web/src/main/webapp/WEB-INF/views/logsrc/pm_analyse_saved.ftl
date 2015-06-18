@@ -33,7 +33,7 @@
 								</div><!-- 模态框（Modal） -->
 							</form>			
 				  	
-				  			<!-- 未保存聚合分析页面 导航条-->
+				  			<!-- 保存聚合分析页面 导航条-->
 							<div class="row"   style="border-bottom: solid 1px #ddd;height: 45px;" >
 									<div class="col-sm-12"> 
 													<table  class="table wratb  removebd">
@@ -69,8 +69,12 @@
 																				<tr>
 																					<td class="col-sm-4">${data['date_time']}</td>
 																					<td class="col-sm-6">
-																								<#list data['error_tc'] as x>
-																										<a title="${x['type']}"   href ="#" >${x['count']},</a>
+																								<#list data['error_tc'] as dt>
+																										<#if dt_has_next>
+																												<a title="${dt['type']}"   href ="#" >&#160;${dt['count']}&#160;</a>,
+																										<#else>
+																												<a title="${dt['type']}"   href ="#" >&#160;${dt['count']}</a>
+																										</#if>
 																								 </#list>
 																					 </td>																	
 																					<td class="col-sm-2">${data['total_count']}</td>
@@ -90,7 +94,7 @@
 					
 					
 							<!-- 右侧： 日志源详情-->
-							<div class="col-sm-5"    style="padding-left: 30px;">
+							<div class="col-sm-4 log_info_border" >
 									<div class="row  detail-head-text">
 												<p style="font-size: 15px;font-weight: bold;">日志源配置</p>
 									</div><!-- row -->

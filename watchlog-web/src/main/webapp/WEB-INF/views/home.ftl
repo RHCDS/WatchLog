@@ -11,7 +11,7 @@
 													<tbody>
 																<tr>
 																	<td class="col-sm-2">
-																						<p class="head-text">调试日志源</p>
+																						<p class="head-text">创建日志源</p>
 																						
 																						<ul class="home-stl">
 																								<li class="font-13-gray">添加日志监控</li>

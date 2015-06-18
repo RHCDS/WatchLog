@@ -6,9 +6,9 @@
   		<div class="container">
   	
 							<!-- 保存聚合分析表单form-->
-							<form  id="pm_analyse_store_form" action="/logsrc/pm_analyse/store"  method="post"   class="form-horizontal" role="form"   accept-charset="UTF-8"   data-remote="true">     	  
+							<form  id="pm_analyse_store_form"  onsubmit="return check_pm_report_name()" action="/logsrc/pm_analyse/store"  method="post"   class="form-horizontal" role="form"   accept-charset="UTF-8"   data-remote="true">     	  
 								<!-- 模态框（Modal）-->
-								<div class="modal fade" id="pm_analyse_store_modal" tabindex="-1" role="dialog"    aria-labelledby="myModalLabel" aria-hidden="true">
+								<div class="modal fade" id="pm_analyse_store_modal" tabindex="-1" role="dialog"    aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
 									   <div class="modal-dialog">
 												      <div class="modal-content">
 												      		<input type="hidden" id="log_id" name="log_id"  />
@@ -18,18 +18,21 @@
 												      		 <!-- header  -->
 													         <div class="modal-header">
 														            <button type="button" class="close"    data-dismiss="modal" aria-hidden="true">   &times;  </button>
-														            <h4 class="modal-title" id="myModalLabel"> 保存历史报告 </h4>
+														            <h4 class="modal-title" id="myModalLabel"> 保存当前聚合报告 </h4>
 													         </div>
 													         <!-- body  -->
-													         <div class="modal-body" style="height: 80px;">
-																		<label for="host_name" class="col-sm-2 control-label"  style="text-align: center;color: gray;font-weight: 100;">备注 <font color="red">*</font>： &#160;&#160;</label>
+													         <div class="modal-body"    style="height: 80px;">
+																		<label for="host_name" class="col-sm-2 control-label"  style="text-align: center;color: gray;font-weight: 100;">报告名<font color="red">&#160;*</font></label>
 																	      <div class="col-sm-10">
-																	         		<input type="text" class="form-control"    id="title"     name="title"   placeholder="备注说明以便于区分">
+																	         		<input type="text" class="form-control"    id="report_title"     name="title"   placeholder="请输入报告名">
 																	          		<div id="warn_report_comment"></div>
 																	      </div>
+																	      <div class="row" style="padding-left: 15px; padding-right: 15px; overflow: auto; ">
+																			  			<div class="col-sm-10 pull-right"  id="title_notice"></div>
+																			</div>
 													         </div>
 													         <!-- footer  -->
-													         <div class="modal-footer">
+													         <div class="modal-footer"  style="border-top: 0;">
 													           <button type="submit" class="btn btn-primary">  确定  </button>
 													            <button type="button" class="btn btn-default"    data-dismiss="modal"> 取消  </button>
 													         </div>
@@ -73,8 +76,12 @@
 																				<tr>
 																					<td class="col-sm-4">${data['date_time']}</td>
 																					<td class="col-sm-6">
-																								<#list data['error_tc'] as x>
-																										<a title="${x['type']}"   href ="#" >${x['count']},</a>
+																								<#list data['error_tc'] as dt>
+																										<#if dt_has_next>
+																												<a title="${dt['type']}"   href ="#" >&#160;${dt['count']}&#160;</a> ,
+																										<#else>
+																												<a title="${dt['type']}"   href ="#" >&#160;${dt['count']}</a>
+																										</#if>
 																								 </#list>
 																					 </td>																	
 																					<td class="col-sm-2">${data['total_count']}</td>
@@ -95,7 +102,7 @@
 					
 					
 							<!-- 右侧： 日志源详情-->
-							<div class="col-sm-5"    style="padding-left: 30px;">
+							<div class="col-sm-4  log_info_border"    >
 									<div class="row detail-head-text">
 												<p style="font-size: 15px;font-weight: bold;">日志源配置</p>
 									</div><!-- row -->
