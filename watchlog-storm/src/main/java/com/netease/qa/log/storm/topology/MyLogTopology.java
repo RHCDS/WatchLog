@@ -22,33 +22,10 @@ public class MyLogTopology {
 	InvalidTopologyException, TException, DRPCExecutionException {
 
 		// Topology definition
-		TopologyBuilder builder = new TopologyBuilder();
-		builder.setSpout("mq-consumer", new MQConsumer());
-		builder.setBolt("log-normalizer", new LogNormalizer()).shuffleGrouping("mq-consumer");
-		builder.setBolt("log-filter", new LogFilter()).shuffleGrouping("log-normalizer");
-		builder.setBolt("log-analyser", new LogAnalyser()).shuffleGrouping("log-filter");
-		builder.setBolt("result-writer", new ResultWriter()).shuffleGrouping("log-analyser");
-
-		// Configuration
-		Config conf = new Config();
-		conf.setDebug(false);
-		
-		// Topology run
-		conf.put(Config.TOPOLOGY_WORKERS, 1);
-		conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 1);
-		conf.put(Config.TOPOLOGY_ACKER_EXECUTORS, 0);
-		
-		LocalCluster cluster = new LocalCluster();
-		cluster.submitTopology("log-test", conf, builder.createTopology());
-		Thread.sleep(10000000);
-		cluster.shutdown();
-		
-		
-//		// Topology definition
 //		TopologyBuilder builder = new TopologyBuilder();
-//		builder.setSpout("mq-consumer", new MQConsumer(), 2);
-//		builder.setBolt("log-normalizer", new LogNormalizer(), 2).shuffleGrouping("mq-consumer");
-//		builder.setBolt("log-filter", new LogFilter(), 2).shuffleGrouping("log-normalizer");
+//		builder.setSpout("mq-consumer", new MQConsumer());
+//		builder.setBolt("log-normalizer", new LogNormalizer()).shuffleGrouping("mq-consumer");
+//		builder.setBolt("log-filter", new LogFilter()).shuffleGrouping("log-normalizer");
 //		builder.setBolt("log-analyser", new LogAnalyser()).shuffleGrouping("log-filter");
 //		builder.setBolt("result-writer", new ResultWriter()).shuffleGrouping("log-analyser");
 //
@@ -57,11 +34,34 @@ public class MyLogTopology {
 //		conf.setDebug(false);
 //		
 //		// Topology run
-//		conf.put(Config.TOPOLOGY_WORKERS, 2);
+//		conf.put(Config.TOPOLOGY_WORKERS, 1);
 //		conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 1);
 //		conf.put(Config.TOPOLOGY_ACKER_EXECUTORS, 0);
 //		
-//		StormSubmitter.submitTopology("perf_watchlog_test", conf, builder.createTopology());
+//		LocalCluster cluster = new LocalCluster();
+//		cluster.submitTopology("log-test", conf, builder.createTopology());
+//		Thread.sleep(10000000);
+//		cluster.shutdown();
+		
+		
+		// Topology definition
+		TopologyBuilder builder = new TopologyBuilder();
+		builder.setSpout("mq-consumer", new MQConsumer(), 2);
+		builder.setBolt("log-normalizer", new LogNormalizer(), 2).shuffleGrouping("mq-consumer");
+		builder.setBolt("log-filter", new LogFilter(), 2).shuffleGrouping("log-normalizer");
+		builder.setBolt("log-analyser", new LogAnalyser()).shuffleGrouping("log-filter");
+		builder.setBolt("result-writer", new ResultWriter()).shuffleGrouping("log-analyser");
+
+		// Configuration
+		Config conf = new Config();
+		conf.setDebug(false);
+		
+		// Topology run
+		conf.put(Config.TOPOLOGY_WORKERS, 2);
+		conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 1);
+		conf.put(Config.TOPOLOGY_ACKER_EXECUTORS, 0);
+		
+		StormSubmitter.submitTopology("perf_watchlog_online", conf, builder.createTopology());
 
 		
 	}

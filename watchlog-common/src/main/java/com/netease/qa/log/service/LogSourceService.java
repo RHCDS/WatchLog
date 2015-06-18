@@ -1,5 +1,6 @@
 package com.netease.qa.log.service;
 
+import java.util.ArrayList;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.netease.qa.log.meta.LogSource;
@@ -16,6 +17,8 @@ public interface LogSourceService {
 	
 	public LogSource getByLocation(String hostname, String path, String filePattern);
 	
+	public LogSource getByLogSourceName(String logname);
+	
 	public int deleteLogSource(int logSourceid);
 	
 	public int deleteLogSources(int[] ids);
@@ -24,10 +27,16 @@ public interface LogSourceService {
 	
 	public boolean checkLogSourceExist(int logSourceid);
 	
+	public boolean checkLogSourceExist(String logsourceName);
+	
 	public int getTotalCountByProjectId(int projectid);
 	
 	public JSONArray getLogSourcesListByProjectid(int project, int limit, int offset);
 	
 	public JSONArray getLogSourcesListSortedByProjectid(int project, String field, String order, int limit, int offset);
+	
+	public int changeMonitorStatus(int[] ids, int status);
+	
+	public ArrayList<LogSource> selectAllByProjectId(int projectId);
 
 }

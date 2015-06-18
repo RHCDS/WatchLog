@@ -6,7 +6,7 @@
 		log_source_id as logSourceId,
 		log_source_name as logSourceName,
 		project_id as projectId,
-		create_time as createTme,
+		create_time as createTime,
 		modify_time as modifyTime,
 		hostname as hostname,
 		path as path,
@@ -14,66 +14,64 @@
 		line_start_regex as lineStartRegex,
 		line_filter_keyword as lineFilterKeyword,
 		line_type_regex as lineTypeRegex,
-		log_source_creator_id as logSourceCreatorId,
-		log_source_creator_name as logSourceCreatorName,
-		log_source_status as logSourceStatus
+		creator_id as logSourceCreatorId,
+		status as logSourceStatus
 	</sql>
 
 	<insert id="insert" parameterType="com.netease.qa.log.meta.LogSource" useGeneratedKeys="true" keyProperty="logSourceId">
-		insert into log_source(log_source_name,project_id,create_time,modify_time, hostname, path, file_pattern, line_start_regex, 
-		line_filter_keyword, line_type_regex,log_source_creator_id,log_source_creator_name,log_source_status)
-		values(#{logSourceName},#{projectId}, now(), now(), #{hostname}, #{path}, #{filePattern}, #{lineStartRegex},
-		 #{lineFilterKeyword}, #{lineTypeRegex}, 1, #{logSourceCreatorName}, 0)
+		insert into log_source(log_source_name,project_id,create_time, hostname, path, file_pattern, line_start_regex, 
+		line_filter_keyword, line_type_regex, creator_id, status)
+		values(#{logSourceName},#{projectId}, now(), #{hostname}, #{path}, #{filePattern}, #{lineStartRegex},
+		 #{lineFilterKeyword}, #{lineTypeRegex}, 1, 0)
 	</insert>
 
 	<update id="update" parameterType="com.netease.qa.log.meta.LogSource">
 		update log_source set 
 		log_source_name=#{logSourceName},
 		project_id=#{projectId}, 
-		create_time=create_time,
-		modify_time=now(),
 		hostname=#{hostname},
 		path=#{path}, 
 		file_pattern=#{filePattern},
 		line_start_regex=#{lineStartRegex},
 		line_filter_keyword=#{lineFilterKeyword},
 		line_type_regex=#{lineTypeRegex},
-		log_source_status=#{logSourceStatus} 
+		status=#{logSourceStatus} 
 		where log_source_id=#{logSourceId}
 	</update>
 
 	<delete id="delete" parameterType="java.lang.Integer">
-		delete from log_source where log_source_id=#{logSourceId}
+		update log_source set status = 3  where log_source_id=#{logSourceId}
 	</delete>
-
+   
+    <!-- limit 1 important -->
     <select id="findByLogSourceName" resultType="com.netease.qa.log.meta.LogSource">
         select
           <include refid="allColumn"/>
-         from log_source where log_source_name=#{logSourceName}
+         from log_source where <![CDATA[status<>3]]> and log_source_name=#{logSourceName} limit 1
     </select>
     
 	<select id="findByLogSourceId" parameterType="java.lang.Integer" resultType="com.netease.qa.log.meta.LogSource">
 		select
 		<include refid="allColumn" />
-		from log_source where log_source_id=#{logSourceId}
+		from log_source where log_source_id=#{logSourceId} limit 1
 	</select>
 
 	<select id="findByLocation" resultType="com.netease.qa.log.meta.LogSource">
 		select
 		<include refid="allColumn" />
-		from log_source where hostname=#{0} and path=#{1} and file_pattern=#{2} limit 1
+		from log_source where <![CDATA[status<>3]]> and hostname=#{0} and path=#{1} and file_pattern=#{2} limit 1
 	</select>
 
 	<select id="selectAllByProjectId" parameterType="java.lang.Integer"
 		resultType="com.netease.qa.log.meta.LogSource">
 		select
 		<include refid="allColumn" />
-		from log_source where project_id=#{projectId}
+		from log_source where <![CDATA[status<>3]]> and project_id=#{projectId}
 	</select>
 	
 	<select id="getTotalCountByProjectId" parameterType="java.lang.Integer"
 	     resultType="java.lang.Integer">
-	     select count(log_source_id) as num from log_source where project_id=#{projectId}
+	     select count(log_source_id) as num from log_source where <![CDATA[status<>3]]> and project_id=#{projectId}
 	</select>
 	
 	 
@@ -81,13 +79,13 @@
 	     resultType="com.netease.qa.log.meta.LogSource">
 	     select
 		<include refid="allColumn" />
-		from log_source where project_id=#{param1} limit #{param2} offset #{param3}
+		from log_source where <![CDATA[status<>3]]> and project_id=#{param1} limit #{param2} offset #{param3}
 	</select>
 	
 	<select id="getSortedByProjectId" resultType="com.netease.qa.log.meta.LogSource">
 	      select
 	      <include refid="allColumn" />
-	      from log_source where project_id=${param1} order by ${param2} ${param3} limit ${param4} offset ${param5}
+	      from log_source where  <![CDATA[status<>3]]> and project_id=${param1} order by ${param2} ${param3} limit ${param4} offset ${param5}
 	</select>
 </mapper>
 

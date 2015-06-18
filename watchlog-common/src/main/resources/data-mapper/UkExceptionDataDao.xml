@@ -30,7 +30,7 @@
         select
         <include refid="allColumn" />
         from unknown_exception_data where log_source_id=${param1} and log_time
-         between ${param2} and ${param3} limit ${param4} offset ${param5} 
+         between ${param2} and ${param3} order by log_time desc limit ${param4} offset ${param5} 
     </select>
     
 </mapper>

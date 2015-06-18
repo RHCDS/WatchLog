@@ -1,0 +1,18 @@
+.pm_info_row {
+  float: left;
+}
+
+select.btn-mini {
+    height: auto;
+    line-height: 14px;
+}
+
+#pm_logsrc_select{
+	    height: auto;
+    line-height: 14px;
+}
+
+.detail-head-text{
+	border-bottom: solid 1px #eee; 
+	margin-bottom:10px;"
+}

@@ -34,9 +34,8 @@ public class ProjectAPI {
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> addProject(
 			@RequestParam(value = "name", required = false) String name,
-			@RequestParam(value = "name_eng", required = false) String name_eng,
 			@RequestParam(value = "accuracy", required = false) String accuracy, Model model) {
-		if (MathUtil.isEmpty(name, name_eng, accuracy)) {
+		if (MathUtil.isEmpty(name, accuracy)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
@@ -44,18 +43,17 @@ public class ProjectAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.ACCURACY_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		if (!MathUtil.isEng(name_eng)) {
+		if (!MathUtil.isName(name)) {
 			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_NAME);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		if(projectService.checkProjectExsit(name_eng)){
+		if(projectService.checkProjectExsit(name)){
 			ConflictRequestException cr = new ConflictRequestException(Const.PROJECT_ALREADY_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleConflictRequestException(cr), HttpStatus.CONFLICT);
 		}
 		
 		Project project = new Project();
 		project.setProjectName(name);
-		project.setProjectEngName(name_eng);
 		project.setTimeAccuracy(Integer.parseInt(accuracy));
 		int result = projectService.createProject(project);
 		if (result == 0) {
@@ -73,9 +71,8 @@ public class ProjectAPI {
 	@RequestMapping(value = "{projectid}", method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> updateProject(@PathVariable String projectid,
 			@RequestParam(value = "name", required = false) String name,
-			@RequestParam(value = "name_eng", required = false) String name_eng,
 			@RequestParam(value = "accuracy", required = false) String accuracy, Model model) {
-		if (MathUtil.isEmpty(name, name_eng, accuracy)) {
+		if (MathUtil.isEmpty(name, accuracy)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
@@ -83,7 +80,7 @@ public class ProjectAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		if (!MathUtil.isEng(name_eng)) {
+		if (!MathUtil.isName(name)) {
 			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_NAME);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
@@ -95,11 +92,15 @@ public class ProjectAPI {
 			NotFoundRequestException nr = new NotFoundRequestException(Const.PROJECT_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
 		}
-		
-		Project project = new Project();
-		project.setProjectId(Integer.parseInt(projectid)); 
+		Project projectOld = projectService.getByProjectId(Integer.parseInt(projectid));
+		if(!name.equals(projectOld.getProjectName())){
+			if(projectService.checkProjectExsit(name)){
+				ConflictRequestException cr = new ConflictRequestException(Const.PROJECT_ALREADY_EXSIT);
+				return new ResponseEntity<JSONObject>(apiException.handleConflictRequestException(cr), HttpStatus.CONFLICT);
+			}
+		}
+		Project project = projectOld;
 		project.setProjectName(name);
-		project.setProjectEngName(name_eng);
 		project.setTimeAccuracy(Integer.parseInt(accuracy));
 		int result = projectService.updateProject(project);
 	    if (result == 0) {

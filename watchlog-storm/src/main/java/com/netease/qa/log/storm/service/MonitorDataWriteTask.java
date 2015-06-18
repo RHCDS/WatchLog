@@ -7,7 +7,7 @@ import org.slf4j.LoggerFactory;
 
 public class MonitorDataWriteTask implements Runnable{
 
-	private static final int time_accuracy = 15000; 
+	private static final int time_accuracy = 30000; 
 	private static final Logger logger = LoggerFactory.getLogger(MonitorDataWriteTask.class);
 
 	@Override

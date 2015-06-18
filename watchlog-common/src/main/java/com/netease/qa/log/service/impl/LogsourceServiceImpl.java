@@ -1,5 +1,6 @@
 package com.netease.qa.log.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -70,7 +71,7 @@ public class LogsourceServiceImpl implements LogSourceService{
 		result.put("linestart", logSource.getLineStartRegex());
 		result.put("filterkeyword", logSource.getLineFilterKeyword());
 		result.put("typeregex", logSource.getLineTypeRegex());
-		result.put("creator", logSource.getLogSourceCreatorName());
+		result.put("creator", logSource.getLogSourceCreatorId());
 		result.put("status", logSource.getLogSourceStatus());
 		logger.debug(result.toJSONString());
 		return result;
@@ -80,6 +81,20 @@ public class LogsourceServiceImpl implements LogSourceService{
 	@Override
 	public LogSource getByLogSourceId(int logSourceid) {
 		return logSourceDao.findByLogSourceId(logSourceid);
+	}
+	
+	
+
+	@Override
+	public LogSource getByLogSourceName(String logname) {
+		return logSourceDao.findByLogSourceName(logname);
+	}
+	
+
+	@Override
+	public boolean checkLogSourceExist(String logsourceName) {
+			LogSource logsource = logSourceDao.findByLogSourceName(logsourceName);
+			return logsource != null;
 	}
 	
 	
@@ -121,6 +136,9 @@ public class LogsourceServiceImpl implements LogSourceService{
 		return logsource != null;
 	}
 
+	
+	
+	
 
 	@Override
 	public boolean checkLogSourceExist(int logSourceId) {
@@ -165,7 +183,7 @@ public class LogsourceServiceImpl implements LogSourceService{
 			record.put("logsrc_file", logSource.getFilePattern());
 			record.put("status", logSource.getLogSourceStatus());
 			record.put("update_time", MathUtil.parse2Str(logSource.getModifyTime()));
-			record.put("creator", logSource.getLogSourceCreatorName());
+			record.put("creator", logSource.getLogSourceCreatorId());
 			records.add(record);
 			i++;
 		}
@@ -201,12 +219,40 @@ public class LogsourceServiceImpl implements LogSourceService{
 			record.put("logsrc_file", logSource.getFilePattern());
 			record.put("status", logSource.getLogSourceStatus());
 			record.put("update_time", MathUtil.parse2Str(logSource.getModifyTime()));
-			record.put("creator", logSource.getLogSourceCreatorName());
+			record.put("creator", logSource.getLogSourceCreatorId());
 			records.add(record);
 			i++;
 		}
 		return records;
 	}
+
+
+	@Override
+	public int changeMonitorStatus(int[] ids, int status) {
+		LogSource logsource;
+		for(int i=0; i < ids.length; i++){
+			try {
+				logsource = logSourceDao.findByLogSourceId(ids[i]);
+				logsource.setLogSourceStatus(status);
+				logSourceDao.update(logsource);
+			} catch (Exception e) {
+				logger.error("error", e);
+				return -1;
+			}
+		}
+		return 0;
+	}
+
+
+	@Override
+	public ArrayList<LogSource> selectAllByProjectId(int projectId) {
+		List<LogSource> logSources =  logSourceDao.selectAllByProjectId(projectId);
+		ArrayList<LogSource> logsources = new ArrayList<LogSource>();
+		for(int i=0; i<logSources.size(); i++)
+			logsources.add(logSources.get(i));
+		return logsources;
+	}
+
 
 
 

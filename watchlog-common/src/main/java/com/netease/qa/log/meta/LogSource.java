@@ -22,7 +22,6 @@ public class LogSource {
 	private String lineFilterKeyword;
 	private String lineTypeRegex;
 	private int logSourceCreatorId;
-	private String logSourceCreatorName;
 	private int logSourceStatus;
 	
 	private ArrayList<String> lineTypeRegexs;
@@ -40,7 +39,7 @@ public class LogSource {
 
 	
 	private void convertTypeRegexs() {
-		String[] typeRegexs = lineTypeRegex.split(Const.TYPE_REGEX_CON, -1);
+		String[] typeRegexs = lineTypeRegex.split(Const.FILTER_KEYWORD_OR, -1);
 		lineTypeRegexs = new ArrayList<String>();
 		for (String tmp : typeRegexs) {
 			if (!StringUtils.isEmpty(tmp)) {
@@ -220,14 +219,6 @@ public class LogSource {
 
 	public void setLogSourceCreatorId(int logSourceCreatorId) {
 		this.logSourceCreatorId = logSourceCreatorId;
-	}
-
-	public String getLogSourceCreatorName() {
-		return logSourceCreatorName;
-	}
-
-	public void setLogSourceCreatorName(String logSourceCreatorName) {
-		this.logSourceCreatorName = logSourceCreatorName;
 	}
 
 	public String toString(){
