@@ -92,7 +92,8 @@ public class ReadServiceImpl implements ReadService {
 				}
 				JSONObject record = new JSONObject();
 				record.put("date_time", MathUtil.parse2Str(endTime));
-				record.put("total_count", exceptionDataRecord.getTotalCount());
+				record.put("total_count", exceptionDataRecord != null && exceptionDataRecord.getTotalCount() > 0 ? 
+						exceptionDataRecord.getTotalCount() : 0);
 				record.put("error_tc", details);
 				records.add(record);
 			} catch (Exception e) {
