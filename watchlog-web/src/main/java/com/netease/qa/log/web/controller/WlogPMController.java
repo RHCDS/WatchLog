@@ -232,6 +232,7 @@ public class WlogPMController {
 		model.addAttribute("end_time", endTime);
 		LogSource logSource = logSourceService.getByLogSourceId(report.getLogSourceId());
 		model.addAttribute("logsrc_name", logSource.getLogSourceName());
+		model.addAttribute("title", report.getTitle());
 		model.addAttribute("host_name", logSource.getHostname());
 		model.addAttribute("logsrc_path", logSource.getPath());
 		model.addAttribute("logsrc_file", logSource.getFilePattern());
