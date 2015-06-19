@@ -71,9 +71,9 @@
 																					<td class="col-sm-6">
 																								<#list data['error_tc'] as dt>
 																										<#if dt_has_next>
-																												<a title="${dt['type']}"   href ="#" >&#160;${dt['count']}&#160;</a>,
+																												<a title='${dt['type']}'   href ="#" >&#160;${dt['count']}&#160;</a>,
 																										<#else>
-																												<a title="${dt['type']}"   href ="#" >&#160;${dt['count']}</a>
+																												<a title='${dt['type']}'   href ="#" >&#160;${dt['count']}</a>
 																										</#if>
 																								 </#list>
 																					 </td>																	

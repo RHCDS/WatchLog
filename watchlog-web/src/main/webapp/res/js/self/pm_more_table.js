@@ -85,7 +85,7 @@ var end_time_ct = end_time.replace(/\%20/g, ' ');
 
 	  // 遍历数字，拼接type和count到超链接
 	  for(i=0; i<value.length; i++){
-		  each_val = "<a title="+value[i]['type']+ ">"+value[i]['count']+" </a>";
+		  each_val = "<a title='"+value[i]['type']+ "'>"+value[i]['count']+" </a>";
 		  content_arr.push(each_val);
 	  }
 	  var  content_str = content_arr.join(' , ');
