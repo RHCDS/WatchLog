@@ -2,6 +2,8 @@ package com.netease.qa.log.web.controller;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -17,6 +19,8 @@ import com.netease.qa.log.util.Const;
 @Controller
 @RequestMapping(value = "/")
 public class WlogProjectController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(WlogProjectController.class);
 
 	@Resource
 	private ApiExceptionHandler apiException;
@@ -34,6 +38,7 @@ public class WlogProjectController {
 		JSONObject result = new JSONObject();
 		result.put("message", message);
 		result.put("data", data);
+		logger.debug("### [route]/projects   [key]data : " +  data.toJSONString());
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 }
