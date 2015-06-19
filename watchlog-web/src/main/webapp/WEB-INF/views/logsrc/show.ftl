@@ -32,17 +32,20 @@
 								</div><!-- 模态框（Modal） -->
 							</form>			
 			
-				<!-- 日志详情页面 导航条-->
-				<div class="row"  style="border-bottom: solid 1px #eee;  height: 35px; ">
-						<div class="col-md-6 pull-left">  
-								 <a href="/logsrc/manage?proj=${pid}">  返回 >   </a>
-								<small>${logsrc_name}</small>
-						</div>
-						<div class="col-md-4 pull-right">  
-								 <a class="btn btn-primary btn-xs"  style="margin-right: 15px;" href="/logsrc/${id}/edit?proj=${pid}" role="button">修改日志源</a>
-								  <button id="remove" class="btn btn-primary  btn-xs"  onclick="delete_logsrc_single(${id}, ${pid})" > 删除日志源 </button>
-						</div>
-				</div>
+			  				<!-- 日志详情页面 导航条-->
+							<div class="row"   style="border-bottom: solid 1px #ddd;height: 45px;" >
+									<div class="col-sm-12"> 
+													<table  class="table wratb  removebd">
+														<tbody>
+																	<tr>
+																		<td class="col-sm-10"> <a href="/logsrc/pm_analyse?proj=${pid}"> 返回 &#62; </a>	&#160;&#160;<small>${logsrc_name}</small></td>
+																		<td class="col-sm-1"> <a class="btn btn-primary btn-xs"  style="margin-right: 15px;" href="/logsrc/${id}/edit?proj=${pid}" role="button">修改日志源</a></td>
+																		<td class="col-sm-1">  <button id="remove" class="btn btn-primary  btn-xs"  onclick="delete_logsrc_single(${id}, ${pid})" > 删除日志源 </button></td>
+																	</tr>		
+														</tbody>
+													</table>
+									</div><!-- /col-sm-12 -->			
+							</div><!-- /row -->						
 			
 						
 				<div class="row" style=" border-bottom: solid 1px #eee;">
