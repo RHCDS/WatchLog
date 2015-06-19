@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,6 +25,8 @@ import com.netease.qa.log.util.MathUtil;
 
 @Controller
 public class WlogRTController {
+	
+	private static final Logger logger = LoggerFactory.getLogger(WlogRTController.class);
 
 	@Resource
 	private LogSourceService logSourceService;
@@ -79,6 +83,7 @@ public class WlogRTController {
 			result = readService.queryLatestTimeRecords(logSource.getLogSourceId(), current);
 		}
 		model.addAttribute("rt_table", result.getJSONArray("record"));
+		logger.debug("### [route]logsrc/rt_analyse [key]rt_table : " +  result.toJSONString());
 		return "logsrc/rt_analyse";
 	}
 
@@ -111,6 +116,7 @@ public class WlogRTController {
 		result.put("status", 0);
 		result.put("message", ConstCN.RESPONSE_SUCCESSFUL);
 		result.put("data", records.getJSONArray("record"));
+		logger.debug("### [route]/logsrc/rt_analyse/refresh  [key]data : " +  records.toJSONString());
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 
