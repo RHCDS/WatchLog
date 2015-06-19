@@ -16,6 +16,7 @@
 长度最长为100;"  style="color: gray;"><span class="glyphicon glyphicon-question-sign"  aria-hidden="true"><a>		</label>		
 						      <div class="col-sm-6">
 						         <input type="text" class="form-control log-item-input"   id="logsrc_name"      name="logsrc_name"  value=${logsrc_name}  placeholder="请输入名字">
+						         <p  style="font-size: 12px;color: #699;"> 命名规则：不能以下划线开始和结尾;  只能包含英文字母/汉字/数字;  长度最长为100;</p>
 						         <div id="warn_edit_logsrc_name"></div>
 						      </div>
 						</div>
@@ -74,6 +75,7 @@
 											</label>
 									      <div class="col-sm-6">
 									         <input type="text" class="form-control log-item-input"   id="start_regex"  name="start_regex"   value=${start_regex}   placeholder="请输入起始标志">
+									          <p  style="font-size: 12px;color: #699;"> 一般以非空格作为日志行起始标志，即  ^\S+ </p>
 									         <div id="warn_edit_start_regex"></div>
 									      </div>
 									</div>		
@@ -146,7 +148,7 @@
 														<div class="col-md-2 pull-right">  <a class="btn btn-default btn-sm" href="javascript:void(0);" onclick="add_row_reg_regex()" role="button">+ 添加行</a></div>										
 												</div><!-- /row -->
 												<div class="form-group"  style="margin: 0px;" >
-														<table  id="reg_regex_table" class="table table-bordered">
+														<table  id="reg_regex_table" class="table table-bordered"   style="margin-bottom: 0px;">
 															<tbody>
 																	<#assign j=0>
 																	<#list reg_regex_arr as r>
@@ -168,6 +170,7 @@
 																	</#list>		
 															</tbody>
 														</table>
+														<p  style="font-size: 12px;color: #699;"> 如果是java应用，可以使用   (\w+\.)+(\w)*Exception:.*?(($)|(\\t))    匹配典型的java异常信息 </p>
 												</div><!-- /row -->
 										</div><!-- /col-md-10 -->			
 								</div><!-- /row -->
@@ -176,7 +179,7 @@
 						<input type="hidden"  name="proj"   value="${pid}"  />
 						
 				   <div class="form-group">
-				      <div class="col-sm-offset-2 col-sm-10">
+				      <div class="col-sm-offset-2 col-sm-10" style="margin-top: 40px;">
 				         <button type="submit" class="btn btn-primary">保存</button>
 				          <a class="btn btn-default" href="/logsrc/manage?proj=${pid}" role="button">取消</a>
 				      </div>
