@@ -207,6 +207,7 @@ public class ReadServiceImpl implements ReadService {
 			JSONObject error = new JSONObject();
 			com.netease.qa.log.meta.Exception exception = exceptionDao
 					.findByExceptionId(exceptionData.getExceptionId());
+			error.put("exp_id", exception.getExceptionId());
 			error.put("error_type", exception.getExceptionType());
 			error.put("error_example", exception.getExceptionDemo());
 			error.put("total_count", exceptionData.getExceptionCount());

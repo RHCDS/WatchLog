@@ -43,8 +43,8 @@
 													<tbody id='rt_refresh_body'>
 																<tr>
 																	<th class='col-sm-4'>采样时间</th>
-																	<th class='col-sm-6'>Error type & count </th>
-																	<th class='col-sm-2'>Total  count</th>
+																	<th class='col-sm-6'>异常类型和数量</th>
+																	<th class='col-sm-2'>异常总数</th>
 																</tr>		
 																<#list rt_table as data>
 																	<tr  >

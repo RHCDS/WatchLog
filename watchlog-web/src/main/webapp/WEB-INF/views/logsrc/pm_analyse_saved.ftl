@@ -62,8 +62,8 @@
 															<#if  pm_error_dist_table?has_content >
 																			<tr>
 																				<th class="col-sm-4">采样时间</th>
-																				<th class="col-sm-6">Error type & count </th>
-																				<th class="col-sm-2">Total  count</th>
+																				<th class="col-sm-6">异常类型和数量</th>
+																				<th class="col-sm-2">异常总数</th>
 																			</tr>		
 																			<#list pm_error_dist_table as data>
 																				<tr>
@@ -86,7 +86,7 @@
 												
 												<!-- 更多-->
 												<#if  pm_error_dist_table?has_content>
-														<div class="row pull-right"  style="margin-right: 0px;"><a target="_blank" href="/logsrc/pm_analyse/error_dist_more?log_id=${log_id}&proj=${pid}&start_time=${start_time}&end_time=${end_time}">更多&#62;&#62;</a></div>
+														<div class="row pull-right"  style="margin-right: 0px;"><a target="_blank" href="/logsrc/pm_analyse/error_dist_more?report_id=${report_id}&proj=${pid}">更多&#62;&#62;</a></div>
 												<#else>
 														<div class="row   alert alert-info"  style="margin-right: 0px;">暂无数据</div>
 												</#if>			
@@ -206,8 +206,8 @@
 												      		<input type="hidden" id="proj" name="proj"  />
 												      		 <!-- header  -->
 													         <div class="modal-header">
-														            <button type="button" class="close"    data-dismiss="modal" aria-hidden="true"  onclick="window.location.reload();" >   &times;  </button>
-														            <h4 class="modal-title" id="myModalLabel">    异常类型详情 Total count    </h4>
+														            <button type="button" class="close"    data-dismiss="modal" aria-hidden="true" >   &times;  </button>
+														            <h4 class="modal-title" id="myModalLabel">    异常类型详情 </h4>
 													         </div>												      		
 													         <!-- body  -->
 													         <div class="modal-body">
@@ -215,7 +215,7 @@
 																            <thead>
 																            <tr>
 																                <th data-field="date_time"   data-sortable="true"    > 采样时间</th>
-																                 <th data-field="total_count" data-sortable="true"  > Total count </th>
+																                 <th data-field="total_count" data-sortable="true"  > 异常总数</th>
 																            </tr>
 																            </thead>
 																        </table>													            	
@@ -230,14 +230,16 @@
 													<tbody>
 													<#if  pm_error_type_table?has_content>
 																<tr>
-																		<th class="col-sm-4">Error Type</th>
-																		<th class="col-sm-7">Error type & count </th>
-																		<th class="col-sm-1">Total  count</th>
+																		<th class="col-sm-4">异常类型</th>
+																		<th class="col-sm-7">原始日志实例 </th>
+																		<th class="col-sm-1">异常总数</th>
 																</tr>		
 																<#list pm_error_type_table as data>
+																	<#assign error_type_str = data['error_type']?replace("(\t)+", "<br/>",'r')>
+																	<#assign error_example_str = data['error_example']?replace("(\t)+", "<br/>",'r')>
 																	<tr>
-																			<td class="col-sm-4">${data['error_type']}</td>
-																			<td class="col-sm-7">${data['error_example']}	 </td>																	
+																			<td class="col-sm-4">${error_type_str}</td>
+																			<td class="col-sm-7">${error_example_str}</td>																	
 																			<td class="col-sm-1"><a  href="javascript:void(0)"  
 																			onclick="get_saved_error_type_total(${report_id},  ${data['exp_id']})">${data['total_count']}</a></td>																		
 																	</tr>																 
@@ -248,7 +250,7 @@
 												
 												<!-- 更多-->
 												<#if  pm_error_type_table?has_content>
-														<div class="row pull-right" style="margin-right: 0px;"><a target="_blank" href="/logsrc/pm_analyse/error_type_more?log_id=${log_id}&proj=${pid}&start_time=${start_time}&end_time=${end_time}">更多&#62;&#62;</a></div>
+														<div class="row pull-right" style="margin-right: 0px;"><a target="_blank" href="/logsrc/pm_analyse/error_type_more?report_id=${report_id}&proj=${pid}">更多&#62;&#62;</a></div>
 												<#else>
 														<div class="row   alert alert-info"  style="margin-right: 0px;">暂无数据</div>
 												</#if>										

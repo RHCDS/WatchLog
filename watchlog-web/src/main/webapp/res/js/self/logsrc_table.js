@@ -38,7 +38,7 @@
  // 服务器地址显示：限制长度截断+hover显示所有文字
  function hostnameFormatter(value, row, index){
 	  if(value!=undefined){
-			     var maxwidth = 20; 
+			     var maxwidth = 40; 
 			     value_show = value;
 			     if (value.length > maxwidth) {
 			    	 value_show = value.substring(0, maxwidth) + '...'
@@ -52,7 +52,7 @@
  // 日志源地址显示：限制长度截断+hover显示所有文字
  function logsrcpathFormatter(value, row, index){
 	  if(value!=undefined){
-			     var maxwidth = 45; 
+			     var maxwidth = 70; 
 			     value_show = value;
 			     if (value.length > maxwidth) {
 			    	 value_show = value.substring(0, maxwidth) + '...'

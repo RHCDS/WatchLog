@@ -98,7 +98,7 @@
 																	<#assign i=0>
 																	<#list filter_keyword_arr as f>
 																				<tr>
-																						<td class="col-md-6" style="padding:0px">
+																						<td class="col-md-5" style="padding:0px">
 																									<input type="text" class="form-control log-item-regular-input"  id="filter_keyword_input_id "   name="filter_keyword_arr[]"   value=${f}   >	
 																						</td>
 																					<#if i==0> 
@@ -112,9 +112,11 @@
 																									      		<option value="AND"   >AND</option>		
 																							    	  		</#if>
 																							      </select>	<!-- /select -->															
-																					</td>																		
+																					</td>	
+																					<td class="col-md-1" >操作</td>																	
 																					<#else>
 																						<td class="col-md-1 filter_keyword_td_select"  style="padding:0px">${filter_keyword_flag}</td>
+																						<td class="col-md-1" ><a class="filter_delete" href="javascript:void(0)"  title="删除"  onclick=filter_item_delete(this)><i class="glyphicon glyphicon-trash  filter_delete_icon"></i></a>	</td>
 																					</#if>
 																				</tr><!-- /tr -->
 																				<#assign i=1>
@@ -138,7 +140,7 @@
 							
 									<div class="row" >
 										<div class="col-md-2">
-												<h4> <small  style="padding-left: 60px;">Step1：</small></h4>
+												<h4> <small  style="padding-left: 60px;">Step2：</small></h4>
 										</div><!-- /col-md-2 -->
 										<div class="col-md-6"> 
 												<div class="row" >
@@ -153,7 +155,7 @@
 																	<#assign j=0>
 																	<#list reg_regex_arr as r>
 																			<tr>
-																					<td class="col-md-6" style="padding:0px">
+																					<td class="col-md-5" style="padding:0px">
 																								<input type="text" class="form-control log-item-regular-input"  id="reg_regex_input_id"   name="reg_regex_arr[]"    value=${r}  >	
 																					</td>
 																					<#if j==0> 
@@ -161,9 +163,11 @@
 																						    	  <select class=" form-control log-item-regular-input"   id="reg_regex_select_id"   name="reg_regex_con"  >
 																						    	  			<option value="OR"   selected="true" >OR</option>
 																							      </select>	<!-- /select -->															
-																					</td>																		
+																					</td>				
+																					<td class="col-md-1" >操作</td>														
 																					<#else>
 																						<td class="col-md-1 reg_regex_td_select"  style="padding:0px">${reg_regex_flag}</td>
+																						<td class="col-md-1" ><a class="filter_delete" href="javascript:void(0)"  title="删除"  onclick=filter_item_delete(this)><i class="glyphicon glyphicon-trash  filter_delete_icon"></i></a>	</td>
 																					</#if>
 																			</tr><!-- /tr -->		
 																			<#assign j=1>
