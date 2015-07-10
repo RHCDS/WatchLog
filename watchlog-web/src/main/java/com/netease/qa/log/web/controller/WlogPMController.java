@@ -3,6 +3,7 @@ package com.netease.qa.log.web.controller;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -22,10 +23,12 @@ import com.alibaba.fastjson.JSONObject;
 import com.netease.qa.log.exception.ApiExceptionHandler;
 import com.netease.qa.log.meta.LogSource;
 import com.netease.qa.log.meta.Report;
+import com.netease.qa.log.meta.UkExceptionData;
 import com.netease.qa.log.service.LogSourceService;
 import com.netease.qa.log.service.ProjectService;
 import com.netease.qa.log.service.ReadService;
 import com.netease.qa.log.service.ReportService;
+import com.netease.qa.log.service.UnknowService;
 import com.netease.qa.log.util.Const;
 import com.netease.qa.log.util.ConstCN;
 import com.netease.qa.log.util.MathUtil;
@@ -45,6 +48,8 @@ public class WlogPMController {
 	private ProjectService projectService;
 	@Resource
 	private ReportService reportService;
+	@Resource
+	private UnknowService unknowService;
 
 	// 日志聚合分析，选择日志源内容
 	@RequestMapping(value = "logsrc/pm_analyse", method = RequestMethod.GET)
@@ -59,7 +64,7 @@ public class WlogPMController {
 			}
 		}
 		model.addAttribute("logs", logs);
-		logger.debug("### [route]logsrc/pm_analyse  [key]logs : " + logs); 
+		logger.debug("### [route]logsrc/pm_analyse  [key]logs : " + logs);
 		return "logsrc/pm_analyse";
 	}
 
@@ -113,7 +118,7 @@ public class WlogPMController {
 		result.put("message", message);
 		result.put("total", recordsTotal);
 		result.put("rows", data);
-		logger.debug("### [route]logsrc/pm_analyse/pmtable  [key]rows : " + data.toJSONString());  
+		logger.debug("### [route]logsrc/pm_analyse/pmtable  [key]rows : " + data.toJSONString());
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 
@@ -223,11 +228,11 @@ public class WlogPMController {
 		JSONObject resultByTime = readService.queryTimeRecords(Integer.parseInt(logsrcId), start, end,
 				Const.ORDER_FIELD_SAMPLE_TIME, Const.ORDER_DESC, 10, 0);
 		model.addAttribute("pm_error_dist_table", resultByTime.getJSONArray("record"));
-		logger.debug("### [route]/logsrc/pm_analyse_unsave  [key]pm_error_dist_table : " + resultByTime.toJSONString());  
+		logger.debug("### [route]/logsrc/pm_analyse_unsave  [key]pm_error_dist_table : " + resultByTime.toJSONString());
 		JSONObject resultByError = readService.queryErrorRecords(Integer.parseInt(logsrcId), start, end,
 				Const.ORDER_FIELD_SAMPLE_TIME, Const.ORDER_DESC, 5, 0);
 		model.addAttribute("pm_error_type_table", resultByError.getJSONArray("error"));
-		logger.debug("### [route]/logsrc/pm_analyse_unsave  [key]pm_error_type_table : " + resultByError.toJSONString());  
+		logger.debug("### [route]/logsrc/pm_analyse_unsave  [key]pm_error_type_table : " + resultByError.toJSONString());
 		return "logsrc/pm_analyse_unsave";
 	}
 
@@ -263,11 +268,12 @@ public class WlogPMController {
 		JSONObject resultByTime = readService.queryTimeRecords(report.getLogSourceId(), start, end,
 				Const.ORDER_FIELD_SAMPLE_TIME, Const.ORDER_DESC, 10, 0);
 		model.addAttribute("pm_error_dist_table", resultByTime.getJSONArray("record"));
-		logger.debug("### [route]/logsrc/pm_analyse_saved  [key]pm_error_dist_table : " + resultByTime.toJSONString()); 
+		logger.debug("### [route]/logsrc/pm_analyse_saved  [key]pm_error_dist_table : " + resultByTime.toJSONString());
 		JSONObject resultByError = readService.queryErrorRecords(report.getLogSourceId(), start, end,
 				Const.ORDER_FIELD_SAMPLE_TIME, Const.ORDER_DESC, 5, 0);
 		model.addAttribute("pm_error_type_table", resultByError.getJSONArray("error"));
-		logger.debug("### [route]/logsrc/pm_analyse_saved  [key]pm_error_type_table : " + resultByError.getJSONArray("error"));
+		logger.debug("### [route]/logsrc/pm_analyse_saved  [key]pm_error_type_table : "
+				+ resultByError.getJSONArray("error"));
 		return "logsrc/pm_analyse_saved";
 	}
 
@@ -357,7 +363,7 @@ public class WlogPMController {
 		result.put("message", ConstCN.RESPONSE_SUCCESSFUL);
 		result.put("total", total);
 		result.put("rows", rows);
-		logger.debug("### [route]/logsrc/pm_analyse/error_dist_table  [key]rows : " + rows.toJSONString()); 
+		logger.debug("### [route]/logsrc/pm_analyse/error_dist_table  [key]rows : " + rows.toJSONString());
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 
@@ -445,7 +451,7 @@ public class WlogPMController {
 		result.put("message", ConstCN.RESPONSE_SUCCESSFUL);
 		result.put("total", total);
 		result.put("rows", rows);
-		logger.debug("### [route]/logsrc/pm_analyse/error_type_table  [key]rows : " + rows.toJSONString()); 
+		logger.debug("### [route]/logsrc/pm_analyse/error_type_table  [key]rows : " + rows.toJSONString());
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 
@@ -526,6 +532,65 @@ public class WlogPMController {
 		result.put("message", ConstCN.RESPONSE_SUCCESSFUL);
 		result.put("total", total);
 		result.put("rows", detail.getJSONArray("details"));
+		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/logsrc/pm_analyse/unknown", method = RequestMethod.POST)
+	public ResponseEntity<JSONObject> getUnknownDatas(
+			@RequestParam(value = "log_id", required = false) String logsourceid,
+			@RequestParam(value = "start_time", required = false) String startTime,
+			@RequestParam(value = "end_time", required = false) String endTime,
+			@RequestParam(value = "limit", required = false) String limit,
+			@RequestParam(value = "offset", required = false) String offset, Model model) {
+		String message = "";
+		JSONObject result = new JSONObject();
+		JSONObject unknow = new JSONObject();
+		JSONArray rows = new JSONArray();
+		int total = 0;
+		if (MathUtil.isEmpty(logsourceid, limit, offset)) {
+			message = ConstCN.NULL_PARAM;
+			result.put("message", message);
+			result.put("total", total);
+			result.put("rows", rows);
+			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+		}
+		if (!MathUtil.isInteger(logsourceid)) {
+			message = ConstCN.ID_MUST_BE_NUM;
+			result.put("message", message);
+			result.put("total", total);
+			result.put("rows", rows);
+			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+		}
+		if (!MathUtil.isInteger(limit) || !MathUtil.isInteger(offset)) {
+			message = ConstCN.LIMIT_AND_OFFSET_MUST_BE_NUM;
+			result.put("message", message);
+			result.put("total", total);
+			result.put("rows", rows);
+			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+		}
+		Long start = null;
+		Long end = null;
+		try {
+			start = MathUtil.parse2Long(startTime);
+			end = MathUtil.parse2Long(endTime);
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		total = unknowService.getTotalCount(Integer.parseInt(logsourceid), start, end);
+		List<UkExceptionData> unknowsDatas = new ArrayList<UkExceptionData>();
+		unknowsDatas = unknowService.findByLogSourceIdAndTime(Integer.parseInt(logsourceid), start, end,
+				Integer.parseInt(limit), Integer.parseInt(offset));
+		for(UkExceptionData unknowdata : unknowsDatas){
+			unknow = new JSONObject();
+			unknow.put("uknow_id", unknowdata.getUkExceptionDataId());
+			unknow.put("sample", unknowdata.getOriginLog());
+			rows.add(unknow);
+		}
+		message = ConstCN.RESPONSE_SUCCESSFUL;
+		result.put("message", message);
+		result.put("total", total);
+		result.put("rows", rows);
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 }

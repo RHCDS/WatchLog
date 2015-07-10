@@ -33,6 +33,12 @@
          between ${param2} and ${param3} order by log_time desc limit ${param4} offset ${param5} 
     </select>
     
+    <select id="getTotalCount"  resultType="java.lang.Integer">
+        select count(unk_exception_data_id) 
+            from unknown_exception_data 
+                 where log_source_id=${param1} and log_time between ${param2} and ${param3}
+    </select>
+    
 </mapper>
 
 
