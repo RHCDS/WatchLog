@@ -4,6 +4,8 @@ import java.util.Locale;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,6 +33,8 @@ import com.netease.qa.log.util.MathUtil;
 @RequestMapping(value = "/logsrc")
 public class WlogSrcController {
 
+	private static final Logger logger = LoggerFactory.getLogger(WlogRTController.class);
+	
 	@Resource
 	private ApiExceptionHandler apiException;
 	@Resource
@@ -72,6 +76,7 @@ public class WlogSrcController {
 		result.put("message", message);
 		result.put("total", recordsTotal);
 		result.put("rows", data);
+		logger.debug("### [route]manage/logtable  [key]rows : " +  data.toJSONString());
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 

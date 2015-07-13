@@ -6,6 +6,8 @@ import java.util.ArrayList;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,6 +33,8 @@ import com.netease.qa.log.util.MathUtil;
 @Controller
 public class WlogPMController {
 
+	private static final Logger logger = LoggerFactory.getLogger(WlogPMController.class);
+
 	@Resource
 	private LogSourceService logSourceService;
 	@Resource
@@ -55,6 +59,7 @@ public class WlogPMController {
 			}
 		}
 		model.addAttribute("logs", logs);
+		logger.debug("### [route]logsrc/pm_analyse  [key]logs : " + logs); 
 		return "logsrc/pm_analyse";
 	}
 
@@ -108,6 +113,7 @@ public class WlogPMController {
 		result.put("message", message);
 		result.put("total", recordsTotal);
 		result.put("rows", data);
+		logger.debug("### [route]logsrc/pm_analyse/pmtable  [key]rows : " + data.toJSONString());  
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 
@@ -217,9 +223,11 @@ public class WlogPMController {
 		JSONObject resultByTime = readService.queryTimeRecords(Integer.parseInt(logsrcId), start, end,
 				Const.ORDER_FIELD_SAMPLE_TIME, Const.ORDER_DESC, 10, 0);
 		model.addAttribute("pm_error_dist_table", resultByTime.getJSONArray("record"));
+		logger.debug("### [route]/logsrc/pm_analyse_unsave  [key]pm_error_dist_table : " + resultByTime.toJSONString());  
 		JSONObject resultByError = readService.queryErrorRecords(Integer.parseInt(logsrcId), start, end,
 				Const.ORDER_FIELD_SAMPLE_TIME, Const.ORDER_DESC, 5, 0);
 		model.addAttribute("pm_error_type_table", resultByError.getJSONArray("error"));
+		logger.debug("### [route]/logsrc/pm_analyse_unsave  [key]pm_error_type_table : " + resultByError.toJSONString());  
 		return "logsrc/pm_analyse_unsave";
 	}
 
@@ -255,9 +263,11 @@ public class WlogPMController {
 		JSONObject resultByTime = readService.queryTimeRecords(report.getLogSourceId(), start, end,
 				Const.ORDER_FIELD_SAMPLE_TIME, Const.ORDER_DESC, 10, 0);
 		model.addAttribute("pm_error_dist_table", resultByTime.getJSONArray("record"));
+		logger.debug("### [route]/logsrc/pm_analyse_saved  [key]pm_error_dist_table : " + resultByTime.toJSONString()); 
 		JSONObject resultByError = readService.queryErrorRecords(report.getLogSourceId(), start, end,
 				Const.ORDER_FIELD_SAMPLE_TIME, Const.ORDER_DESC, 5, 0);
 		model.addAttribute("pm_error_type_table", resultByError.getJSONArray("error"));
+		logger.debug("### [route]/logsrc/pm_analyse_saved  [key]pm_error_type_table : " + resultByError.getJSONArray("error"));
 		return "logsrc/pm_analyse_saved";
 	}
 
@@ -347,6 +357,7 @@ public class WlogPMController {
 		result.put("message", ConstCN.RESPONSE_SUCCESSFUL);
 		result.put("total", total);
 		result.put("rows", rows);
+		logger.debug("### [route]/logsrc/pm_analyse/error_dist_table  [key]rows : " + rows.toJSONString()); 
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 
@@ -434,6 +445,7 @@ public class WlogPMController {
 		result.put("message", ConstCN.RESPONSE_SUCCESSFUL);
 		result.put("total", total);
 		result.put("rows", rows);
+		logger.debug("### [route]/logsrc/pm_analyse/error_type_table  [key]rows : " + rows.toJSONString()); 
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 
