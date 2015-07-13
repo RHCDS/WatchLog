@@ -133,6 +133,8 @@
 										</div><!-- /col-md-10 -->			
 								</div><!-- /row -->
 								
+							<input type="hidden" name="filter_keyword_arr[]"   value=""  />	
+							<input type="hidden" name="reg_regex_arr[]"   value=""  />									
 							<input type="hidden"  name="proj"   value="${pid}"  />
 						
 						   <div class="form-group">

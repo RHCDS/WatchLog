@@ -100,7 +100,7 @@
 																	<#list filter_keyword_arr as f>
 																				<tr>
 																						<td class="col-md-5" style="padding:0px">
-																									<input type="text" class="form-control log-item-regular-input"  id="filter_keyword_input_id "   name="filter_keyword_arr[]"   value=${f}   >	
+																									<input type="text" class="form-control log-item-regular-input"  id="filter_keyword_input_id "   name="filter_keyword_arr[]"   value="${f}"   >	
 																						</td>
 																					<#if i==0> 
 																						<td class="col-md-1"  style="padding:0px"> 
@@ -157,7 +157,7 @@
 																	<#list reg_regex_arr as r>
 																			<tr>
 																					<td class="col-md-5" style="padding:0px">
-																								<input type="text" class="form-control log-item-regular-input"  id="reg_regex_input_id"   name="reg_regex_arr[]"    value=${r}  >	
+																								<input type="text" class="form-control log-item-regular-input"  id="reg_regex_input_id"   name="reg_regex_arr[]"    value="${r}"  >	
 																					</td>
 																					<#if j==0> 
 																						<td class="col-md-1"  style="padding:0px"> 
@@ -180,6 +180,8 @@
 										</div><!-- /col-md-10 -->			
 								</div><!-- /row -->
 						
+						<input type="hidden" name="filter_keyword_arr[]"   value=""  />	
+						<input type="hidden" name="reg_regex_arr[]"   value=""  />									
 						<input type="hidden" name="id"   value=${id} />		
 						<input type="hidden"  name="proj"   value="${pid}"  />
 						
