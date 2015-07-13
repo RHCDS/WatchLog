@@ -81,7 +81,7 @@ public class MQConsumer extends BaseRichSpout {
 			    dsTime =  headers.get("__DS_.timestamp").toString();   
 			}
 			catch(NullPointerException e){
-				logger.error("can't get header", e);
+				logger.error("can't get header, hostname: " + hostname + ", path: " + path + ", file: " + filePattern);
 			}
 			
 			logger.debug("Consume: " + message);
@@ -122,14 +122,14 @@ public class MQConsumer extends BaseRichSpout {
 					    path =  headers.get("__DS_.fields._ds_target_dir").toString();  
 					    filePattern =  headers.get("__DS_.fields._ds_file_pattern").toString();  
 					    dsTime =  headers.get("__DS_.timestamp").toString();   
+					    
+					    this.collector.emit(new Values(message, hostname, path, filePattern, dsTime), message);
+						logger.debug("Consume: " + message);
+						logger.info("hostname: " + hostname + ", path: " + path + ", filePattern: " + filePattern);
 					}
 					catch(NullPointerException e){
-						logger.error("can't get header", e);
+						logger.error("can't get header, hostname: " + hostname + ", path: " + path + ", file: " + filePattern, e);
 					}
-					
-					this.collector.emit(new Values(message, hostname, path, filePattern, dsTime), message);
-					logger.debug("Consume: " + message);
-					logger.debug("hostname: " + hostname + ", path: " + path + ", filePattern: " + filePattern);
 				}
 			}
 			catch (Exception e) {

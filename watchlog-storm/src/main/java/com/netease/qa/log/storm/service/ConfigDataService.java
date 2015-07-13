@@ -136,6 +136,7 @@ public class ConfigDataService {
 				if(logSource != null){
 					logSource.convertParams();
 					logSourceIdCache.put(l.getKey(), logSource);
+					logger.info("reload config for logSourceIdCache: " + logSource.getLogSourceName() + " " + l.getKey());
 				}
 			}
 			// 更新logSourceCache
@@ -146,6 +147,7 @@ public class ConfigDataService {
 				if(logSource != null){
 					logSource.convertParams();
 					logSourceCache.put(l.getKey(), logSource);
+					logger.info("reload config for logSourceCache: " + logSource.getLogSourceName() + " " + l.getKey());
 				}
 			}
 			// 更新projectCache
@@ -154,6 +156,7 @@ public class ConfigDataService {
 				Project project = projectDao.findByProjectId(p.getKey());
 				if(project != null){ 
 					projectCache.put(p.getKey(), project);
+					logger.info("reload config for project: " + project.getProjectName());
 				}
 			}
 			logger.info("logSourceCache:   " + logSourceCache.size()); 

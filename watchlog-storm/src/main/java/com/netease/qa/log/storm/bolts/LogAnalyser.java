@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,17 +46,22 @@ public class LogAnalyser implements IBasicBolt {
 		//TODO 观察性能问题
 		HashSet<String> exceptionTypes = new HashSet<String>(); //支持一条日志属于多个type
 		for(String lineTypeRegex : lineTypeRegexs){
-			Pattern p = Pattern.compile(lineTypeRegex); 
-			Matcher m = p.matcher(line);  
-			if(m.find()){
-				logger.debug("match! " + m.group());
-				exceptionTypes.add(m.group());
+			try{
+				Pattern p = Pattern.compile(lineTypeRegex); 
+				Matcher m = p.matcher(line);  
+				if(m.find()){
+					logger.info("match! " + m.group() + ", logSource: " + logSource.getLogSourceName());
+					exceptionTypes.add(m.group());
+				}
+			}
+			catch(PatternSyntaxException e){
+				logger.error("Pattern compile error, regex: " + lineTypeRegex + ", logSource: " + logSource.getLogSourceName() + ", line: " + line, e);
 			}
 		}
 		//日志没有匹配到任何异常类型，设置为unknown类型
 		if(exceptionTypes.size() == 0){
 			exceptionTypes.add(Const.UNKNOWN_TYPE);
-			logger.debug("cant match! set as unknown");
+			logger.info("cant match! set as unknown, logSource: " + logSource.getLogSourceName() + ", line: " + line);
 		}
 			
 		// 查询exception缓存，如果不存在则插入exception表
@@ -73,7 +79,10 @@ public class LogAnalyser implements IBasicBolt {
 			}
 			// unknown类型异常记录原始日志
 			if(exceptionType.equals(Const.UNKNOWN_TYPE)){
-				MonitorDataService.putUkExceptionData(logSourceId, dsTime / 1000, line);
+				if(line.length() >= 500)
+					MonitorDataService.putUkExceptionData(logSourceId, dsTime / 1000, line.substring(0, 499));
+				else
+					MonitorDataService.putUkExceptionData(logSourceId, dsTime / 1000, line);
 			}
 			
 			
