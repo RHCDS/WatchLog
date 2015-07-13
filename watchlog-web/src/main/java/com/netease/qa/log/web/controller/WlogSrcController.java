@@ -207,6 +207,78 @@ public class WlogSrcController {
 			return ret;
 		}
 	}
+	
+	@RequestMapping(value = "/repeat", method = RequestMethod.POST)
+	public String repeatLogsource(@RequestParam(value = "logsrc_name", required = false) String logsourceName,
+			@RequestParam(value = "proj", required = false) String projectid,
+			@RequestParam(value = "id", required = false) String logsourceid,
+			@RequestParam(value = "host_name", required = false) String hostname,
+			@RequestParam(value = "logsrc_path", required = false) String path,
+			@RequestParam(value = "logsrc_file", required = false) String filepattern,
+			@RequestParam(value = "start_regex", required = false) String linestart,
+			@RequestParam(value = "filter_keyword_arr[]", required = false) String[] filterkeywords,
+			@RequestParam(value = "reg_regex_arr[]", required = false) String[] typeregexs,
+			@RequestParam(value = "filter_keyword_con", required = false) String filter_keyword_con,
+			@RequestParam(value = "reg_regex_con", required = false) String reg_regex_con, RedirectAttributes model) {
+		String ret = "redirect:/logsrc/manage?proj=" + projectid;
+		String ret_fail = "redirect:/logsrc/" + logsourceid + "/copy?proj=" + projectid;
+		if (MathUtil.isEmpty(logsourceName, projectid, hostname, path, filepattern, linestart, filter_keyword_con,
+				reg_regex_con)) {
+			model.addFlashAttribute("status", -1);
+			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
+			return ret_fail;
+		}
+		if (filterkeywords == null || typeregexs == null) {
+			model.addFlashAttribute("status", -1);
+			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
+			return ret_fail;
+		}
+		if (!MathUtil.isName(logsourceName)) {
+			model.addFlashAttribute("message", ConstCN.INVALID_NAME);
+			return ret_fail;
+		}
+		if (!MathUtil.isInteger(projectid)) {
+			model.addFlashAttribute("status", -1);
+			model.addFlashAttribute("message", ConstCN.ID_MUST_BE_NUM);
+			return ret_fail;
+		}
+		if (!projectService.checkProjectExsit(Integer.parseInt(projectid))) {
+			model.addFlashAttribute("status", -1);
+			model.addFlashAttribute("message", ConstCN.PROJECT_NOT_EXSIT);
+			return ret_fail;
+		}
+		if (logSourceService.checkLogSourceExist(logsourceName)) {
+			model.addFlashAttribute("status", -1);
+			model.addFlashAttribute("message", ConstCN.LOG_NAME_ALREADY_EXSIT);
+			return ret_fail;
+		}
+		if (logSourceService.checkLogSourceExist(hostname, path, filepattern)) {
+			model.addFlashAttribute("status", -1);
+			model.addFlashAttribute("message", ConstCN.LOG_PATH_ALREADY_EXSIT);
+			return ret_fail;
+		}
+		LogSource logSource = new LogSource();
+		logSource.setLogSourceName(logsourceName);
+		logSource.setProjectId(Integer.parseInt(projectid));
+		logSource.setHostname(hostname);
+		logSource.setPath(path);
+		logSource.setFilePattern(filepattern);
+		logSource.setLineStartRegex(linestart);
+		logSource.setLineFilterKeyword(MathUtil.parse2Str(filterkeywords, filter_keyword_con));
+		logSource.setLineTypeRegex(MathUtil.parse2Str(typeregexs, Const.FILITER_TYPE));
+		int result = logSourceService.createLogSource(logSource);
+		if (result == 0) {
+			model.addFlashAttribute("status", -1);
+			model.addFlashAttribute("message", ConstCN.INNER_ERROR);
+			return ret_fail;
+		} else {
+			model.addFlashAttribute("status", 0);
+			model.addFlashAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);
+			return ret;
+		}
+	}	
+	
+		
 
 	@RequestMapping(value = "/start_monitor", method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> startMonitorStatus(@RequestParam(value = "ids", required = false) String ids) {
@@ -282,6 +354,39 @@ public class WlogSrcController {
 		}
 		return "logsrc/edit";
 	}
+	
+	@RequestMapping(value = "/{id}/copy", method = RequestMethod.GET)
+	public String copyLogSource(@PathVariable(value = "id") String logsourceId,
+			@RequestParam(value = "proj", required = false) String projectid, Model model) {
+		if (MathUtil.isEmpty(logsourceId, projectid) || !MathUtil.isInteger(logsourceId)) {
+			return "redirect:/logsrc/manage?proj=" + projectid;
+		}
+		LogSource logSource = logSourceService.getByLogSourceId(Integer.parseInt(logsourceId));
+		if (logSource == null) {
+			model.addAttribute("controller", "WlogManage");
+			model.addAttribute("action", "copy");
+			model.addAttribute("id", "0");
+			model.addAttribute("logsrc_name", "NONE");
+			model.addAttribute("host_name", "NONE");
+			model.addAttribute("logsrc_path", "NONE");
+			model.addAttribute("logsrc_file", "NONE");
+			model.addAttribute("start_regex", "NONE");
+			model.addAttribute("filter_keyword", "NONE");
+			model.addAttribute("reg_regex", "NONE");
+		} else {
+			model.addAttribute("controller", "WlogManage");
+			model.addAttribute("action", "copy");
+			model.addAttribute("id", logSource.getLogSourceId());
+			model.addAttribute("logsrc_name", logSource.getLogSourceName());
+			model.addAttribute("host_name", logSource.getHostname());
+			model.addAttribute("logsrc_path", logSource.getPath());
+			model.addAttribute("logsrc_file", logSource.getFilePattern());
+			model.addAttribute("start_regex", logSource.getLineStartRegex());
+			model.addAttribute("filter_keyword", logSource.getLineFilterKeyword());
+			model.addAttribute("reg_regex", logSource.getLineTypeRegex());
+		}
+		return "logsrc/copy";
+	}	
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public String commitEditLogSource(@RequestParam(value = "proj", required = false) String projectid,
