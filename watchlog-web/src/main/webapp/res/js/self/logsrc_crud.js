@@ -16,6 +16,8 @@ $(function() {
 });
 
 
+
+
 //删除1行： 过滤关键字 + 正则表达式
 function filter_item_delete(e){
 	console.log("take it ease");
@@ -232,77 +234,4 @@ function check_copy_logsrc(old_name, old_host_name, old_logsrc_path, old_logsrc_
 }
 
 
-// 调试日志源验证功能
-function start_debug_validate(proj, log_id){
-	// loading 出现
-	$(".ajax_content").html("");
-	$("#debug_fail").css("display",  "none");
-	$('#debug_loader_div').modal('show');
-	
-	// 校验用户输入 输入最多行
-	
-	
-	// ajax 请求后端
-  	$.ajax({
-  		type: 'GET',
-		url: '/logsrc/debugvalidate',
-		data: {proj: proj,  id: log_id},
-		dataType: "json",
-		success :function(e){
-					// loading消失
-					$('#debug_loader_div').modal('hide');
-					// 调试成功
-					if(e['status'] == 0)
-					{
-							// 渲染debug的2个表格
-							var error_tc_list = e['error_tc'];
-							var unknow_list = e['unknow_list'];
-							var i=0;
-							// error_tc表格
-							if(error_tc_list.length>0){
-								// 表格第一行
-								var debug_tc_body_html = "<tr><th class='col-sm-10'>异常类型</th><th class='col-sm-2'>异常总数</th></tr>";
-								for(i=0; i<error_tc_list.length; i++){
-									// 表格其他行
-									if(error_tc_list[i]['type'] == "unknown"){
-										debug_tc_body_html = debug_tc_body_html + "<tr><td class='col-sm-10' style='color:blue'>" +error_tc_list[i]['type'] + "</td>" + "<td class='col-sm-2'>"+error_tc_list[i]['count']+"</td></tr>";
-									}
-									else{
-										debug_tc_body_html = debug_tc_body_html + "<tr><td class='col-sm-10'>" +error_tc_list[i]['type'] + "</td>" + "<td class='col-sm-2'>"+error_tc_list[i]['count']+"</td></tr>";
-									}
-								}				
-								// 表格更新
-								$("#debug_tc_body").html(debug_tc_body_html);		
-								// 备注
-								$("#debug_tc_comment").html("备注： 显示为unknown说明没有分析出异常类型，请修改正则表达式进一步区分.");				
-							}
-	
-							// unknown表格
-							if(unknow_list.length > 0){
-								// 表格第一行
-								var debug_unknow_body_html = "<tr><th class='col-sm-12' style='text-align: center;'>unknow日志信息</th></tr>";
-								for(i=0; i<unknow_list.length; i++){
-									// 表格其他行
-									debug_unknow_body_html = debug_unknow_body_html + "<tr><td class='col-sm-12'>"+unknow_list[i]+"</td></tr>";
-								}			
-								// 表格更新
-								$("#debug_unknow_body").html(debug_unknow_body_html);					
-							}
-					}
-					// 调试失败
-					else{
-						$("#debug_fail").css("display",  "block");
-						$("#debug_fail").html(e['message']);
-					}
-		},
-		error: function(){
-			//请求出错处理
-		}
-	});
-}
 
-
-	// 清空调试日志内容
-	function clear_debug_validate(){
-		$("#debug_log_content").val('');  //jquery
-	}

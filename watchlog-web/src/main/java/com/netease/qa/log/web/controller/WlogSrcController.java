@@ -477,7 +477,7 @@ public class WlogSrcController {
 		LogSource logSource = logSourceService.getByLogSourceId(Integer.parseInt(logsourceId));
 		if (logSource == null) {
 			model.addAttribute("controller", "WlogManage");
-			model.addAttribute("action", "copy");
+			model.addAttribute("action", "debug");
 			model.addAttribute("id", "0");
 			model.addAttribute("logsrc_name", "NONE");
 			model.addAttribute("host_name", "NONE");
@@ -488,7 +488,7 @@ public class WlogSrcController {
 			model.addAttribute("reg_regex", "NONE");
 		} else {
 			model.addAttribute("controller", "WlogManage");
-			model.addAttribute("action", "copy");
+			model.addAttribute("action", "debug");
 			model.addAttribute("id", logSource.getLogSourceId());
 			model.addAttribute("logsrc_name", logSource.getLogSourceName());
 			model.addAttribute("host_name", logSource.getHostname());
