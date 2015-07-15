@@ -1,5 +1,5 @@
 <#import "../layout/tableLayout.ftl" as layout>
-<@layout.tbLayout>
+<@layout.tbLayout title="更多-异常类型">
 
     <div class="container-fluid">
 	
@@ -37,9 +37,9 @@
 							           <table id="pm_error_type_table"    data-toggle="toolbar"     data-height="500"     data-side-pagination="server"            data-pagination="true"      data-search="false">
 									            <thead>
 											            <tr>
-											                <th data-field="error_type"     > 异常类型 </th>
-											                <th data-field="error_example"    > 原始日志实例</th>
-											                 <th data-field="total_count" data-sortable="true"  data-formatter="totalcountFormatter" > 异常总数 </th>
+											                <th data-field="error_type"     data-formatter="pmtypeTypeFormatter"  > 异常类型 </th>
+											                <th data-field="error_example"   data-formatter="pmtypeExampleFormatter"  > 原始日志实例</th>
+											                 <th data-field="total_count" data-sortable="true"  data-formatter="pmtypeTotalFormatter" > 异常总数 </th>
 											            </tr>
 									            </thead>
 							        </table>

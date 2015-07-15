@@ -1,5 +1,5 @@
 <#import "../layout/tableLayout.ftl" as layout>
-<@layout.tbLayout>
+<@layout.tbLayout title="更多-异常分布">
 
     <div class="container-fluid">
 	

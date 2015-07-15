@@ -239,7 +239,16 @@
 																	<#assign error_example_str = data['error_example']?replace("(\t)+", "<br/>",'r')>
 																	<tr>
 																			<td class="col-sm-4">${error_type_str}</td>
-																			<td class="col-sm-7">${error_example_str}</td>																	
+																			<#if error_type_str == "unknown">
+																					<td class="col-sm-7">部分日志无法解析类型，
+																						<a class="custom_a"  target="_blank" 
+																						href="/logsrc/pm_analyse/unknown?report_id=${report_id}&proj=${pid}">
+																						点击查看所有unknown类型原始日志
+																						</a>
+																					</td>
+																			<#else>
+																					<td class="col-sm-7">${error_example_str}</td>
+																			</#if>
 																			<td class="col-sm-1"><a  href="javascript:void(0)"  
 																			onclick="get_saved_error_type_total(${report_id},  ${data['exp_id']})">${data['total_count']}</a></td>																		
 																	</tr>																 

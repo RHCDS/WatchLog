@@ -535,7 +535,15 @@ public class WlogPMController {
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 
-	@RequestMapping(value = "/logsrc/pm_analyse/unknown", method = RequestMethod.POST)
+	
+	@RequestMapping(value = "/logsrc/pm_analyse/unknown", method = RequestMethod.GET)
+	public String unknowPage(Model model) {
+		return "logsrc/pm_analyse_unkown";
+	}
+
+	
+	
+	@RequestMapping(value = "/logsrc/pm_analyse/unknown_table", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> getUnknownDatas(
 			@RequestParam(value = "report_id", required = false, defaultValue = "0") String reportid,
 			@RequestParam(value = "log_id", required = false) String logsourceid,

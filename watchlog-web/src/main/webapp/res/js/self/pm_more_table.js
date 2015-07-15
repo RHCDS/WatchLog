@@ -73,7 +73,29 @@ var end_time_ct = end_time.replace(/\%20/g, ' ');
 				  		}
 				  	});//  表格end		    
 	  }
-	  	
+	  
+	  // unknown - 更多 表格
+	  if($("#pm_unknow_list_table" ).length != 0){
+				  // 聚合分析 - 异常分布情况 表格
+				  	$('#pm_unknow_list_table').bootstrapTable({
+				  		url : "/logsrc/pm_analyse/unknown_table",
+				  		height: "900",
+				  		pageList: "[50, 80, 100]",
+				  		pageSize: "50",
+				  		queryParams: function(p){
+				  			return {
+				  				proj : pid,
+				  				report_id: report_id,
+				  				log_id : log_id,
+				  				start_time : start_time_ct,
+				  				end_time : end_time_ct,
+				  				limit: p.limit,
+				  				offset : p.offset,
+				  			}
+				  		}
+				  	});   
+	  }	  //  表格end		 
+	  
  } );  //document
   
   // 异常分布情况 (Error type & count) 显示格式 :  数字+hover信息
@@ -90,10 +112,28 @@ var end_time_ct = end_time.replace(/\%20/g, ' ');
 	  return content_str
   }
   
+  // 异常类型详情 更多表格 异常类型 显示格式
+  function pmtypeTypeFormatter(value, row, index){
+	  // \t 转换为换行
+ 	  if(row.exp_id==undefined){
+			return "-";	  
+ 	  }else{
+ 		 return value.replace(/\t+/g, "<br />");
+ 	  }	  
+  }
   
+  // 异常类型详情 更多表格  异常实例 显示格式
+  function pmtypeExampleFormatter(value, row, index){
+	  // \t 转换为换行
+ 	  if(row.exp_id==undefined){
+			return "-";	  
+ 	  }else{
+ 		 return value.replace(/\t+/g, "<br />");
+ 	  }	  
+  }
   
   // 异常类型详情 更多表格 异常总数的显示
-  function totalcountFormatter(value, row, index){
+  function pmtypeTotalFormatter(value, row, index){
  	  if(row.exp_id==undefined){
  			return "-";	  
  		  }
@@ -159,6 +199,16 @@ var end_time_ct = end_time.replace(/\%20/g, ' ');
 	  			}
 	  		}
 	  	});//  表格end
-	  	
-
   }  
+  
+  
+  
+  // unknow 详情表格 原始日志实例 显示格式
+  function pmunknownExampleFormatter(value, row, index){
+	  // \t 转换为换行
+ 	  if(row.uknow_id==undefined){
+			return "-";	  
+ 	  }else{
+ 		 return value.replace(/\t+/g, "<br />");
+ 	  }	  
+  }
