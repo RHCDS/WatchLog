@@ -16,6 +16,7 @@
 				<script src="/res/js/plugin/table/bootstrap-table.min.js"></script>
 					
 			     <!--  self defined  -->    
+			     <link href="/res/css/self/pm_more_table.css" rel="stylesheet" />
 				  <script src="/res/js/self/pm_more_table.js" ></script>
 		  </head>
   <body>

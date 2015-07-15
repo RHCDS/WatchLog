@@ -124,12 +124,24 @@ var end_time_ct = end_time.replace(/\%20/g, ' ');
   
   // 异常类型详情 更多表格  异常实例 显示格式
   function pmtypeExampleFormatter(value, row, index){
-	  // \t 转换为换行
  	  if(row.exp_id==undefined){
 			return "-";	  
+ 	  }
+ 	  // 如果是unknow类型
+ 	  if(value == "unknown"){
+ 		  return [
+ 		          '部分日志无法解析类型，',
+ 		          '<a class="custom_a"  target="_blank"  ',
+ 		         ' href="/logsrc/pm_analyse/unknown?proj='+pid+'&report_id='+report_id+'&log_id='+log_id+'&start_time='+start_time_ct+'&end_time='+end_time_ct+'">',
+ 		          '点击查看所有unknown类型原始日志',
+ 		          '</a>'
+ 		          ].join('');
  	  }else{
- 		 return value.replace(/\t+/g, "<br />");
- 	  }	  
+ 	 	  // \t 转换为换行
+ 		 var value_ct =  value.replace(/\t+/g, "<br />");
+ 		 return value_ct;
+ 	  }
+
   }
   
   // 异常类型详情 更多表格 异常总数的显示

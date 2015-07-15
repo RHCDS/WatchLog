@@ -607,6 +607,7 @@ public class WlogPMController {
 		result.put("message", message);
 		result.put("total", total);
 		result.put("rows", rows);
+		logger.debug("### [route]/logsrc/pm_analyse/unknown_table  [key]rows : " + rows.toJSONString());
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 }

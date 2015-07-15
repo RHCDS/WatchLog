@@ -79,9 +79,9 @@ function start_debug_validate(proj, log_id){
 	
 	// ajax 请求后端
   	$.ajax({
-  		type: 'GET',
+  		type: 'POST',
 		url: '/logsrc/debugvalidate',
-		data: {proj: proj,  id: log_id},
+		data: {proj: proj,  log_id: log_id},
 		dataType: "json",
 		success :function(e){
 					// loading消失
