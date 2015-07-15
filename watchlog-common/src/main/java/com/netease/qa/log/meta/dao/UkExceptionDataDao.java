@@ -15,4 +15,6 @@ public interface UkExceptionDataDao {
     
     public List<UkExceptionData> findByLogSourceIdAndTime(int logSourceId, long startTime, long endTime, int limit, int offset);
     
+    public int getTotalCount(int logsourceId, long startTime, long endTime);
+    
 }
