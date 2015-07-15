@@ -145,13 +145,11 @@ public class ReadServiceImpl implements ReadService {
 	public JSONObject queryErrorRecords(int logSourceId, long startTime, long endTime, String orderBy, String order,
 			int limit, int offset) {
 		List<ExceptionData> exceptionDatas = null;
-		ExceptionData unknownexception = null;
+		ExceptionData unknownexception = exceptionDataDao.findUnknownTypeByLogSourceIdAndTime(logSourceId, startTime,
+				endTime, Const.UNKNOWN_TYPE);
 		try {
 			exceptionDatas = exceptionDataDao.findErrorRecordsByLogSourceIdAndTime(logSourceId, startTime, endTime,
 					orderBy, order, limit, offset);
-			// 得到unknown
-			unknownexception = exceptionDataDao.findUnknownTypeByLogSourceIdAndTime(logSourceId, startTime, endTime,
-					Const.UNKNOWN_TYPE);
 		} catch (Exception e) {
 			logger.error("error", e);
 			return null;
@@ -162,13 +160,15 @@ public class ReadServiceImpl implements ReadService {
 		result.put("logsourceid", logSourceId);
 		JSONObject error = new JSONObject();
 		JSONArray errors = new JSONArray();
-		com.netease.qa.log.meta.Exception ukexception = exceptionDao.findByExceptionId(unknownexception
-				.getExceptionId());
-		error.put("exp_id", ukexception.getExceptionId());
-		error.put("error_type", ukexception.getExceptionType());
-		error.put("error_example", ukexception.getExceptionDemo());
-		error.put("total_count", unknownexception.getExceptionCount());
-		errors.add(error);
+		if (unknownexception != null) {
+			com.netease.qa.log.meta.Exception ukexception = exceptionDao.findByExceptionId(unknownexception
+					.getExceptionId());
+			error.put("exp_id", ukexception.getExceptionId());
+			error.put("error_type", ukexception.getExceptionType());
+			error.put("error_example", ukexception.getExceptionDemo());
+			error.put("total_count", unknownexception.getExceptionCount());
+			errors.add(error);
+		}
 		for (ExceptionData exceptionData : exceptionDatas) {
 			com.netease.qa.log.meta.Exception exception = exceptionDao
 					.findByExceptionId(exceptionData.getExceptionId());
@@ -189,13 +189,11 @@ public class ReadServiceImpl implements ReadService {
 	public JSONObject queryErrorRecordsWithTimeDetail(int logSourceId, long startTime, long endTime, String orderBy,
 			String order, int limit, int offset) {
 		List<ExceptionData> exceptionDatas = null;
-		ExceptionData unknownexception = null;
+		ExceptionData unknownexception = exceptionDataDao.findUnknownTypeByLogSourceIdAndTime(logSourceId, startTime,
+				endTime, Const.UNKNOWN_TYPE);
 		try {
 			exceptionDatas = exceptionDataDao.findErrorRecordsByLogSourceIdAndTime(logSourceId, startTime, endTime,
 					orderBy, order, limit, offset);
-			unknownexception = exceptionDataDao.findUnknownTypeByLogSourceIdAndTime(logSourceId, startTime, endTime,
-					Const.UNKNOWN_TYPE);
-
 		} catch (Exception e) {
 			logger.error("error", e);
 			return null;
@@ -206,14 +204,17 @@ public class ReadServiceImpl implements ReadService {
 		result.put("logsourceid", logSourceId);
 		JSONObject error = new JSONObject();
 		JSONArray errors = new JSONArray();
-		com.netease.qa.log.meta.Exception ukexception = exceptionDao.findByExceptionId(unknownexception
-				.getExceptionId());
-		error.put("exp_id", ukexception.getExceptionId());
-		error.put("error_type", ukexception.getExceptionType());
-		error.put("error_example", ukexception.getExceptionDemo());
-		error.put("total_count", unknownexception.getExceptionCount());
-		error.put("detail", new JSONArray());
-		errors.add(error);
+		//当unknown不为空，且非第一页，才把error装入array中
+		if (unknownexception != null && offset == 0) {
+			com.netease.qa.log.meta.Exception ukexception = exceptionDao.findByExceptionId(unknownexception
+					.getExceptionId());
+			error.put("exp_id", ukexception.getExceptionId());
+			error.put("error_type", ukexception.getExceptionType());
+			error.put("error_example", ukexception.getExceptionDemo());
+			error.put("total_count", unknownexception.getExceptionCount());
+			error.put("detail", new JSONArray());
+			errors.add(error);
+		}
 		for (ExceptionData exceptionData : exceptionDatas) {
 			error = new JSONObject();
 			com.netease.qa.log.meta.Exception exception = exceptionDao
@@ -224,7 +225,9 @@ public class ReadServiceImpl implements ReadService {
 				error.put("error_example", exception.getExceptionDemo());
 				error.put("total_count", exceptionData.getExceptionCount());
 				/**
-				 * detail jsonarray在web端，没有用（因为detail被写在另外一个接口queryDetailByErrorType中），只是在api中才有用
+				 * detail
+				 * jsonarray在web端，没有用（因为detail被写在另外一个接口queryDetailByErrorType中
+				 * ），只是在api中才有用
 				 */
 				JSONArray details = new JSONArray();
 				List<ExceptionData> tmp = exceptionDataDao.findErrorRecordsByLogSourceIdAndExceptionIdAndTime(
