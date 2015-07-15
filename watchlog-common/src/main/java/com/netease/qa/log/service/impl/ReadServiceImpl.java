@@ -19,6 +19,7 @@ import com.netease.qa.log.meta.dao.LogSourceDao;
 import com.netease.qa.log.meta.dao.UkExceptionDataDao;
 import com.netease.qa.log.service.ReadService;
 import com.netease.qa.log.util.Const;
+import com.netease.qa.log.util.ConstCN;
 import com.netease.qa.log.util.MathUtil;
 
 @Service
@@ -164,8 +165,8 @@ public class ReadServiceImpl implements ReadService {
 			com.netease.qa.log.meta.Exception ukexception = exceptionDao.findByExceptionId(unknownexception
 					.getExceptionId());
 			error.put("exp_id", ukexception.getExceptionId());
-			error.put("error_type", ukexception.getExceptionType());
-			error.put("error_example", ukexception.getExceptionDemo());
+			error.put("error_type", Const.UNKNOWN_TYPE);
+			error.put("error_example", Const.UNKNOWN_TYPE);
 			error.put("total_count", unknownexception.getExceptionCount());
 			errors.add(error);
 		}
@@ -209,8 +210,8 @@ public class ReadServiceImpl implements ReadService {
 			com.netease.qa.log.meta.Exception ukexception = exceptionDao.findByExceptionId(unknownexception
 					.getExceptionId());
 			error.put("exp_id", ukexception.getExceptionId());
-			error.put("error_type", ukexception.getExceptionType());
-			error.put("error_example", ukexception.getExceptionDemo());
+			error.put("error_type", Const.UNKNOWN_TYPE);
+			error.put("error_example", Const.UNKNOWN_TYPE);
 			error.put("total_count", unknownexception.getExceptionCount());
 			error.put("detail", new JSONArray());
 			errors.add(error);

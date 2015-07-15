@@ -532,17 +532,15 @@ public class WlogPMController {
 		result.put("message", ConstCN.RESPONSE_SUCCESSFUL);
 		result.put("total", total);
 		result.put("rows", detail.getJSONArray("details"));
+		logger.debug("### [route]/logsrc/pm_analyse/error_type_total_table  [key]rows : " + rows.toJSONString());
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 
-	
 	@RequestMapping(value = "/logsrc/pm_analyse/unknown", method = RequestMethod.GET)
 	public String unknowPage(Model model) {
 		return "logsrc/pm_analyse_unkown";
 	}
 
-	
-	
 	@RequestMapping(value = "/logsrc/pm_analyse/unknown_table", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> getUnknownDatas(
 			@RequestParam(value = "report_id", required = false, defaultValue = "0") String reportid,
