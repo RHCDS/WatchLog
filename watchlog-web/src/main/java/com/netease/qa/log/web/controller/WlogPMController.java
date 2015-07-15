@@ -537,6 +537,7 @@ public class WlogPMController {
 
 	@RequestMapping(value = "/logsrc/pm_analyse/unknown", method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> getUnknownDatas(
+			@RequestParam(value = "report_id", required = false, defaultValue = "0") String reportid,
 			@RequestParam(value = "log_id", required = false) String logsourceid,
 			@RequestParam(value = "start_time", required = false) String startTime,
 			@RequestParam(value = "end_time", required = false) String endTime,
@@ -547,15 +548,8 @@ public class WlogPMController {
 		JSONObject unknow = new JSONObject();
 		JSONArray rows = new JSONArray();
 		int total = 0;
-		if (MathUtil.isEmpty(logsourceid, limit, offset)) {
+		if(MathUtil.isEmpty(limit, offset)){
 			message = ConstCN.NULL_PARAM;
-			result.put("message", message);
-			result.put("total", total);
-			result.put("rows", rows);
-			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
-		}
-		if (!MathUtil.isInteger(logsourceid)) {
-			message = ConstCN.ID_MUST_BE_NUM;
 			result.put("message", message);
 			result.put("total", total);
 			result.put("rows", rows);
@@ -570,16 +564,32 @@ public class WlogPMController {
 		}
 		Long start = null;
 		Long end = null;
-		try {
-			start = MathUtil.parse2Long(startTime);
-			end = MathUtil.parse2Long(endTime);
-		} catch (ParseException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+		int logsourceId = 0;
+		if(Integer.parseInt(reportid) == 0){
+			logsourceId = Integer.parseInt(logsourceid);
+			try {
+				start = MathUtil.parse2Long(startTime);
+				end = MathUtil.parse2Long(endTime);
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		}else{
+			Report report = reportService.getReportById(Integer.parseInt(reportid));
+			logsourceId = report.getLogSourceId();
+			System.out.println("logsourceId:" + logsourceId);
+			try {
+				start = MathUtil.parse2Long(MathUtil.parse2Str(report.getStartTime()));
+				end = MathUtil.parse2Long(MathUtil.parse2Str(report.getEndTime()));
+				System.out.println("start: " + start + ";end: " + end);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		total = unknowService.getTotalCount(Integer.parseInt(logsourceid), start, end);
+		total = unknowService.getTotalCount(logsourceId, start, end);
 		List<UkExceptionData> unknowsDatas = new ArrayList<UkExceptionData>();
-		unknowsDatas = unknowService.findByLogSourceIdAndTime(Integer.parseInt(logsourceid), start, end,
+		unknowsDatas = unknowService.findByLogSourceIdAndTime(logsourceId, start, end,
 				Integer.parseInt(limit), Integer.parseInt(offset));
 		for(UkExceptionData unknowdata : unknowsDatas){
 			unknow = new JSONObject();

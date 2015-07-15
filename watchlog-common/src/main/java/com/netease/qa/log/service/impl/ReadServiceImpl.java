@@ -204,7 +204,7 @@ public class ReadServiceImpl implements ReadService {
 		result.put("logsourceid", logSourceId);
 		JSONObject error = new JSONObject();
 		JSONArray errors = new JSONArray();
-		//当unknown不为空，且非第一页，才把error装入array中
+		//当unknown不为空，且第一页，才把error装入array中
 		if (unknownexception != null && offset == 0) {
 			com.netease.qa.log.meta.Exception ukexception = exceptionDao.findByExceptionId(unknownexception
 					.getExceptionId());
