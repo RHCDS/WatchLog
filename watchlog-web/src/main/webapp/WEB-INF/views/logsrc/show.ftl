@@ -41,7 +41,7 @@
 																		<td class="col-sm-9"> <a href="/logsrc/pm_analyse?proj=${pid}"> 返回 &#62; </a>	&#160;&#160;<small>${logsrc_name}</small></td>
 																		<td class="col-sm-1"> <a class="btn btn-primary btn-xs"  style="margin-right: 15px;" href="/logsrc/${id}/edit?proj=${pid}" role="button">修改日志源</a></td>
 																		<td class="col-sm-1">  <button id="remove" class="btn btn-primary  btn-xs"  onclick="delete_logsrc_single(${id}, ${pid})" > 删除日志源 </button></td>
-																		<td class="col-sm-1"> <a class="btn btn-primary btn-xs"  style="margin-right: 15px;" href="/logsrc/${id}/debug?proj=${pid}" role="button">调试日志源</a></td>
+																		<!--td class="col-sm-1"> <a class="btn btn-primary btn-xs"  style="margin-right: 15px;" href="/logsrc/${id}/debug?proj=${pid}" role="button">调试日志源</a></td-->
 																	</tr>		
 														</tbody>
 													</table>

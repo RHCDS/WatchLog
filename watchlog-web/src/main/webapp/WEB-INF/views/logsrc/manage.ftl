@@ -54,7 +54,7 @@
 						                 <th data-field="logsrc_file" data-sortable="true"  data-formatter="logsrcfileFormatter" >日志文件名称</th>
 						                 <th data-field="status"   data-formatter="statusFormatter"  data-sortable="true" >监控状态</th>
 						                 <th data-field="update_time" data-sortable="true" >更新时间</th>
-						                  <th data-field="operate"    data-formatter="operateFormatter" ">操作</th>
+						                  <th data-field="operate"    data-formatter="operateFormatter">操作</th>
 						            </tr>
 				            </thead>
 				        </table>
