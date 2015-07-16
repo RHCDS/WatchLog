@@ -27,9 +27,9 @@
 												<table  class="table wratb  removebd" style="margin-bottom: 0px;margin-left: 10px;">
 													<tbody>
 																<tr>
-																	<td class="col-sm-10" style="vertical-align: bottom;">  <label for="debug_log_content">请输入日志信息&#160; &#160; &#160; &#160; </label> <p id="warn_debug_info"></p></td>
+																	<td class="col-sm-10" style="vertical-align: bottom;">  <label for="debug_log_content">请输入日志信息&#160; &#160; &#160; &#160; </label> <p id="warn_debug_info"></p><p id="warn_debug_notice"></p></td>
 																	<td class="col-sm-1"> <a class="btn btn-default  btn-sm" onclick="clear_debug_validate()"  role="button">&#160; 清空 &#160;</a></td>
-																	<td class="col-sm-1"> <button class="btn btn-warning  btn-sm" onclick="start_debug_validate(${pid}, ${id})">&#160; 验证 &#160;</button></td>
+																	<td class="col-sm-1"> <button id="btn_debug_validate" class="btn btn-warning  btn-sm" onclick="start_debug_validate(${pid}, ${id})">&#160; 验证 &#160;</button></td>
 																</tr>		
 													</tbody>
 												</table>

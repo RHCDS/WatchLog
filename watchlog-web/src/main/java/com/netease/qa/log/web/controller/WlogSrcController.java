@@ -504,9 +504,13 @@ public class WlogSrcController {
 	
 	@RequestMapping(value = "/debugvalidate", method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> debugValidate(@RequestParam(value = "proj", required = false) String projectid,
-			@RequestParam(value = "log_id") String logsourceId) throws InterruptedException {
+			@RequestParam(value = "log_id") String logsourceId, @RequestParam(value = "debug_info") String debuginfo) throws InterruptedException {
 		System.out.println("project id : " + projectid);
 		System.out.println("logsource id : " + logsourceId);
+		System.out.println("--- debuginfo start---");
+		System.out.println(debuginfo);
+		System.out.println("--- debuginfo end---");
+		System.out.println("debug size: " + debuginfo.length());
 		// message
 		String message = Const.RESPONSE_SUCCESSFUL;
 		// 表1第1行
