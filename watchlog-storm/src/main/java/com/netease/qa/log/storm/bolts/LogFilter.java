@@ -44,7 +44,7 @@ public class LogFilter implements IBasicBolt {
 				for (String keyword : keywords) {
 					if (line.indexOf(keyword.trim()) != -1) {
 						collector.emit(new Values(line, input.getValue(1), input.getValue(2), input.getValue(3)));
-						logger.debug("or get! " + keyword);
+						logger.info("or get! " + keyword + "logsource: " + logSource.getLogSourceName() + ", " + line);
 						break;
 					}
 				}
@@ -60,7 +60,7 @@ public class LogFilter implements IBasicBolt {
 				}
 				if (flag) {
 					collector.emit(new Values(line, input.getValue(1), input.getValue(2), input.getValue(3)));
-					logger.debug("and get! " + line);
+					logger.info("and get! " + "logsource: " + logSource.getLogSourceName() + ", " + line);
 				}
 			}
 		}

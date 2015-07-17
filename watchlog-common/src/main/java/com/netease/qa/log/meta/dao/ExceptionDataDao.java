@@ -54,6 +54,11 @@ public interface ExceptionDataDao {
     		String orderBy, String order, int limit, int offset);
     
     /**
+     * 返回特定类型的异常id和对应数量
+     */
+    public ExceptionData findUnknownTypeByLogSourceIdAndTime(int logSourceId, long startTime, long endTime, String field);
+    
+    /**
      * 异常维度聚合，返回记录总数，分页用
      */
     public int getErrorRecordsCountByLogSourceIdAndTime(int logSourceId, long startTime, long endTime);

@@ -16,3 +16,13 @@ select.btn-mini {
 	border-bottom: solid 1px #eee; 
 	margin-bottom:10px;"
 }
+
+.custom_a{
+	text-decoration: none;
+	cursor: pointer;
+	color: blue;
+}
+
+.custom_a:hover{
+		text-decoration: none;
+}

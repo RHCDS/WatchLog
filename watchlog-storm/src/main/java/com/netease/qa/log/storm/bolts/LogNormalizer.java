@@ -32,10 +32,16 @@ public class LogNormalizer implements IBasicBolt {
         String path = input.getString(2);
         String filePattern = input.getString(3);
 		LogSource logsource = ConfigDataService.getLogSource(hostname, path, filePattern);
-		if(logsource == null) return;
+		if(logsource == null) {
+			logger.warn("logsource in DB is null, logsource: " + hostname + " " + path + " " + filePattern);
+			return;
+		}
 		
 		Project project = ConfigDataService.getProject(logsource.getProjectId());
-		if(project == null) return;
+		if(project == null) {
+			logger.warn("project in DB is null, logsource: " + hostname + " " + path + " " + filePattern);
+			return;
+		}
 		
 		logger.debug("logsource======"  + logsource);
 		logger.debug("project======"  + project);

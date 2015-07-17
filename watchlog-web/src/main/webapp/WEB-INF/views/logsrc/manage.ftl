@@ -4,8 +4,10 @@
 
   <#if RequestParameters.proj?exists >
   	<#assign pid = RequestParameters.proj>
-    <div class="container">
-    
+    <div class="container-fluid">
+    	<div class="row">
+   		<div class="col-sm-1"></div>
+    	<div class="col-sm-10 "> 
 						<form  id="destroy_logsrc_form" action="/logsrc/destroy"  method="post"   class="form-horizontal" role="form"   accept-charset="UTF-8"   data-remote="true">     	  
 							<!-- 模态框（Modal）for: 删除日志源 二次确认对话框 -->
 							<div class="modal fade" id="destroy_logsrc_modal" tabindex="-1" role="dialog"    aria-labelledby="myModalLabel" aria-hidden="true">
@@ -52,11 +54,13 @@
 						                 <th data-field="logsrc_file" data-sortable="true"  data-formatter="logsrcfileFormatter" >日志文件名称</th>
 						                 <th data-field="status"   data-formatter="statusFormatter"  data-sortable="true" >监控状态</th>
 						                 <th data-field="update_time" data-sortable="true" >更新时间</th>
-						                  <th data-field="operate"    data-formatter="operateFormatter" ">操作</th>
+						                  <th data-field="operate"    data-formatter="operateFormatter">操作</th>
 						            </tr>
 				            </thead>
 				        </table>
-				        
+						</div><!-- col-sm-10 -->			
+						<div class="col-sm-1"></div>	        
+				 </div><!-- row -->
     </div><!-- container -->
         
 <#else>

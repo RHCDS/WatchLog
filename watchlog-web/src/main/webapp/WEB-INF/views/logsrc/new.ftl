@@ -84,7 +84,7 @@
 											        <table  id="filter_keyword_table" class="table table-bordered">
 															<tbody>
 																		<tr>
-																				<td class="col-md-6" style="padding:0px">
+																				<td class="col-md-5" style="padding:0px">
 																							<input type="text" class="form-control log-item-regular-input"  id="filter_keyword_input_id"   name="filter_keyword_arr[]">	
 																				</td>
 																				<td class="col-md-1"  style="padding:0px">
@@ -93,6 +93,7 @@
 																						      		<option value="AND">AND</option>
 																						      </select>	<!-- /select -->															
 																				</td>
+																				<td class="col-md-1" >操作	</td>
 																		</tr><!-- /tr -->																																			
 															</tbody>
 														</table><!-- /table -->			   
@@ -115,7 +116,7 @@
 														<table  id="reg_regex_table" class="table table-bordered"  style="margin-bottom: 0px;">
 															<tbody>
 																		<tr>
-																				<td class="col-md-6" style="padding:0px">
+																				<td class="col-md-5" style="padding:0px">
 																							<input type="text" class="form-control log-item-regular-input"   id="reg_regex_input_id"   name="reg_regex_arr[]"   >	
 																				</td>
 																				<td class="col-md-1"  style="padding:0px">
@@ -123,6 +124,7 @@
 																						      		<option value="OR" >OR</option>
 																						      </select>	<!-- /select -->															
 																				</td>
+																				<td class="col-md-1" >操作</td>
 																		</tr><!-- /tr -->		
 															</tbody>
 														</table>
@@ -131,6 +133,8 @@
 										</div><!-- /col-md-10 -->			
 								</div><!-- /row -->
 								
+							<input type="hidden" name="filter_keyword_arr[]"   value=""  />	
+							<input type="hidden" name="reg_regex_arr[]"   value=""  />									
 							<input type="hidden"  name="proj"   value="${pid}"  />
 						
 						   <div class="form-group">

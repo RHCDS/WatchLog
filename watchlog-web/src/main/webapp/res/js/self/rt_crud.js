@@ -36,7 +36,7 @@ function rt_analyse_refresh()
 					if(e['status'] == 0){
 						var rt_refresh_data = e['data'];  // rt_refresh_data是array
 						var i=0;
-						var rt_refresh_td_html = "<tr><th class='col-sm-4'>采样时间</th><th class='col-sm-6'>Error type & count </th><th class='col-sm-2'>Total  count</th></tr>";
+						var rt_refresh_td_html = "<tr><th class='col-sm-4'>采样时间</th><th class='col-sm-6'>异常类型和数量</th><th class='col-sm-2'>异常总数</th></tr>";
 						console.log(rt_refresh_data);
 						for(i=0; i<rt_refresh_data.length; i++){
 							// 表格第一列

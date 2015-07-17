@@ -7,7 +7,7 @@
   	
 		<div class="container">
 
-				<form  id="logsrc_edit_form" class="form-horizontal" role="form"   accept-charset="UTF-8" action="/logsrc/update" data-remote="true" method="post" onsubmit="return check_update_logsrc()">
+				<form  id="logsrc_edit_form" class="form-horizontal" role="form"   accept-charset="UTF-8" action="/logsrc/repeat" data-remote="true" method="post" onsubmit="return check_copy_logsrc('${logsrc_name}', '${host_name}', '${logsrc_path}', '${logsrc_file}' )">
 						
 						<div class="form-group"  >
 								<label for="logsrc_name" class="col-sm-2 control-label"  style="text-align: left; font-size: medium; color: gray;">日志源名称
@@ -17,7 +17,7 @@
 						      <div class="col-sm-6">
 						         <input type="text" class="form-control log-item-input"   id="logsrc_name"      name="logsrc_name"  value=${logsrc_name}  placeholder="请输入名字">
 						         <p  style="font-size: 12px;color: #699;"> 命名规则：不能以下划线开始和结尾;  只能包含英文字母/汉字/数字;  长度最长为100;</p>
-						         <div id="warn_edit_logsrc_name"></div>
+						         <div id="warn_copy_logsrc_name"></div>
 						      </div>
 						</div>
 					
@@ -30,7 +30,7 @@
 											<label for="host_name" class="col-sm-2 control-label log-item-show" >服务器地址</label>
 									      <div class="col-sm-6">
 									         <input type="text" class="form-control log-item-input"    id="host_name"     name="host_name"   value=${host_name} placeholder="请输入服务器地址">
-									          <div id="warn_edit_host_name"></div>
+									         <div id="warn_copy_host_name"></div>
 									      </div>
 									</div>		
 						
@@ -38,7 +38,7 @@
 											<label for="logsrc_path" class="col-sm-2 control-label log-item-show" >日志文件路径</label>
 									      <div class="col-sm-6">
 									         <input type="text" class="form-control log-item-input"     id="logsrc_path"       name="logsrc_path"  value=${logsrc_path}   placeholder="请输入日志文件路径">
-									         <div id="warn_edit_logsrc_path"></div>
+									          <div id="warn_copy_logsrc_path"></div>
 									      </div>
 									</div>		
 						
@@ -47,7 +47,8 @@
 											<label for="logsrc_file" class="col-sm-2 control-label log-item-show" >日志文件名</label>
 									      <div class="col-sm-6">
 									         <input type="text" class="form-control log-item-input"     id="logsrc_file"  name="logsrc_file"      value=${logsrc_file} placeholder="请输入日志文件名">
-									          <div id="warn_edit_logsrc_file"></div>
+									           <div id="warn_copy_logsrc_file"></div>
+									          <div id="warn_copy_logsrc_location"></div>
 									      </div>
 									</div>		
 									
@@ -103,7 +104,7 @@
 																						</td>
 																					<#if i==0> 
 																						<td class="col-md-1"  style="padding:0px"> 
-																						    	  <select class=" form-control  log-item-regular-input"   id="filter_keyword_select_id"   name="filter_keyword_con"   onchange="select_onchange_filter_words(this)">
+																						    	  <select class=" form-control  log-item-regular-input"   id="filter_keyword_select_id"   name="filter_keyword_con"    onchange="select_onchange_filter_words(this)">
 																							    	  		<#if filter_keyword_flag=="AND">
 																									      		<option value="AND"   selected="true" >AND</option>
 																									      		<option value="OR"   >OR</option>																									    	  		
@@ -160,7 +161,7 @@
 																					</td>
 																					<#if j==0> 
 																						<td class="col-md-1"  style="padding:0px"> 
-																						    	  <select class=" form-control log-item-regular-input"   id="reg_regex_select_id"   name="reg_regex_con"   onchange="select_onchange_reg_regex(this)">
+																						    	  <select class=" form-control log-item-regular-input"   id="reg_regex_select_id"   name="reg_regex_con"  onchange="select_onchange_reg_regex(this)" >
 																						    	  			<option value="OR"   selected="true" >OR</option>
 																							      </select>	<!-- /select -->															
 																					</td>				
@@ -180,7 +181,7 @@
 								</div><!-- /row -->
 						
 						<input type="hidden" name="filter_keyword_arr[]"   value=""  />	
-						<input type="hidden" name="reg_regex_arr[]"   value=""  />	
+						<input type="hidden" name="reg_regex_arr[]"   value=""  />									
 						<input type="hidden" name="id"   value=${id} />		
 						<input type="hidden"  name="proj"   value="${pid}"  />
 						
