@@ -19,13 +19,13 @@ import com.netease.qa.log.meta.dao.LogSourceDao;
 import com.netease.qa.log.meta.dao.UkExceptionDataDao;
 import com.netease.qa.log.service.ReadService;
 import com.netease.qa.log.util.Const;
+import com.netease.qa.log.util.ConstCN;
 import com.netease.qa.log.util.MathUtil;
 
 @Service
 public class ReadServiceImpl implements ReadService {
 
-	private static final Logger logger = LoggerFactory
-			.getLogger(ReadServiceImpl.class);
+	private static final Logger logger = LoggerFactory.getLogger(ReadServiceImpl.class);
 
 	@Resource
 	private ExceptionDao exceptionDao;
@@ -37,52 +37,44 @@ public class ReadServiceImpl implements ReadService {
 	private LogSourceDao logSourceDao;
 
 	@Override
-	public int getTimeCountByLogSourceIdAndTime(int logSourceId,
-			long startTime, long endTime) {
-		return exceptionDataDao.getTimeRecordsCountByLogSourceIdAndTime(
-				logSourceId, startTime, endTime);
+	public int getTimeCountByLogSourceIdAndTime(int logSourceId, long startTime, long endTime) {
+		return exceptionDataDao.getTimeRecordsCountByLogSourceIdAndTime(logSourceId, startTime, endTime);
 	}
 
 	@Override
-	public int getErrorTypeCountByLogSourceId(int logSourceId, long startTime,
-			long endTime) {
-		return exceptionDataDao.getErrorRecordsCountByLogSourceIdAndTime(
-				logSourceId, startTime, endTime);
+	public int getErrorTypeCountByLogSourceId(int logSourceId, long startTime, long endTime) {
+		return exceptionDataDao.getErrorRecordsCountByLogSourceIdAndTime(logSourceId, startTime, endTime);
 	}
 
 	@Override
 	public int getErrorRecordsCountByLogSourceIdAndExceptionIdAndTime(int logSourceId, int exceptionId, long startTime,
 			long endTime) {
-	return exceptionDataDao.getErrorRecordsCountByLogSourceIdAndExceptionIdAndTime(logSourceId, exceptionId, startTime, endTime);
+		return exceptionDataDao.getErrorRecordsCountByLogSourceIdAndExceptionIdAndTime(logSourceId, exceptionId,
+				startTime, endTime);
 	}
 
 	@Override
 	public JSONObject queryLatestTimeRecords(int logSourceId, long currentTime) {
-		//时间精度取整： xx:xx:00 、xx:xx:30两种精度
-		Long formatCurrentTime = currentTime / Const.RT_SHOW_TIME * Const.RT_SHOW_TIME; 
+		// 时间精度取整： xx:xx:00 、xx:xx:30两种精度
+		Long formatCurrentTime = currentTime / Const.RT_SHOW_TIME * Const.RT_SHOW_TIME;
 		JSONObject result = new JSONObject();
-		result.put("projectid", logSourceDao.findByLogSourceId(logSourceId)
-				.getProjectId());
+		result.put("projectid", logSourceDao.findByLogSourceId(logSourceId).getProjectId());
 		result.put("logsourceid", logSourceId);
 		JSONArray records = new JSONArray();
 		for (int i = 0; i < Const.RT_SHOW_NUM; i++) {
 			long endTime = formatCurrentTime - Const.RT_SHOW_TIME * i;
 			long startTime = endTime - Const.RT_SHOW_TIME + 1; // mysql
-		// between包含前后区间值，此处取前开后闭，以防止重复数据。
+			// between包含前后区间值，此处取前开后闭，以防止重复数据。
 			try {
-				ExceptionDataRecord exceptionDataRecord = exceptionDataDao
-						.findSummaryByLogSourceIdAndTime(logSourceId,
-								startTime, endTime);
+				ExceptionDataRecord exceptionDataRecord = exceptionDataDao.findSummaryByLogSourceIdAndTime(logSourceId,
+						startTime, endTime);
 				JSONArray details = new JSONArray();
 				if (exceptionDataRecord != null && exceptionDataRecord.getTotalCount() > 0) {
-					String[] eids = exceptionDataRecord.getExceptionIds()
-							.split(",");
-					String[] ecounts = exceptionDataRecord.getExceptionCounts()
-							.split(",");
+					String[] eids = exceptionDataRecord.getExceptionIds().split(",");
+					String[] ecounts = exceptionDataRecord.getExceptionCounts().split(",");
 					for (int j = 0; j < eids.length; j++) {
 						int exceptionId = Integer.valueOf(eids[j].trim());
-						String type = exceptionDao.findByExceptionId(
-								exceptionId).getExceptionType();
+						String type = exceptionDao.findByExceptionId(exceptionId).getExceptionType();
 
 						JSONObject detail = new JSONObject();
 						detail.put("type", type);
@@ -92,8 +84,10 @@ public class ReadServiceImpl implements ReadService {
 				}
 				JSONObject record = new JSONObject();
 				record.put("date_time", MathUtil.parse2Str(endTime));
-				record.put("total_count", exceptionDataRecord != null && exceptionDataRecord.getTotalCount() > 0 ? 
-						exceptionDataRecord.getTotalCount() : 0);
+				record.put(
+						"total_count",
+						exceptionDataRecord != null && exceptionDataRecord.getTotalCount() > 0 ? exceptionDataRecord
+								.getTotalCount() : 0);
 				record.put("error_tc", details);
 				records.add(record);
 			} catch (Exception e) {
@@ -106,23 +100,21 @@ public class ReadServiceImpl implements ReadService {
 	}
 
 	@Override
-	public JSONObject queryTimeRecords(int logSourceId, long startTime,
-			long endTime, String orderBy, String order, int limit, int offset) {
+	public JSONObject queryTimeRecords(int logSourceId, long startTime, long endTime, String orderBy, String order,
+			int limit, int offset) {
 		List<ExceptionDataRecord> exceptionDataRecords = null;
 		try {
 			if (orderBy.equals("sample_time"))
 				orderBy = "aaa.sample_time";
-			exceptionDataRecords = exceptionDataDao
-					.findTimeRecordsByLogSourceIdAndTime(logSourceId,
-							startTime, endTime, orderBy, order, limit, offset);
+			exceptionDataRecords = exceptionDataDao.findTimeRecordsByLogSourceIdAndTime(logSourceId, startTime,
+					endTime, orderBy, order, limit, offset);
 		} catch (Exception e) {
 			logger.error("error", e);
 			return null;
 		}
 		// 组装数据
 		JSONObject result = new JSONObject();
-		result.put("projectid", logSourceDao.findByLogSourceId(logSourceId)
-				.getProjectId());
+		result.put("projectid", logSourceDao.findByLogSourceId(logSourceId).getProjectId());
 		result.put("logsourceid", logSourceId);
 
 		JSONArray records = new JSONArray();
@@ -136,8 +128,7 @@ public class ReadServiceImpl implements ReadService {
 			String[] ecounts = eRecord.getExceptionCounts().split(",");
 			for (int i = 0; i < eids.length; i++) {
 				int exceptionId = Integer.valueOf(eids[i].trim());
-				String type = exceptionDao.findByExceptionId(exceptionId)
-						.getExceptionType();
+				String type = exceptionDao.findByExceptionId(exceptionId).getExceptionType();
 
 				JSONObject detail = new JSONObject();
 				detail.put("type", type);
@@ -152,97 +143,123 @@ public class ReadServiceImpl implements ReadService {
 	}
 
 	@Override
-	public JSONObject queryErrorRecords(int logSourceId, long startTime,
-			long endTime, String orderBy, String order, int limit, int offset) {
-		List<ExceptionData> exceptionDatas = null;
-		try {
-			exceptionDatas = exceptionDataDao
-					.findErrorRecordsByLogSourceIdAndTime(logSourceId,
-							startTime, endTime, orderBy, order, limit, offset);
-		} catch (Exception e) {
-			logger.error("error", e);
-			return null;
-		}
-		// 组装数据
-		JSONObject result = new JSONObject();
-		result.put("projectid", logSourceDao.findByLogSourceId(logSourceId)
-				.getProjectId());
-		result.put("logsourceid", logSourceId);
-
-		JSONArray errors = new JSONArray();
-		for (ExceptionData exceptionData : exceptionDatas) {
-			JSONObject error = new JSONObject();
-			com.netease.qa.log.meta.Exception exception = exceptionDao.findByExceptionId(exceptionData.getExceptionId());
-			error.put("exp_id", exception.getExceptionId());
-			error.put("error_type", exception.getExceptionType());
-			error.put("error_example", exception.getExceptionDemo());
-			error.put("total_count", exceptionData.getExceptionCount());
-			errors.add(error);
-		}
-		result.put("error", errors);
-		return result;
-	}
-
-	@Override
-	public JSONObject queryErrorRecordsWithTimeDetail(int logSourceId,
-			long startTime, long endTime, String orderBy, String order,
+	public JSONObject queryErrorRecords(int logSourceId, long startTime, long endTime, String orderBy, String order,
 			int limit, int offset) {
 		List<ExceptionData> exceptionDatas = null;
+		ExceptionData unknownexception = exceptionDataDao.findUnknownTypeByLogSourceIdAndTime(logSourceId, startTime,
+				endTime, Const.UNKNOWN_TYPE);
 		try {
-			exceptionDatas = exceptionDataDao
-					.findErrorRecordsByLogSourceIdAndTime(logSourceId,
-							startTime, endTime, orderBy, order, limit, offset);
+			exceptionDatas = exceptionDataDao.findErrorRecordsByLogSourceIdAndTime(logSourceId, startTime, endTime,
+					orderBy, order, limit, offset);
 		} catch (Exception e) {
 			logger.error("error", e);
 			return null;
 		}
 		// 组装数据
 		JSONObject result = new JSONObject();
-		result.put("projectid", logSourceDao.findByLogSourceId(logSourceId)
-				.getProjectId());
+		result.put("projectid", logSourceDao.findByLogSourceId(logSourceId).getProjectId());
 		result.put("logsourceid", logSourceId);
-
+		JSONObject error = new JSONObject();
 		JSONArray errors = new JSONArray();
+		if (unknownexception != null) {
+			com.netease.qa.log.meta.Exception ukexception = exceptionDao.findByExceptionId(unknownexception
+					.getExceptionId());
+			error.put("exp_id", ukexception.getExceptionId());
+			error.put("error_type", Const.UNKNOWN_TYPE);
+			error.put("error_example", Const.UNKNOWN_TYPE);
+			error.put("total_count", unknownexception.getExceptionCount());
+			errors.add(error);
+		}
 		for (ExceptionData exceptionData : exceptionDatas) {
-			JSONObject error = new JSONObject();
 			com.netease.qa.log.meta.Exception exception = exceptionDao
 					.findByExceptionId(exceptionData.getExceptionId());
-			error.put("error_type", exception.getExceptionType());
-			error.put("error_example", exception.getExceptionDemo());
-			error.put("total_count", exceptionData.getExceptionCount());
-			JSONArray details = new JSONArray();
-			List<ExceptionData> tmp = exceptionDataDao
-					.findErrorRecordsByLogSourceIdAndExceptionIdAndTime(
-							logSourceId, exceptionData.getExceptionId(),
-							startTime, endTime, "sample_time", "desc", 99999, 0);
-			for (ExceptionData e : tmp) {
-				JSONObject detail = new JSONObject();
-				detail.put(MathUtil.parse2Str(e.getSampleTime()),
-						e.getExceptionCount());
-				details.add(detail);
+			error = new JSONObject();
+			if (!exception.getExceptionType().equals(Const.UNKNOWN_TYPE)) {
+				error.put("exp_id", exception.getExceptionId());
+				error.put("error_type", exception.getExceptionType());
+				error.put("error_example", exception.getExceptionDemo());
+				error.put("total_count", exceptionData.getExceptionCount());
+				errors.add(error);
 			}
-			error.put("detail", details);
-			errors.add(error);
 		}
 		result.put("error", errors);
 		return result;
 	}
 
 	@Override
-	public JSONObject queryUnknownExceptions(int logSourceId, long startTime,
-			long endTime, int limit, int offset) {
-		List<UkExceptionData> ukExceptionDatas = null;
+	public JSONObject queryErrorRecordsWithTimeDetail(int logSourceId, long startTime, long endTime, String orderBy,
+			String order, int limit, int offset) {
+		List<ExceptionData> exceptionDatas = null;
+		ExceptionData unknownexception = exceptionDataDao.findUnknownTypeByLogSourceIdAndTime(logSourceId, startTime,
+				endTime, Const.UNKNOWN_TYPE);
 		try {
-			ukExceptionDatas = ukExceptionDataDao.findByLogSourceIdAndTime(
-					logSourceId, startTime, endTime, limit, offset);
+			exceptionDatas = exceptionDataDao.findErrorRecordsByLogSourceIdAndTime(logSourceId, startTime, endTime,
+					orderBy, order, limit, offset);
 		} catch (Exception e) {
 			logger.error("error", e);
 			return null;
 		}
 		// 组装数据
 		JSONObject result = new JSONObject();
-		result.put("projectid", this.logSourceDao
-				.findByLogSourceId(logSourceId).getProjectId());
+		result.put("projectid", logSourceDao.findByLogSourceId(logSourceId).getProjectId());
+		result.put("logsourceid", logSourceId);
+		JSONObject error = new JSONObject();
+		JSONArray errors = new JSONArray();
+		//当unknown不为空，且第一页，才把error装入array中
+		if (unknownexception != null && offset == 0) {
+			com.netease.qa.log.meta.Exception ukexception = exceptionDao.findByExceptionId(unknownexception
+					.getExceptionId());
+			error.put("exp_id", ukexception.getExceptionId());
+			error.put("error_type", Const.UNKNOWN_TYPE);
+			error.put("error_example", Const.UNKNOWN_TYPE);
+			error.put("total_count", unknownexception.getExceptionCount());
+			error.put("detail", new JSONArray());
+			errors.add(error);
+		}
+		for (ExceptionData exceptionData : exceptionDatas) {
+			error = new JSONObject();
+			com.netease.qa.log.meta.Exception exception = exceptionDao
+					.findByExceptionId(exceptionData.getExceptionId());
+			if (!exception.getExceptionType().equals(Const.UNKNOWN_TYPE)) {
+				error.put("exp_id", exception.getExceptionId());
+				error.put("error_type", exception.getExceptionType());
+				error.put("error_example", exception.getExceptionDemo());
+				error.put("total_count", exceptionData.getExceptionCount());
+				/**
+				 * detail
+				 * jsonarray在web端，没有用（因为detail被写在另外一个接口queryDetailByErrorType中
+				 * ），只是在api中才有用
+				 */
+				JSONArray details = new JSONArray();
+				List<ExceptionData> tmp = exceptionDataDao.findErrorRecordsByLogSourceIdAndExceptionIdAndTime(
+						logSourceId, exceptionData.getExceptionId(), startTime, endTime, "sample_time", "desc", 99999,
+						0);
+				for (ExceptionData e : tmp) {
+					JSONObject detail = new JSONObject();
+					detail.put(MathUtil.parse2Str(e.getSampleTime()), e.getExceptionCount());
+					details.add(detail);
+				}
+				error.put("detail", details);
+				errors.add(error);
+			}
+		}
+		result.put("error", errors);
+		return result;
+	}
+
+	@Override
+	public JSONObject queryUnknownExceptions(int logSourceId, long startTime, long endTime, int limit, int offset) {
+		List<UkExceptionData> ukExceptionDatas = null;
+		try {
+			ukExceptionDatas = ukExceptionDataDao.findByLogSourceIdAndTime(logSourceId, startTime, endTime, limit,
+					offset);
+		} catch (Exception e) {
+			logger.error("error", e);
+			return null;
+		}
+		// 组装数据
+		JSONObject result = new JSONObject();
+		result.put("projectid", this.logSourceDao.findByLogSourceId(logSourceId).getProjectId());
 		result.put("logsourceid", logSourceId);
 		// 查不到数据，unknown部分为空
 		if (ukExceptionDatas.size() == 0) {
@@ -252,8 +269,7 @@ public class ReadServiceImpl implements ReadService {
 		JSONArray unknowns = new JSONArray();
 		for (UkExceptionData uk : ukExceptionDatas) {
 			JSONObject unknown = new JSONObject();
-			unknown.put(MathUtil.parse2Str(uk.getOriginLogTime()),
-					uk.getOriginLog());
+			unknown.put(MathUtil.parse2Str(uk.getOriginLogTime()), uk.getOriginLog());
 			unknowns.add(unknown);
 		}
 		result.put("unknowns", unknowns);
@@ -267,7 +283,7 @@ public class ReadServiceImpl implements ReadService {
 		JSONArray details = new JSONArray();
 		List<ExceptionData> tmp = exceptionDataDao.findErrorRecordsByLogSourceIdAndExceptionIdAndTime(logSourceId,
 				exceptionId, startTime, endTime, sort, order, limit, offset);
-		for(ExceptionData e : tmp){
+		for (ExceptionData e : tmp) {
 			JSONObject detail = new JSONObject();
 			detail.put("date_time", MathUtil.parse2Str(e.getSampleTime()));
 			detail.put("total_count", e.getExceptionCount());
@@ -276,6 +292,5 @@ public class ReadServiceImpl implements ReadService {
 		result.put("details", details);
 		return result;
 	}
-
 
 }

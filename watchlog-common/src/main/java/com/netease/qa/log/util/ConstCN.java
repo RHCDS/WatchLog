@@ -29,4 +29,6 @@ public class ConstCN {
     
     public static final String RESPONSE_SUCCESSFUL = "响应成功";
     public static final String RESPONSE_NOTSUCCESSFUL = "响应不成功";
+    
+    public static final String UNKNOWN_MESSAGE = "部分日志无法解析类型，点击查看所有unknown类型原始日志";
 }

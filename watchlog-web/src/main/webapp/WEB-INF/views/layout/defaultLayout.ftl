@@ -36,6 +36,10 @@
 		  <script src="/res/js/self/logsrc_crud.js"></script>
 	 </#if>
 	 
+	 <#if action == "debug">
+	 	<script src="/res/js/self/logsrc_debug.js"></script>
+	 </#if>
+	 
 	 <#if controller == "WlogRT">
 	  	<link rel="stylesheet" href="/res/css/self/logsrc_rt.css" />
 	  	<script src="/res/js/self/rt_crud.js"></script>

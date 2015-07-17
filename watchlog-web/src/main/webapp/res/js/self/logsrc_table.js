@@ -38,7 +38,7 @@
  // 服务器地址显示：限制长度截断+hover显示所有文字
  function hostnameFormatter(value, row, index){
 	  if(value!=undefined){
-			     var maxwidth = 20; 
+			     var maxwidth = 40; 
 			     value_show = value;
 			     if (value.length > maxwidth) {
 			    	 value_show = value.substring(0, maxwidth) + '...'
@@ -52,7 +52,7 @@
  // 日志源地址显示：限制长度截断+hover显示所有文字
  function logsrcpathFormatter(value, row, index){
 	  if(value!=undefined){
-			     var maxwidth = 45; 
+			     var maxwidth = 70; 
 			     value_show = value;
 			     if (value.length > maxwidth) {
 			    	 value_show = value.substring(0, maxwidth) + '...'
@@ -102,14 +102,19 @@
 		  }
 	  else{
 		  return [
-		          	// 复制日志源功能
+		          	// 复制日志源功能-弹窗
 //		            '<a class="copy" href="javascript:void(0)"  title="复制"  onclick=logsrc_copy('+row.id+')>',
 //		            '<i class="glyphicon glyphicon-file"></i>',
 //		            '</a>  ',	            
 		            // 编辑日志源功能
-		           '<a class="edit" href="' + row.id + '/edit?proj=' + pid + '" >',
+		           '<a class="edit"   title="修改"   href="' + row.id + '/edit?proj=' + pid + '" >',
 		            '<i class="glyphicon glyphicon-edit"></i>',
-		            '</a>'
+		            '</a>',
+		            '&nbsp ',
+		            // 复制日志源功能-链接
+		           '<a class="copy"  title="复制"   href="' + row.id + '/copy?proj=' + pid + '" >',
+		            '<i class="glyphicon glyphicon-copy"></i>',
+		            '</a>'		            
 		        ].join('');
 	  }
  }

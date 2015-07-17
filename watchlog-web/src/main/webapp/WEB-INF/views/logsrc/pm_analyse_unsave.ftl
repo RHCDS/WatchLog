@@ -69,8 +69,8 @@
 															<#if  pm_error_dist_table?has_content >
 																			<tr>
 																				<th class="col-sm-4">采样时间</th>
-																				<th class="col-sm-6">Error type & count </th>
-																				<th class="col-sm-2">Total  count</th>
+																				<th class="col-sm-6">异常类型和数量</th>
+																				<th class="col-sm-2">异常总数</th>
 																			</tr>		
 																			<#list pm_error_dist_table as data>
 																				<tr>
@@ -213,8 +213,8 @@
 												      		<input type="hidden" id="proj" name="proj"  />
 												      		 <!-- header  -->
 													         <div class="modal-header">
-														            <button type="button" class="close"    data-dismiss="modal" aria-hidden="true"  onclick="window.location.reload();" >   &times;  </button>
-														            <h4 class="modal-title" id="myModalLabel">    异常类型详情 Total count    </h4>
+														            <button type="button" class="close"    data-dismiss="modal" aria-hidden="true"   >   &times;  </button>
+														            <h4 class="modal-title" id="myModalLabel">    异常类型详情    </h4>
 													         </div>													      		
 
 													         <!-- body  -->
@@ -223,7 +223,7 @@
 																            <thead>
 																            <tr>
 																                <th data-field="date_time"   data-sortable="true"    > 采样时间</th>
-																                 <th data-field="total_count" data-sortable="true"  > Total count </th>
+																                 <th data-field="total_count" data-sortable="true"  > 异常总数 </th>
 																            </tr>
 																            </thead>
 																        </table>													            	
@@ -237,14 +237,26 @@
 													<tbody>
 													<#if  pm_error_type_table?has_content>
 																<tr>
-																	<th class="col-sm-4">Error Type</th>
-																	<th class="col-sm-7">Error type & count </th>
-																	<th class="col-sm-1">Total  count</th>
+																	<th class="col-sm-4">异常类型</th>
+																	<th class="col-sm-7">原始日志实例</th>
+																	<th class="col-sm-1">异常总数</th>
 																</tr>		
 																<#list pm_error_type_table as data>
+																	<#assign error_type_str = data['error_type']?replace("(\t)+", "<br/>",'r')>
+																	<#assign error_example_str = data['error_example']?replace("(\t)+", "<br/>",'r')>																
 																	<tr>
-																		<td class="col-sm-4">${data['error_type']}</td>
-																		<td class="col-sm-7">${data['error_example']}	 </td>																	
+																			<td class="col-sm-4">${error_type_str}</td>
+																			<#if error_type_str == "unknown">
+																					<td class="col-sm-7">部分日志无法解析类型，
+																						<a class="custom_a"  target="_blank" 
+																						href="/logsrc/pm_analyse/unknown?log_id=${log_id}&proj=${pid}&start_time=${start_time}&end_time=${end_time}">
+																						点击查看所有unknown类型原始日志
+																						</a>
+																					</td>
+																			<#else>
+																					<td class="col-sm-7">${error_example_str}</td>
+																			</#if>
+																																							
 																		<td class="col-sm-1"><a  href="javascript:void(0)"  
 																		onclick="get_unsave_error_type_total(${log_id}, ${data['exp_id']},  '${start_time}','${end_time}')">${data['total_count']}</a></td>																		
 																	</tr>																 
