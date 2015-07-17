@@ -104,7 +104,7 @@
 																						</td>
 																					<#if i==0> 
 																						<td class="col-md-1"  style="padding:0px"> 
-																						    	  <select class=" form-control  log-item-regular-input"   id="filter_keyword_select_id"   name="filter_keyword_con" >
+																						    	  <select class=" form-control  log-item-regular-input"   id="filter_keyword_select_id"   name="filter_keyword_con"    onchange="select_onchange_filter_words(this)">
 																							    	  		<#if filter_keyword_flag=="AND">
 																									      		<option value="AND"   selected="true" >AND</option>
 																									      		<option value="OR"   >OR</option>																									    	  		
@@ -114,7 +114,7 @@
 																							    	  		</#if>
 																							      </select>	<!-- /select -->															
 																					</td>	
-																					<td class="col-md-1" >操作</td>																	
+																						<td class="col-md-1" ><a class="filter_delete" href="javascript:void(0)"  title="删除"  onclick=filter_item_delete(this)><i class="glyphicon glyphicon-trash  filter_delete_icon"></i></a>	</td>
 																					<#else>
 																						<td class="col-md-1 filter_keyword_td_select"  style="padding:0px">${filter_keyword_flag}</td>
 																						<td class="col-md-1" ><a class="filter_delete" href="javascript:void(0)"  title="删除"  onclick=filter_item_delete(this)><i class="glyphicon glyphicon-trash  filter_delete_icon"></i></a>	</td>
@@ -161,11 +161,11 @@
 																					</td>
 																					<#if j==0> 
 																						<td class="col-md-1"  style="padding:0px"> 
-																						    	  <select class=" form-control log-item-regular-input"   id="reg_regex_select_id"   name="reg_regex_con"  >
+																						    	  <select class=" form-control log-item-regular-input"   id="reg_regex_select_id"   name="reg_regex_con"  onchange="select_onchange_reg_regex(this)" >
 																						    	  			<option value="OR"   selected="true" >OR</option>
 																							      </select>	<!-- /select -->															
 																					</td>				
-																					<td class="col-md-1" >操作</td>														
+																						<td class="col-md-1" ><a class="filter_delete" href="javascript:void(0)"  title="删除"  onclick=filter_item_delete(this)><i class="glyphicon glyphicon-trash  filter_delete_icon"></i></a>	</td>
 																					<#else>
 																						<td class="col-md-1 reg_regex_td_select"  style="padding:0px">${reg_regex_flag}</td>
 																						<td class="col-md-1" ><a class="filter_delete" href="javascript:void(0)"  title="删除"  onclick=filter_item_delete(this)><i class="glyphicon glyphicon-trash  filter_delete_icon"></i></a>	</td>
