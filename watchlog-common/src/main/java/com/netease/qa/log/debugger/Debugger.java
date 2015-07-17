@@ -56,6 +56,7 @@ public class Debugger {
 	}
 	
 	
+
 //	public static void main(String []args){
 //		LogSource logSource = new LogSource();
 //		logSource.setLogSourceName("zwj_test");
@@ -81,7 +82,6 @@ public class Debugger {
 //		}
 //		logger.info("======================================");
 //	}
-	
 	
 	/**
 	 * 返回debug结果，类型和个数的map
@@ -124,6 +124,7 @@ public class Debugger {
 			else if (line.length() <= 1 && line.trim().equals("")) {
 				continue;
 			}
+
 			/**
 			 * string 
 			 */
