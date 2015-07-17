@@ -3,7 +3,10 @@
 
   <#if RequestParameters.proj?exists  >
   	<#assign pid = RequestParameters.proj>	
-  	<div class="container">
+  	<div class="container-fluid">
+    	<div class="row">
+   		<div class="col-sm-1"></div>
+    	<div class="col-sm-10 "> 
   	
   	
 							<!-- 删除当前聚合分析报告form-->
@@ -235,8 +238,8 @@
 																		<th class="col-sm-1">异常总数</th>
 																</tr>		
 																<#list pm_error_type_table as data>
-																	<#assign error_type_str = data['error_type']?replace("(\t)+", "<br/>",'r')>
-																	<#assign error_example_str = data['error_example']?replace("(\t)+", "<br/>",'r')>
+																	<#assign error_type_str = data['error_type']?replace("\\t", "<br/>  &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;")>
+																	<#assign error_example_str = data['error_example']?replace("\\t", "<br/> &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;")>
 																	<tr>
 																			<td class="col-sm-4">${error_type_str}</td>
 																			<#if error_type_str == "unknown">
@@ -265,7 +268,10 @@
 												</#if>										
 						</div><!--  col-sm-12 -->		
 				</div> <!-- row 异常分布情况 + 日志源详情-->									
-</div> 		 <!-- container-->	
+			</div><!-- col-sm-10 -->			
+			<div class="col-sm-1"></div>	        
+		 </div><!-- row -->
+</div><!-- container -->		
 				
 <#elseif  !RequestParameters.proj?exists >
 	   <div class="container  alert alert-warning"> 请先选择右上角项目</div>
