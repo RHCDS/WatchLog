@@ -7,12 +7,14 @@
   	
 
 		        
-    <div class="container">
+  <div class="container-fluid">
+    	<div class="row">
+   		<div class="col-sm-1"></div>
+    	<div class="col-sm-10 "> 
 
 							<!-- 生成聚合报告导航表单-->
-    						<form  id="get_pm_repost_single_form" action="/logsrc/pm_analyse_unsave"     method="get"   class="form-horizontal" role="form"   accept-charset="UTF-8"   data-remote="true"> 
-											
-											<div class="row">
+    						<form  id="get_pm_repost_single_form" action="/logsrc/pm_analyse_unsave"     method="get"   class="form-horizontal" role="form"   accept-charset="UTF-8"   data-remote="true"  onsubmit="return check_pm_analyse_view()"> 
+											<div class="row" style="height: 50px;">
 													  <div class="col-sm-1">
 													  				 <h5><p class="text-left" style="font-size: 15px;font-weight: bold;">日志源</p></h5>
 													  	</div>
@@ -27,35 +29,46 @@
 																				</#list>													  
 																	</select>    
 													  </div>
-													 
+										   </div> <!-- row end-->   
+										
+										<div class="row"  style="height: 50px;">
 													  <div class="col-sm-1">
-													  				 <h5><p class="text-left" style="font-size: 15px;font-weight: bold;">开始时间</p></h5>
-													  	</div>									  
+													  				 <h5><p class="text-left" style="font-size: 15px;font-weight: bold;">时间</p></h5>
+													  	</div>				
+													  	<div class="col-sm-3"  style="padding-left: 0px;">			
+													  			<#assign half_hour_minutes=30>
+													  			<#assign hour_minutes=60>
+													  			<#assign one_day_minutes=24*60>
+													  			<#assign three_day_minutes=3*24*60>
+															  	<div class="col-sm-3"><button  class="btn btn-default  btn-sm"   type="button" onclick="pm_time_select(${half_hour_minutes})">  30分钟 </button>  </div>  
+															  	<div class="col-sm-3"><button  class="btn btn-default  btn-sm"   type="button"  onclick="pm_time_select(${hour_minutes})">  1小时&nbsp; </button></div>  
+															  	<div class="col-sm-3"><button  class="btn btn-default  btn-sm"    type="button"  onclick="pm_time_select(${one_day_minutes})">  &nbsp;1天&nbsp; </button></div>  
+															  	<div class="col-sm-3"><button  class="btn btn-default  btn-sm"     type="button" onclick="pm_time_select(${three_day_minutes})">  &nbsp;3天&nbsp; </button></div>  
+													  	</div>
 				 										<div class="col-sm-2">									  				
 													                <div class='input-group date' id='pm_start_time_datetimepicker'>
 														                    <input type='text'   id="pm_start_time_id"   name="start_time" class="form-control    input-sm"   placeholder="开始时间"/>
-														                    <span class="input-group-addon">
+														                    <span class="input-group-addon" onclick="clear_input_start_time()">
 														                        <span class="glyphicon glyphicon-calendar"></span>
 														                    </span>
 													                </div>
 													  </div>
-													  
-													  <div class="col-sm-1">
-													  			 <h5><p class="text-left" style="font-size: 15px;font-weight: bold;">结束时间</p></h5>  
-													  	</div>											  
 													  <div class="col-sm-2">
 													                <div class='input-group date' id='pm_end_time_datetimepicker'>
 														                    <input type='text'    id="pm_end_time_id"   name="end_time" class="form-control    input-sm"   placeholder="结束时间" />
-														                    <span class="input-group-addon">
+														                    <span class="input-group-addon" onclick="clear_input_end_time()">
 														                        <span class="glyphicon glyphicon-calendar"></span>
 														                    </span>
 													                </div>									    			
 													  </div>
-				
+								   </div> <!-- row end-->   
+											
+									<div class="row" >	
 													  <div class="col-sm-2">
-													  				  <button  class="btn btn-primary  btn-sm"  >  查看聚合报告 </button>
+													  				  <button  type="submit" class="btn btn-primary  btn-sm"  >  查看聚合报告 </button>
 													  </div>  
-											</div> <!-- row end-->   
+									  </div> <!-- row end-->   													  
+											
 											</br>
 											<div id="pm_notice" class="row"   style="padding-left: 15px; padding-right: 15px;" > </div></br>
      						</form>	    
@@ -86,20 +99,24 @@
 										</div><!-- /.modal-dialog -->
 								</div><!-- 模态框（Modal） -->
 							</form>	    
-    
-            <table id="pmtable"    data-toggle="toolbar"  data-height="500" data-side-pagination="server"  data-pagination="true" data-search="false">
-		            <thead>
-				            <tr>
-				              			<th data-field="title" data-sortable="true"  data-formatter="pmreportnameFormatter">报告名</th>
-						                <th data-field="report_id"  data-sortable="true"  data-visible="false">ID</th>
-						                <th data-field="logsrc_name"   data-sortable="true"    data-formatter="pmlogsrcnameFormatter" >日志源名称</th>
-						                <th data-field="start_time" data-sortable="true"   >开始时间</th>
-						                 <th data-field="end_time" data-sortable="true"  >结束时间 </th>
-						                 <th data-field="create_time"    data-sortable="true" >创建时间</th>
-						                  <th data-field="operate"    data-formatter="pmoperateFormatter" >操作</th>
-				            </tr>
-		            </thead>
-        </table>
+						    
+						            <table id="pmtable"    data-toggle="toolbar"  data-height="500" data-side-pagination="server"  data-pagination="true" data-search="false">
+								            <thead>
+										            <tr>
+										              			<th data-field="title" data-sortable="true"  data-formatter="pmreportnameFormatter">报告名</th>
+												                <th data-field="report_id"  data-sortable="true"  data-visible="false">ID</th>
+												                <th data-field="logsrc_name"   data-sortable="true"    data-formatter="pmlogsrcnameFormatter" >日志源名称</th>
+												                <th data-field="start_time" data-sortable="true"   >开始时间</th>
+												                 <th data-field="end_time" data-sortable="true"  >结束时间 </th>
+												                 <th data-field="create_time"    data-sortable="true" >创建时间</th>
+												                  <th data-field="operate"    data-formatter="pmoperateFormatter" >操作</th>
+										            </tr>
+								            </thead>
+						        </table>
+					</div><!-- col-sm-10 -->			
+					<div class="col-sm-1"></div>	        
+				 </div><!-- row -->
+    </div><!-- container -->		        
         
 <#elseif  !RequestParameters.proj?exists >
 	   <div class="container  alert alert-warning"> 请先选择右上角项目</div>

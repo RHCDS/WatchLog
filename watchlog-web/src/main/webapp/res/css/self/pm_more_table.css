@@ -1,0 +1,9 @@
+.custom_a{
+	text-decoration: none;
+	cursor: pointer;
+	color: blue;
+}
+
+.custom_a:hover{
+		text-decoration: none;
+}

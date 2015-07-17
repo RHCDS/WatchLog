@@ -4,7 +4,10 @@
   <#if RequestParameters.proj?exists  && logs?has_content >
   	<#assign pid = RequestParameters.proj>	
   	
-  	 	<div class="container">
+    <div class="container-fluid">
+    	<div class="row">
+   		<div class="col-sm-1"></div>
+    	<div class="col-sm-10 "> 
   	 	
 						<!-- 左侧： 日志源名称列表-->
 						<div class="col-sm-2"  style="padding-left:0px; padding-right:0px;">
@@ -43,8 +46,8 @@
 													<tbody id='rt_refresh_body'>
 																<tr>
 																	<th class='col-sm-4'>采样时间</th>
-																	<th class='col-sm-6'>Error type & count </th>
-																	<th class='col-sm-2'>Total  count</th>
+																	<th class='col-sm-6'>异常类型和数量</th>
+																	<th class='col-sm-2'>异常总数</th>
 																</tr>		
 																<#list rt_table as data>
 																	<tr  >
@@ -167,8 +170,11 @@
 										</div><!-- /col-sm-12 -->			
 								</div><!-- /row -->				
 																														
-						</div><!--  col-sm-4 -->
-		</div><!--  container-fluid -->						
+							</div><!--  col-sm-4 -->
+					</div><!-- col-sm-10 -->			
+					<div class="col-sm-1"></div>	        
+				 </div><!-- row -->
+    </div><!-- container -->				
 				
 <#elseif  !RequestParameters.proj?exists >
 	   <div class="container  alert alert-warning"> 请先选择右上角项目</div>

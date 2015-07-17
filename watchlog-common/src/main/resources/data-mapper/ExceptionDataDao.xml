@@ -20,6 +20,11 @@
         sum(exception_count) as exceptionCount
     </sql>
     
+    <sql id="unknown_exception_count">
+        e.exception_id as exceptionId,
+        sum(e.exception_count) as exceptionCount
+    </sql>
+    
     <sql id="record">
         aaa.sample_time as sampleTime,
         aaa.exception_id as exceptionIds,
@@ -96,6 +101,16 @@
          <include refid="exception_count" />
          from exception_data where log_source_id=${param1} and sample_time between ${param2} and ${param3}  
          group by exception_id order by ${param4}  ${param5}  limit ${param6}  offset ${param7} ;
+    </select>
+    
+      <!-- 聚合分析页面，异常维度聚合，返回特定异常类型   只有一条-->
+    <select id="findUnknownTypeByLogSourceIdAndTime" resultType="com.netease.qa.log.meta.ExceptionData">
+         select  
+         <include refid="unknown_exception_count" />
+         from exception_data e, (
+         select exception_id, log_source_id from exception where log_source_id=${param1} and exception_type=#{3}
+         ) a where e.log_source_id=a.log_source_id and e.exception_id=a.exception_id and sample_time between ${param2} and ${param3}  
+         group by e.exception_id ;
     </select>
    
      <!-- 聚合分析页面，异常维度聚合，返回总数据量 -->
