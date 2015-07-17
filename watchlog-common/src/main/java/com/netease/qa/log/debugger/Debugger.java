@@ -48,7 +48,7 @@ public class Debugger {
 		this.logHeadPattern = Pattern.compile(logSource.getLineStartRegex());
 		try {
 			fileReader =  new EncodingSupportRAFReader(new RandomAccessFile(fileName, "r"), "utf-8");
-			logger.info("debug for file: " + fileName + ", logsource: " + logSource.getLogSourceName());
+//			logger.info("debug for file: " + fileName + ", logsource: " + logSource.getLogSourceName());
 		}
 		catch (FileNotFoundException e) {
 			logger.error("file not exist");
@@ -56,31 +56,31 @@ public class Debugger {
 	}
 	
 	
-	public static void main(String []args){
-		LogSource logSource = new LogSource();
-		logSource.setLogSourceName("zwj_test");
-		logSource.setLineStartRegex("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}");
-		logSource.setLineTypeRegex("(\\w+\\.)+(\\w)*Exception_OR_Forcing driver to exit uncleanly_OR_ThriftEventSink try connecto to ThriftServer fail! retrying...");
-		logSource.setLineFilterKeyword("ERROR_OR_Exception");
-		logSource.convertParams();
-		
-		Debugger d = new Debugger(logSource, "a.txt");
-		d.doDebug();
-		HashMap<String, Integer> exceptionCountCache = d.getExceptionCountMap();
-		ArrayList<String> unknownCache = d.getUnknownList();
-		
-		logger.info("======================================");
-		for(Entry<String, Integer> e1: exceptionCountCache.entrySet(
-				
-				)){
-			logger.info(e1.getKey() + " : " + e1.getValue());
-		}
-		logger.info("======================================");
-		for(String error : unknownCache){
-			logger.info(error);
-		}
-		logger.info("======================================");
-	}
+//	public static void main(String []args){
+//		LogSource logSource = new LogSource();
+//		logSource.setLogSourceName("zwj_test");
+//		logSource.setLineStartRegex("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}");
+//		logSource.setLineTypeRegex("(\\w+\\.)+(\\w)*Exception_OR_Forcing driver to exit uncleanly_OR_ThriftEventSink try connecto to ThriftServer fail! retrying...");
+//		logSource.setLineFilterKeyword("ERROR_OR_Exception");
+//		logSource.convertParams();
+//		
+//		Debugger d = new Debugger(logSource, "a.txt");
+//		d.doDebug();
+//		HashMap<String, Integer> exceptionCountCache = d.getExceptionCountMap();
+//		ArrayList<String> unknownCache = d.getUnknownList();
+//		
+//		logger.info("======================================");
+//		for(Entry<String, Integer> e1: exceptionCountCache.entrySet(
+//				
+//				)){
+//			logger.info(e1.getKey() + " : " + e1.getValue());
+//		}
+//		logger.info("======================================");
+//		for(String error : unknownCache){
+//			logger.info(error);
+//		}
+//		logger.info("======================================");
+//	}
 	
 	
 	/**
@@ -124,6 +124,13 @@ public class Debugger {
 			else if (line.length() <= 1 && line.trim().equals("")) {
 				continue;
 			}
+			/**
+			 * string 
+			 */
+			if (line == null)
+				line = " ";
+			else
+				line = line.trim() + " \\t";
 			append(line, logHeadPattern);
 			// current block end
 			if (isEnd()) {

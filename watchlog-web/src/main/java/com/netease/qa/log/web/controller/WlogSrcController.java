@@ -1,6 +1,12 @@
 package com.netease.qa.log.web.controller;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map.Entry;
 
 import javax.annotation.Resource;
 
@@ -18,6 +24,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.netease.qa.log.debugger.Debugger;
 import com.netease.qa.log.exception.ApiExceptionHandler;
 import com.netease.qa.log.exception.InvalidRequestException;
 import com.netease.qa.log.exception.NotFoundRequestException;
@@ -34,7 +41,7 @@ import com.netease.qa.log.util.MathUtil;
 public class WlogSrcController {
 
 	private static final Logger logger = LoggerFactory.getLogger(WlogRTController.class);
-	
+
 	@Resource
 	private ApiExceptionHandler apiException;
 	@Resource
@@ -76,7 +83,7 @@ public class WlogSrcController {
 		result.put("message", message);
 		result.put("total", recordsTotal);
 		result.put("rows", data);
-		logger.debug("### [route]manage/logtable  [key]rows : " +  data.toJSONString());
+		logger.debug("### [route]manage/logtable  [key]rows : " + data.toJSONString());
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 
@@ -207,7 +214,7 @@ public class WlogSrcController {
 			return ret;
 		}
 	}
-	
+
 	@RequestMapping(value = "/repeat", method = RequestMethod.POST)
 	public String repeatLogsource(@RequestParam(value = "logsrc_name", required = false) String logsourceName,
 			@RequestParam(value = "proj", required = false) String projectid,
@@ -276,9 +283,7 @@ public class WlogSrcController {
 			model.addFlashAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);
 			return ret;
 		}
-	}	
-	
-		
+	}
 
 	@RequestMapping(value = "/start_monitor", method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> startMonitorStatus(@RequestParam(value = "ids", required = false) String ids) {
@@ -354,7 +359,7 @@ public class WlogSrcController {
 		}
 		return "logsrc/edit";
 	}
-	
+
 	@RequestMapping(value = "/{id}/copy", method = RequestMethod.GET)
 	public String copyLogSource(@PathVariable(value = "id") String logsourceId,
 			@RequestParam(value = "proj", required = false) String projectid, Model model) {
@@ -386,7 +391,7 @@ public class WlogSrcController {
 			model.addAttribute("reg_regex", logSource.getLineTypeRegex());
 		}
 		return "logsrc/copy";
-	}	
+	}
 
 	@RequestMapping(value = "/update", method = RequestMethod.POST)
 	public String commitEditLogSource(@RequestParam(value = "proj", required = false) String projectid,
@@ -466,8 +471,7 @@ public class WlogSrcController {
 			return ret_succ;
 		}
 	}
-	
-	
+
 	@RequestMapping(value = "/{id}/debug", method = RequestMethod.GET)
 	public String debugLogSource(@PathVariable(value = "id") String logsourceId,
 			@RequestParam(value = "proj", required = false) String projectid, Model model) {
@@ -499,55 +503,79 @@ public class WlogSrcController {
 			model.addAttribute("reg_regex", logSource.getLineTypeRegex());
 		}
 		return "logsrc/debug";
-	}		
-	
-	
+	}
+
 	@RequestMapping(value = "/debugvalidate", method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> debugValidate(@RequestParam(value = "proj", required = false) String projectid,
-			@RequestParam(value = "log_id") String logsourceId, @RequestParam(value = "debug_info") String debuginfo) throws InterruptedException {
-		System.out.println("project id : " + projectid);
-		System.out.println("logsource id : " + logsourceId);
-		System.out.println("--- debuginfo start---");
-		System.out.println(debuginfo);
-		System.out.println("--- debuginfo end---");
-		System.out.println("debug size: " + debuginfo.length());
+			@RequestParam(value = "log_id") String logsourceId, @RequestParam(value = "debug_info") String debuginfo)
+			throws InterruptedException {
+//	    LogSource logSource = logSourceService.getByLogSourceId(Integer.parseInt(logsourceId));
+		LogSource logSource = new LogSource();
+		logSource.setLogSourceName("zwj_test");
+		logSource.setLineStartRegex("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}");
+		logSource
+				.setLineTypeRegex("(\\w+\\.)+(\\w)*Exception_OR_Forcing driver to exit uncleanly_OR_ThriftEventSink try connecto to ThriftServer fail! retrying...");
+		logSource.setLineFilterKeyword("ERROR_OR_Exception");
+		logSource.convertParams();
+
+		FileOutputStream fop = null;
+		File file;
+		String content = debuginfo;
+		try {
+			file = new File("123.txt");
+			fop = new FileOutputStream(file);
+			// if file doesnt exists, then create it
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			// get the content in bytes
+			byte[] contentInBytes = content.getBytes();
+			fop.write(contentInBytes);
+			fop.flush();
+			fop.close();
+			System.out.println("Done");
+			System.out.println("Path:" + file.getPath());
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (fop != null) {
+					fop.close();
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		Debugger d = new Debugger(logSource, "123.txt");
+		d.doDebug();
+		HashMap<String, Integer> exceptionCountCache = d.getExceptionCountMap();
+		ArrayList<String> unknownCache = d.getUnknownList();
 		// message
 		String message = Const.RESPONSE_SUCCESSFUL;
 		// 表1第1行
-		JSONObject tc1 =  new JSONObject();
-		tc1.put("type", "connectionDefaults = HTTPPluginControl.getConnectionDefaults()");
-		tc1.put("count", 100);
-		// 表1第2行
-		JSONObject tc2 =  new JSONObject();
-		tc2.put("type", "connectionDefaults.setDefaultHeaders(header)");
-		tc2.put("count", 500);		
-		// 表1第3行
-		JSONObject tc3 =  new JSONObject();
-		tc3.put("type", "unknown");
-		tc3.put("count", 500);			
-		// 表1所有行 error_tc 数组
 		JSONArray error_tc = new JSONArray();
-		error_tc.add(tc1);
-		error_tc.add(tc2);
-		error_tc.add(tc3);		
+		JSONObject tc1 = new JSONObject();
+		for (Entry<String, Integer> e1 : exceptionCountCache.entrySet()) {
+			tc1 = new JSONObject();
+			tc1.put("type", e1.getKey());
+			tc1.put("count", e1.getValue());
+			error_tc.add(tc1);
+		}
 		// 表2所有行 unknow_list 数组
 		JSONArray unknow_list = new JSONArray();
-		unknow_list.add("connectionDefaults = HTTPPluginControl.getConnectionDefaults()");
-		unknow_list.add("connectionDefaults.setDefaultHeaders(header)");
-		unknow_list.add("unknow");
+		for (String error : unknownCache) {
+			unknow_list.add(error);
+		}
 		// 所有返回结果
-		JSONObject result = new JSONObject();		
-//		result.put("status", -1);
-//		result.put("message", "日志文件为空");		
+		JSONObject result = new JSONObject();
 		result.put("status", 0);
 		result.put("message", message);
 		result.put("error_tc", error_tc);
 		result.put("unknow_list", unknow_list);
 		// 打印调试信息
-		logger.debug("### [route]/logsrc/debugvalidate   [key]error_tc : " +  error_tc.toJSONString());
-		logger.debug("### [route]/logsrc/debugvalidate   [key]unknow_list : " +  unknow_list.toJSONString());
+		logger.debug("### [route]/logsrc/debugvalidate   [key]error_tc : " + error_tc.toJSONString());
+		logger.debug("### [route]/logsrc/debugvalidate   [key]unknow_list : " + unknow_list.toJSONString());
 		logger.debug("###sleeeeep");
-		Thread.sleep(2000);
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
-	}	
+	}
 }
