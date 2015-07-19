@@ -509,18 +509,22 @@ public class WlogSrcController {
 	public ResponseEntity<JSONObject> debugValidate(@RequestParam(value = "proj", required = false) String projectid,
 			@RequestParam(value = "log_id") String logsourceId, @RequestParam(value = "debug_info") String debuginfo)
 			throws InterruptedException {
-//	    LogSource logSource = logSourceService.getByLogSourceId(Integer.parseInt(logsourceId));
-		LogSource logSource = new LogSource();
-		logSource.setLogSourceName("zwj_test");
-		logSource.setLineStartRegex("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}");
-		logSource
-				.setLineTypeRegex("(\\w+\\.)+(\\w)*Exception_OR_Forcing driver to exit uncleanly_OR_ThriftEventSink try connecto to ThriftServer fail! retrying...");
-		logSource.setLineFilterKeyword("ERROR_OR_Exception");
-		logSource.convertParams();
+	    LogSource logSource = logSourceService.getByLogSourceId(Integer.parseInt(logsourceId));
+	    logSource.setLineStartRegex("\\d{4}\\-\\d{2}\\-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}.\\d{3}");
+//		LogSource logSource = new LogSource();
+//		logSource.setLogSourceName("zwj_test");
+//		logSource.setLineStartRegex("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}");
+//		logSource
+//				.setLineTypeRegex("(\\w+\\.)+(\\w)*Exception_OR_Forcing driver to exit uncleanly_OR_ThriftEventSink try connecto to ThriftServer fail! retrying...");
+//		logSource.setLineFilterKeyword("ERROR_OR_Exception");
+//		logSource.convertParams();
 
 		FileOutputStream fop = null;
 		File file;
 		String content = debuginfo;
+		
+		logger.info(content);
+		
 		try {
 			file = new File("123.txt");
 			fop = new FileOutputStream(file);
@@ -547,7 +551,9 @@ public class WlogSrcController {
 			}
 		}
 		Debugger d = new Debugger(logSource, "123.txt");
+		System.out.println("---------undo debug-----------");
 		d.doDebug();
+		System.out.println("---------done debug-----------");
 		HashMap<String, Integer> exceptionCountCache = d.getExceptionCountMap();
 		ArrayList<String> unknownCache = d.getUnknownList();
 		// message
@@ -572,9 +578,9 @@ public class WlogSrcController {
 		result.put("message", message);
 		result.put("error_tc", error_tc);
 		result.put("unknow_list", unknow_list);
-		// 打印调试信息
-		logger.debug("### [route]/logsrc/debugvalidate   [key]error_tc : " + error_tc.toJSONString());
-		logger.debug("### [route]/logsrc/debugvalidate   [key]unknow_list : " + unknow_list.toJSONString());
+		// 打印调试信息,太长
+//		logger.debug("### [route]/logsrc/debugvalidate   [key]error_tc : " + error_tc.toJSONString());
+//		logger.debug("### [route]/logsrc/debugvalidate   [key]unknow_list : " + unknow_list.toJSONString());
 		logger.debug("###sleeeeep");
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}

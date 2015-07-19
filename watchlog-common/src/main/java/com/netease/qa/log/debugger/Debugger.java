@@ -43,29 +43,41 @@ public class Debugger {
     
 	public Debugger(LogSource logSource, String fileName){
 		this.logSource = logSource;
+	    this.logSource.convertParams();
 		this.exceptionCountCache = new HashMap<String, Integer>();
 		this.unknownCache = new ArrayList<String>();
 		this.logHeadPattern = Pattern.compile(logSource.getLineStartRegex());
+		logger.info("compile lineStartRegex: " + this.logHeadPattern.toString());
 		try {
 			fileReader =  new EncodingSupportRAFReader(new RandomAccessFile(fileName, "r"), "utf-8");
-//			logger.info("debug for file: " + fileName + ", logsource: " + logSource.getLogSourceName());
+			logger.info("debug for file: " + fileName + ", logsource: " + logSource.getLogSourceName());
 		}
 		catch (FileNotFoundException e) {
 			logger.error("file not exist");
 		}
 	}
 	
-	
+	private String s;
+	public String getS(){
+		return s;
+	}
 
-//	public static void main(String []args){
-//		LogSource logSource = new LogSource();
-//		logSource.setLogSourceName("zwj_test");
-//		logSource.setLineStartRegex("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}");
-//		logSource.setLineTypeRegex("(\\w+\\.)+(\\w)*Exception_OR_Forcing driver to exit uncleanly_OR_ThriftEventSink try connecto to ThriftServer fail! retrying...");
-//		logSource.setLineFilterKeyword("ERROR_OR_Exception");
-//		logSource.convertParams();
-//		
-//		Debugger d = new Debugger(logSource, "a.txt");
+	public static void main(String []args){
+		
+		
+		LogSource logSource = new LogSource();
+		logSource.setLogSourceName("zwj_test");
+		logSource.setLineStartRegex("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}");
+		logSource.setLineTypeRegex("(\\w+\\.)+(\\w)*Exception_OR_Forcing driver to exit uncleanly_OR_ThriftEventSink try connecto to ThriftServer fail! retrying...");
+		logSource.setLineFilterKeyword("ERROR_OR_Exception");
+		logSource.convertParams();
+		
+		Debugger d = new Debugger(logSource, "a.txt");
+		
+		logger.info(""+ d.getS().equals("asd"));
+
+		
+		
 //		d.doDebug();
 //		HashMap<String, Integer> exceptionCountCache = d.getExceptionCountMap();
 //		ArrayList<String> unknownCache = d.getUnknownList();
@@ -81,7 +93,7 @@ public class Debugger {
 //			logger.info(error);
 //		}
 //		logger.info("======================================");
-//	}
+	}
 	
 	/**
 	 * 返回debug结果，类型和个数的map
@@ -107,9 +119,9 @@ public class Debugger {
 			String line = null; 
 			try {
 				line = fileReader.readLine();
+				logger.debug("read line:" + line);
 			}
 			catch (IOException e) {
-				logger.error("error in read a line", e);
 				return false;
 			}
 			if (line == null) {
@@ -131,7 +143,8 @@ public class Debugger {
 			if (line == null)
 				line = " ";
 			else
-				line = line.trim() + " \\t";
+				line = line + " \\t";
+			logger.debug("-------append1--------");
 			append(line, logHeadPattern);
 			// current block end
 			if (isEnd()) {
@@ -153,26 +166,34 @@ public class Debugger {
 	 */
 	private String filter(String line){
 		String keywordStr = logSource.getLineFilterKeyword();
+		logger.info("filter line:" + line);
 		// 未指定过滤关键字， 不需要过滤
 		if (keywordStr.trim().equals(Const.FILTER_KEYWORD_NONE)) {
+			logger.info("not need filter");
 			return line;
 		}
 		// 需要过滤
 		else {
+			logger.info("need filter");
 			ArrayList<String> keywords = logSource.getLineFilterKeywords();
 			String condition = logSource.getLineFilterKeywordsCondition();
 			// OR 关键字过滤
+			
+			logger.info("start filter: " + condition);
 			if (condition.equals(Const.FILTER_KEYWORD_OR)) {
+				logger.info("need or filter");
 				for (String keyword : keywords) {
 					if (line.indexOf(keyword.trim()) != -1) {
-//						logger.debug("or get! " + keyword + ", " + line);
+						logger.info("or get! " + keyword + ", " + line);
 						return line;
 					}
 				}
+				logger.info("drop! " + line);
 				return null;
 			}
 			// AND关键字过滤
 			else {
+				logger.info("need and filter");
 				boolean flag = true;
 				for (String keyword : keywords) {
 					if (line.indexOf(keyword.trim()) == -1) {
@@ -181,10 +202,11 @@ public class Debugger {
 					}
 				}
 				if (flag) {
-//					logger.debug("and get! " + line);
+					logger.info("and get! " + line);
 					return line;
 				}
 				else{
+					logger.info("drop! " + line);
 					return null;
 				}
 			}
@@ -205,7 +227,7 @@ public class Debugger {
 				Pattern p = Pattern.compile(lineTypeRegex); 
 				Matcher m = p.matcher(line);  
 				if(m.find()){
-//					logger.debug("match! " + m.group() + ", logSource: " + logSource.getLogSourceName());
+					logger.debug("match! " + m.group() + ", logSource: " + logSource.getLogSourceName());
 					exceptionTypes.add(m.group());
 				}
 			}
@@ -216,7 +238,7 @@ public class Debugger {
 		//日志没有匹配到任何异常类型，设置为unknown类型
 		if(exceptionTypes.size() == 0){
 			exceptionTypes.add(Const.UNKNOWN_TYPE);
-//			logger.debug("cant match! set as unknown, logSource: " + logSource.getLogSourceName() + ", line: " + line);
+			logger.debug("cant match! set as unknown, logSource: " + logSource.getLogSourceName() + ", line: " + line);
 		}
 			
 		// 查询exception缓存，如果不存在则插入exception表
@@ -317,8 +339,14 @@ public class Debugger {
 		}
 
 		String theHead = line.substring(0, line.length() < HEAD_LEN ? line.length() : HEAD_LEN);
+
+		logger.debug("getLineStartRegex: " + this.logSource.getLineStartRegex());
+		logger.debug("pattern str: " + "\\d{4}\\-\\d{2}\\-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}.\\d{3}");
+		
 		Matcher m = headPattern.matcher(theHead);
-		return m.find();
+		boolean result = m.find();
+		logger.info("isHeadLine:" + result);
+		return result;
 	}
 
 
