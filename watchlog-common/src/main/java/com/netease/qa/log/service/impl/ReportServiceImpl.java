@@ -82,12 +82,11 @@ public class ReportServiceImpl implements ReportService{
 			report = reports.get(i);
 			record.put("report_id", report.getReportId());
 			LogSource logsource = logSourceDao.findByLogSourceId(report.getLogSourceId());
-			record.put("logsrc_name", logsource.getLogSourceName());
+			record.put("title", report.getTitle());
 			record.put("start_time", MathUtil.parse2Str(report.getStartTime()));
 			record.put("end_time", MathUtil.parse2Str(report.getEndTime()));
 			record.put("creator", report.getCreatorId());
 			record.put("create_time", MathUtil.parse2Str(report.getCreatTime()));
-			record.put("title", report.getTitle());
 			records.add(record);
 			i++;
 		}

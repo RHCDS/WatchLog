@@ -69,7 +69,7 @@ public class WlogPMController {
 	}
 
 	// 历史报告表格内容
-	@RequestMapping(value = "logsrc/pm_analyse/pmtable", method = RequestMethod.GET)
+	@RequestMapping(value = "logsrc/pm_analyse/pmtable", method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> getSortedReports(
 			@RequestParam(value = "proj", required = false) String projectid,
 			@RequestParam(value = "sort", required = false, defaultValue = "create_time") String sort,
