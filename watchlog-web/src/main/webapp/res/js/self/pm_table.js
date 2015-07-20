@@ -17,8 +17,6 @@
 	  		}
 	  	});//  表格end
 	  	
-	  	//  日志源选择下拉列表
-	  	$('#pm_logsrc_select').select2();
 	  	
 	  	// 开始时间datatimepicker
         $('#pm_start_time_datetimepicker').datetimepicker({
