@@ -56,20 +56,11 @@ public class WlogPMController {
 	public String pm_analyse(@RequestParam(value = "proj", required = false) String projectid, Model model) {
 		model.addAttribute("controller", "WlogPM");
 		model.addAttribute("action", "pm_analyse");
-		ArrayList<String> logs = new ArrayList<String>();
-		if (projectid != null) {
-			ArrayList<LogSource> logsources = logSourceService.selectAllByProjectId(Integer.parseInt(projectid));
-			for (int i = 0; i < logsources.size(); i++) {
-				logs.add(logsources.get(i).getLogSourceId() + "#" + logsources.get(i).getLogSourceName());
-			}
-		}
-		model.addAttribute("logs", logs);
-		logger.debug("### [route]logsrc/pm_analyse  [key]logs : " + logs);
 		return "logsrc/pm_analyse";
 	}
 
 	// 历史报告表格内容
-	@RequestMapping(value = "logsrc/pm_analyse/pmtable", method = RequestMethod.POST)
+	@RequestMapping(value = "logsrc/pm_analyse/pmtable", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> getSortedReports(
 			@RequestParam(value = "proj", required = false) String projectid,
 			@RequestParam(value = "sort", required = false, defaultValue = "create_time") String sort,
@@ -610,8 +601,24 @@ public class WlogPMController {
 		logger.debug("### [route]/logsrc/pm_analyse/unknown_table  [key]rows : " + rows.toJSONString());
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
+	
+	
+	//  项目级聚合报告-未保存页面
+	@RequestMapping(value = "/logsrc/pm_projlevel_unsave", method = RequestMethod.GET)
+    public String pm_projlevel_unsave(@RequestParam(value = "proj", required = false) String projectid,
+            @RequestParam(value = "start_time", required = false) String starttime,
+            @RequestParam(value = "end_time", required = false) String endtime,
+            Model model) {
+        model.addAttribute("controller", "WlogPM" );
+        model.addAttribute("action", "pm_projlevel_unsave" );
+        model.addAttribute("proj", projectid );
+        model.addAttribute("start_time", starttime );
+        model.addAttribute("end_time",  endtime );
+        return "logsrc/pm_projlevel_unsave";
+	}
+	
 
-	@RequestMapping(value = "/logsrc/pm_projlevel_etc_table", method = RequestMethod.POST)
+	@RequestMapping(value = "/logsrc/pm_projlevel_etc_table", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> getExceptionsByProject(
 			@RequestParam(value = "proj", required = false) String projectid,
 			@RequestParam(value = "report_id", required = false, defaultValue = "0") String reportid,
@@ -678,6 +685,7 @@ public class WlogPMController {
 		result.put("message", Const.RESPONSE_SUCCESSFUL);
 		result.put("total", total);
 		result.put("rows", rows);
+		logger.debug("### [route]/logsrc/pm_projlevel_etc_table  [key]rows : " + rows.toJSONString());
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 }

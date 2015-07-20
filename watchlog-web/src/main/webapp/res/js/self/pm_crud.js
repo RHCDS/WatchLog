@@ -52,15 +52,7 @@ function pm_time_select(duration){
 
 // 查看聚合报告校验
 function check_pm_analyse_view(){
-			// 日志源id  :  selected值 
-			var logsrc_id=$('#pm_logsrc_select').val(); 
-			if(logsrc_id == 0){
-				 $("#pm_notice").html("<font color='red'> 请选择日志源</font></br>");
-				 return false;
-			}
-			else{
-				 $("#pm_notice").html("");
-			}
+
 			// 开始时间
 			var start_time = $('#pm_start_time_id').val(); 
 			if(start_time == "" ){

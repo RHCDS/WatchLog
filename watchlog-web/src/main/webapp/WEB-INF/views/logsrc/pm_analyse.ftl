@@ -2,33 +2,31 @@
 <@layout.myLayout>
 
 
-  <#if RequestParameters.proj?exists  && logs?has_content >
+  <#if RequestParameters.proj?exists  >
   	<#assign pid = RequestParameters.proj>
-  	
-
 		        
-  <div class="container-fluid">
-    	<div class="row">
-   		<div class="col-sm-1"></div>
-    	<div class="col-sm-10 "> 
+	  <div class="container-fluid">
+	    	<div class="row">
+	   		<div class="col-sm-1"></div>
+	    	<div class="col-sm-10 "> 
 
 							<!-- 生成聚合报告导航表单-->
-    						<form  id="get_pm_repost_single_form" action="/logsrc/pm_analyse_unsave"     method="get"   class="form-horizontal" role="form"   accept-charset="UTF-8"   data-remote="true"  onsubmit="return check_pm_analyse_view()"> 
+    						<form  id="get_pm_repost_single_form" action="/logsrc/pm_projlevel_unsave"     method="get"   class="form-horizontal" role="form"   accept-charset="UTF-8"   data-remote="true"  onsubmit="return check_pm_analyse_view()"> 
 										<div class="row"  style="height: 50px;">
 													  <div class="col-sm-1">
 													  				 <h5><p class="text-left" style="font-size: 13px;font-weight: bold;">选择起始时间</p></h5>
 													  	</div>				
-													  	<div class="col-sm-5"  style="padding-left: 0px;">			
+													  	<div class="btn-toolbar col-sm-4"  style="padding-left: 0px;">			
 													  			<#assign hour_minutes=60>
 													  			<#assign three_minutes=3*60>
 													  			<#assign six_minutes=6*60>
 													  			<#assign one_day_minutes=24*60>
 													  			<#assign three_day_minutes=3*24*60>
-															  	<div class="col-sm-2"><button  class="btn btn-default  btn-sm"   type="button"  onclick="pm_time_select(${hour_minutes})">  最新1小时 </button> &nbsp; &nbsp; </div>  
-															  	<div class="col-sm-2"><button  class="btn btn-default  btn-sm"   type="button"  onclick="pm_time_select(${three_minutes})">  最新3小时</button> &nbsp; &nbsp; </div>  
-															  	<div class="col-sm-2"><button  class="btn btn-default  btn-sm"   type="button"  onclick="pm_time_select(${six_minutes})">  最新6小时 </button> &nbsp; &nbsp; </div>  
-															  	<div class="col-sm-2"><button  class="btn btn-default  btn-sm"    type="button"  onclick="pm_time_select(${one_day_minutes})">  最新1天 </button> &nbsp; &nbsp; </div>  
-															  	<div class="col-sm-2"><button  class="btn btn-default  btn-sm"     type="button" onclick="pm_time_select(${three_day_minutes})">  最新3天</button> &nbsp; &nbsp; </div>  
+															<div class="btn-group"><button  class="btn btn-default  btn-sm"   type="button"  onclick="pm_time_select(${hour_minutes})">  最新1小时 </button> &nbsp; &nbsp; </div>  
+															<div class="btn-group"><button  class="btn btn-default  btn-sm"   type="button"  onclick="pm_time_select(${three_minutes})">  最新3小时</button> &nbsp; &nbsp; </div>  
+															<div class="btn-group"><button  class="btn btn-default  btn-sm"   type="button"  onclick="pm_time_select(${six_minutes})">  最新6小时 </button> &nbsp; &nbsp; </div>  
+															<div class="btn-group"><button  class="btn btn-default  btn-sm"    type="button"  onclick="pm_time_select(${one_day_minutes})">  最新1天 </button> &nbsp; &nbsp; </div>  
+															<div class="btn-group"><button  class="btn btn-default  btn-sm"     type="button" onclick="pm_time_select(${three_day_minutes})">  最新3天</button> &nbsp; &nbsp; </div>  
 													  	</div>
 				 										<div class="col-sm-2">									  				
 													                <div class='input-group date' id='pm_start_time_datetimepicker'>
@@ -84,9 +82,8 @@
 						            <table id="pmtable"    data-toggle="toolbar"  data-height="500" data-side-pagination="server"  data-pagination="true" data-search="false">
 								            <thead>
 										            <tr>
-										              			<th data-field="title" data-sortable="true"  data-formatter="pmreportnameFormatter">报告名</th>
+										              			<th data-field="title" data-sortable="true"  data-formatter="pmreportnameFormatter">报告名称</th>
 												                <th data-field="report_id"  data-sortable="true"  data-visible="false">ID</th>
-												                <th data-field="logsrc_name"   data-sortable="true"    data-formatter="pmlogsrcnameFormatter" >日志源名称</th>
 												                <th data-field="start_time" data-sortable="true"   >开始时间</th>
 												                 <th data-field="end_time" data-sortable="true"  >结束时间 </th>
 												                 <th data-field="create_time"    data-sortable="true" >创建时间</th>
@@ -101,10 +98,8 @@
         
 <#elseif  !RequestParameters.proj?exists >
 	   <div class="container  alert alert-warning"> 请先选择右上角项目</div>
-<#elseif !logs?has_content>
-	<div class="container  alert alert-warning">该项目没有日志源</div>
 <#else>
-	<div class="container  alert alert-warning">其他位置错误，请联系管理员</div>
+	<div class="container  alert alert-warning">其他错误，请联系管理员</div>
 </#if>
     
 
