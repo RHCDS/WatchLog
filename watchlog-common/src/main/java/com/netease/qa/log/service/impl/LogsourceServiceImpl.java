@@ -254,6 +254,16 @@ public class LogsourceServiceImpl implements LogSourceService{
 	}
 
 
+	@Override
+	public ArrayList<LogSource> getLogsourcesByProjectId(int projectId, int limit, int offset) {
+		List<LogSource> logSources = logSourceDao.getSortedByProjectId(projectId, "modify_time", "desc", limit, offset);
+		ArrayList<LogSource> logsources = new ArrayList<LogSource>();
+		for(int i=0; i<logSources.size(); i++)
+			logsources.add(logSources.get(i));
+		return logsources;
+	}
+
+
 
 
 }

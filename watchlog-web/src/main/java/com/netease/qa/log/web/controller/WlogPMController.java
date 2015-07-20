@@ -554,7 +554,7 @@ public class WlogPMController {
 		JSONObject unknow = new JSONObject();
 		JSONArray rows = new JSONArray();
 		int total = 0;
-		if(MathUtil.isEmpty(limit, offset)){
+		if (MathUtil.isEmpty(limit, offset)) {
 			message = ConstCN.NULL_PARAM;
 			result.put("message", message);
 			result.put("total", total);
@@ -571,7 +571,7 @@ public class WlogPMController {
 		Long start = null;
 		Long end = null;
 		int logsourceId = 0;
-		if(Integer.parseInt(reportid) == 0){
+		if (Integer.parseInt(reportid) == 0) {
 			logsourceId = Integer.parseInt(logsourceid);
 			try {
 				start = MathUtil.parse2Long(startTime);
@@ -580,7 +580,7 @@ public class WlogPMController {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		}else{
+		} else {
 			Report report = reportService.getReportById(Integer.parseInt(reportid));
 			logsourceId = report.getLogSourceId();
 			System.out.println("logsourceId:" + logsourceId);
@@ -595,9 +595,9 @@ public class WlogPMController {
 		}
 		total = unknowService.getTotalCount(logsourceId, start, end);
 		List<UkExceptionData> unknowsDatas = new ArrayList<UkExceptionData>();
-		unknowsDatas = unknowService.findByLogSourceIdAndTime(logsourceId, start, end,
-				Integer.parseInt(limit), Integer.parseInt(offset));
-		for(UkExceptionData unknowdata : unknowsDatas){
+		unknowsDatas = unknowService.findByLogSourceIdAndTime(logsourceId, start, end, Integer.parseInt(limit),
+				Integer.parseInt(offset));
+		for (UkExceptionData unknowdata : unknowsDatas) {
 			unknow = new JSONObject();
 			unknow.put("uknow_id", unknowdata.getUkExceptionDataId());
 			unknow.put("sample", unknowdata.getOriginLog());
@@ -608,6 +608,76 @@ public class WlogPMController {
 		result.put("total", total);
 		result.put("rows", rows);
 		logger.debug("### [route]/logsrc/pm_analyse/unknown_table  [key]rows : " + rows.toJSONString());
+		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/logsrc/pm_projlevel_etc_table", method = RequestMethod.POST)
+	public ResponseEntity<JSONObject> getExceptionsByProject(
+			@RequestParam(value = "proj", required = false) String projectid,
+			@RequestParam(value = "report_id", required = false, defaultValue = "0") String reportid,
+			@RequestParam(value = "start_time", required = false) String startTime,
+			@RequestParam(value = "end_time", required = false) String endTime,
+			@RequestParam(value = "limit", required = false) String limit,
+			@RequestParam(value = "offset", required = false) String offset, Model model) {
+		String message = "";
+		JSONArray rows = new JSONArray();
+		int total = 0;
+		JSONObject result = new JSONObject();
+
+		if (MathUtil.isEmpty(limit, offset)) {
+			message = ConstCN.NULL_PARAM;
+			result.put("message", message);
+			result.put("total", total);
+			result.put("rows", rows);
+			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+		}
+		if (!MathUtil.isInteger(limit) || !MathUtil.isInteger(offset)) {
+			message = ConstCN.LIMIT_AND_OFFSET_MUST_BE_NUM;
+			result.put("message", message);
+			result.put("total", total);
+			result.put("rows", rows);
+			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+		}
+		Long start = null;
+		Long end = null;
+		int projectId = 0;
+
+		if (Integer.parseInt(reportid) == 0) {
+			projectId = Integer.parseInt(projectid);
+			try {
+				start = MathUtil.parse2Long(startTime);
+				end = MathUtil.parse2Long(endTime);
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} else {
+			Report report = reportService.getReportById(Integer.parseInt(reportid));
+			projectId = report.getProjectId();
+			try {
+				start = MathUtil.parse2Long(MathUtil.parse2Str(report.getStartTime()));
+				end = MathUtil.parse2Long(MathUtil.parse2Str(report.getEndTime()));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		total = logSourceService.getTotalCountByProjectId(projectId);
+		List<LogSource> logSources = logSourceService.getLogsourcesByProjectId(projectId, Integer.parseInt(limit),
+				Integer.parseInt(offset));
+		JSONObject row = new JSONObject();
+		JSONObject temp = null;
+		for (LogSource logsource : logSources) {
+			temp = readService.queryExceptionByLogSourceIdAndTime(logsource.getLogSourceId(), start, end);
+			row = new JSONObject();
+			row.put("logsrc_name", logsource.getLogSourceName());
+			row.put("error_tc", temp.getJSONArray("error_tc"));
+			row.put("total_count", temp.get("total_count"));
+			rows.add(row);
+		}
+		result.put("message", Const.RESPONSE_SUCCESSFUL);
+		result.put("total", total);
+		result.put("rows", rows);
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 }

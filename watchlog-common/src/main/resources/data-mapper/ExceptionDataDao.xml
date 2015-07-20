@@ -32,6 +32,13 @@
         bbb.total_count as totalCount
     </sql>
     
+    <!-- 项目级别的record -->
+    <sql id="pro_record">
+         b.exceptions_ids as exceptionIds,
+         b.exception_count as exceptionCounts,
+         b.total_count as totalCount
+    </sql>
+    
 	<insert id="insert" parameterType="com.netease.qa.log.meta.ExceptionData"
 		useGeneratedKeys="true" keyProperty="exceptionDataId">
 		insert into exception_data(log_source_id, sample_time, exception_id, exception_count) 
@@ -84,6 +91,22 @@
              and sample_time between ${param2} and ${param3}  
              group by sample_time ) bbb
         where aaa.sample_time = bbb.sample_time order by ${param4}  ${param5}  limit ${param6}  offset ${param7}  ;
+    </select>
+    
+    <!-- 项目级别的异常分布，返回所有数据 -->
+    <select id="findRecordsByLogSourceIdAndTime" resultType="com.netease.qa.log.meta.ExceptionDataRecord">
+      select
+         <include refid="pro_record" />
+         from(
+              SELECT a.log_source_id log_source_id,GROUP_CONCAT(a.exception_id) exceptions_ids,GROUP_CONCAT(a.sub_count) exception_count,SUM(a.sub_count) total_count
+                 FROM(
+                          SELECT log_source_id,exception_id,SUM(exception_count) sub_count 
+                                   FROM exception_data WHERE log_source_id=${param1}
+                                           AND sample_time BETWEEN ${param2} AND ${param3}
+                                                 GROUP BY exception_id 
+                     ) a
+                          GROUP BY log_source_id
+              ) b
     </select>
     
      <!-- 聚合分析页面，时间维度聚合，返回总数据量 -->

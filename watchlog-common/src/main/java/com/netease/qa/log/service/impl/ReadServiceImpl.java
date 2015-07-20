@@ -205,7 +205,7 @@ public class ReadServiceImpl implements ReadService {
 		result.put("logsourceid", logSourceId);
 		JSONObject error = new JSONObject();
 		JSONArray errors = new JSONArray();
-		//当unknown不为空，且第一页，才把error装入array中
+		// 当unknown不为空，且第一页，才把error装入array中
 		if (unknownexception != null && offset == 0) {
 			com.netease.qa.log.meta.Exception ukexception = exceptionDao.findByExceptionId(unknownexception
 					.getExceptionId());
@@ -291,6 +291,39 @@ public class ReadServiceImpl implements ReadService {
 		}
 		result.put("details", details);
 		return result;
+	}
+
+	@Override
+	public JSONObject queryExceptionByLogSourceIdAndTime(int logSourceId, long startTime, long endTime) {
+		ExceptionDataRecord exceptionDataRecord = null;
+		try {
+			exceptionDataRecord = exceptionDataDao.findRecordsByLogSourceIdAndTime(logSourceId, startTime, endTime);
+		} catch (Exception e) {
+			logger.error("error", e);
+			return null;
+		}
+		// 组装数据
+		JSONObject result = new JSONObject();
+		JSONArray details = new JSONArray();
+		if (exceptionDataRecord != null) {
+			String[] eids = exceptionDataRecord.getExceptionIds().split(",");
+			String[] ecounts = exceptionDataRecord.getExceptionCounts().split(",");
+			for (int i = 0; i < eids.length; i++) {
+				int exceptionId = Integer.valueOf(eids[i].trim());
+				String type = exceptionDao.findByExceptionId(exceptionId).getExceptionType();
+				JSONObject detail = new JSONObject();
+				detail.put("type", type);
+				detail.put("count", ecounts[i]);
+				details.add(detail);
+			}
+			result.put("error_tc", details);
+			result.put("total_count", exceptionDataRecord.getTotalCount());
+			return result;
+		} else {
+			result.put("error_tc", details);
+			result.put("total_count", 0);
+			return result;
+		}
 	}
 
 }

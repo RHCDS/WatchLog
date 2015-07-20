@@ -26,4 +26,6 @@ public interface ReadService {
 			String order, int limit, int offset);
 
 	public JSONObject queryUnknownExceptions(int logSourceId, long startTime, long endTime, int limit, int offset);
+	
+	public JSONObject queryExceptionByLogSourceIdAndTime(int logSourceId, long startTime, long endTime);
 }
