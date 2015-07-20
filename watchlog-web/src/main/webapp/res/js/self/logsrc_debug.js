@@ -109,11 +109,13 @@ function start_debug_validate(proj, log_id)
 											var debug_tc_body_html = "<tr><th class='col-sm-10' style='text-align: center;'>异常类型</th><th class='col-sm-2' style='text-align: center;'>异常总数</th></tr>";
 											for(i=0; i<error_tc_list.length; i++){
 												// 表格其他行
+												error_tc_item = error_tc_list[i]['type'].replace(/\\t+/g, "<br /> &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;"); // \\t 用换行和8个space替换
 												if(error_tc_list[i]['type'] == "unknown"){
-													debug_tc_body_html = debug_tc_body_html + "<tr><td class='col-sm-10' style='color:blue'>" +error_tc_list[i]['type'] + "</td>" + "<td class='col-sm-2' style='text-align: center;'>"+error_tc_list[i]['count']+"</td></tr>";
+													debug_tc_body_html = debug_tc_body_html + "<tr><td class='col-sm-10' style='color:blue'>" +error_tc_item + "</td>" + "<td class='col-sm-2' style='text-align: center;'>"+error_tc_list[i]['count']+"</td></tr>";
 												}
 												else{
-													debug_tc_body_html = debug_tc_body_html + "<tr><td class='col-sm-10'>" +error_tc_list[i]['type'] + "</td>" + "<td class='col-sm-2' style='text-align: center;'>"+error_tc_list[i]['count']+"</td></tr>";
+													
+													debug_tc_body_html = debug_tc_body_html + "<tr><td class='col-sm-10'>" + error_tc_item + "</td>" + "<td class='col-sm-2' style='text-align: center;'>"+error_tc_list[i]['count']+"</td></tr>";
 												}
 											}				
 											// 表格更新
@@ -128,7 +130,8 @@ function start_debug_validate(proj, log_id)
 											var debug_unknow_body_html = "<tr><th class='col-sm-12' style='text-align: center;'>unknow日志信息</th></tr>";
 											for(i=0; i<unknow_list.length; i++){
 												// 表格其他行
-												debug_unknow_body_html = debug_unknow_body_html + "<tr><td class='col-sm-12'>"+unknow_list[i]+"</td></tr>";
+												unknow_item = unknow_list[i].replace(/\\t+/g, "<br /> &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;"); // \\t 用换行和8个space替换
+												debug_unknow_body_html = debug_unknow_body_html + "<tr><td class='col-sm-12'>"+unknow_item+"</td></tr>";
 											}			
 											// 表格更新
 											$("#debug_unknow_body").html(debug_unknow_body_html);					

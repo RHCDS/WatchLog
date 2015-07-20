@@ -578,10 +578,9 @@ public class WlogSrcController {
 		result.put("message", message);
 		result.put("error_tc", error_tc);
 		result.put("unknow_list", unknow_list);
-		// 打印调试信息,太长
-//		logger.debug("### [route]/logsrc/debugvalidate   [key]error_tc : " + error_tc.toJSONString());
-//		logger.debug("### [route]/logsrc/debugvalidate   [key]unknow_list : " + unknow_list.toJSONString());
-		logger.debug("###sleeeeep");
+		// 打印调试信息
+		logger.debug("### [route]/logsrc/debugvalidate   [key]error_tc : " + error_tc.toJSONString());
+		logger.debug("### [route]/logsrc/debugvalidate   [key]unknow_list : " + unknow_list.toJSONString());
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 }
