@@ -76,7 +76,15 @@
 						
 							<div class="row"    style="height:25px;   border-bottom: solid 1px #ddd; margin-bottom:30px;margin-top:30px;">
 									<div class="col-sm-12"> <p style="font-size: 15px;font-weight: bold;">异常分布趋势图</p>	</div><!-- /col-sm-12 -->		
-							</div>								
+							</div>		
+							<!-- loading-->						
+                                <div  class='row'   style="display:none; "   id="rt_loading" >
+                                            <div  class="col-sm-7 pull-right" >
+                                                        <img src="/res/img/loading.gif" />
+                                            </div>            
+                                </div>		
+                                <div id="pm_projlevel_notice"> </div>
+                                					
 							<!-- 聚合分析 异常分布图-->
 							<div class="row"    id = "pm_projlevel_etc_chats">	</div><!-- /row -->													        				
 			

@@ -30,24 +30,33 @@ $(function () {
 					// 项目级聚合分析趋势图
 					if($("#pm_projlevel_etc_chats" ).length != 0) {
 						// ajax 请求获取chart数据
+						$('#pm_projlevel_notice').css('display','none'); // 失败提示文字
+						$('#rt_loading').css('display','block');
 						$.ajax({
 							type: 'GET',
 							url : '/logsrc/pm_projlevel_etc_charts',
-							data: {proj: pid, report_id: report_id, start_time: start_time, end_time: end_time},
+							data: {proj: pid, 
+								report_id: report_id, 
+								start_time: start_time_ct, 
+								end_time: end_time_ct},
 							dataType: "json",
 							success : function(e){
-								
-							}
-							
-						});
-						draw_charts('#pm_projlevel_etc_chats');
-					}
+								$('#rt_loading').css('display','none');
+									if(e['status'] == 0){
+										draw_charts('#pm_projlevel_etc_chats', e['results']);
+									}
+									else{
+										$('#pm_projlevel_notice').css('display','block'); // 失败提示文字
+										$("#pm_projlevel_notice").html("<font color='red'>"+e['message']+"</font>")
+									}
+							} // success
+						}); // ajax
+					}// 趋势图
 		} );  //document
 });
 
 // table表格封装
 function render_table(div_table_id){
-	console.log(start_time);
 	  	$(div_table_id).bootstrapTable({
 	  		url : "/logsrc/pm_projlevel_etc_table",
 	  		pageList: "[10, 25, 50, 100, All]",
@@ -65,7 +74,7 @@ function render_table(div_table_id){
 }
 
 // highcharts 趋势图封装
-function draw_charts(div_charts_id){
+function draw_charts(div_charts_id, results){
 			// highcharts 画图
 		    Highcharts.setOptions({
 		        global: {
@@ -76,67 +85,57 @@ function draw_charts(div_charts_id){
 		    	credits: {enabled: false}, 
 		        chart: {
 		            type: 'spline',
+		            height: 500,
 		            animation: Highcharts.svg, // don't animate in old IE
-		            marginRight: 10,
 		        },
-		        title: { text:''},
+		        title: { text: null},
 		        plotOptions: {
 		            series: {
-		                lineWidth: 1,   //曲线粗细，默认是2
-		                marker: {
-		                	radius: 3,  //曲线点半径，默认是4
-		                	 symbol: 'diamond' //曲线点类型："circle", "square", "diamond", "triangle","triangle-down"，默认是"circle"
-		                }
-		            }
-		        },
+		              lineWidth: '1px',   //曲线粗细，默认是2
+		              marker: {   // 鼠标悬浮设置
+		                enabled: false,  // 是否显示point点
+		                states: {
+		                  hover: {
+		                    enabled: true,
+		                  },
+		                  select: {
+		                    enabled: true,
+		                  },
+		                },
+		              },
+		          }},
 		        xAxis: {
 		            type: 'datetime',
-		            tickPixelInterval: 150
+		            dateTimeLabelFormats: {
+		            	 second: '%Y-%m-%d %H:%M:%S',
+		            },		    
+		            reversed: true,
+		            //tickInterval: 10 * 1000,  // interval : 10s
+		            tickPixelInterval : 50
 		        },
 		        yAxis: {
 		            title: {
-		                text: 'Value'
+		                text: '异常总数'
 		            },
-		            plotLines: [{
-		                value: 0,
-		                width: 1,
-		                color: '#808080'
-		            }]
-		        },
-		        tooltip: {  
-		            formatter: function () {
-		                return '<b>' + this.series.name + '</b><br/>' +
-		                    Highcharts.dateFormat('%Y-%m-%d %H:%M:%S', this.x) + '<br/>' +
-		                    Highcharts.numberFormat(this.y, 2);
-		            }
+		            reversed: true
 		        },
 		        legend: {  
-		            enabled: false
+		            enabled: true
 		        },
-		        exporting: {
-		            enabled: false
+		        tooltip:{
+		        	shared: true,
+		        	xDateFormat: "%Y-%m-%d %H:%M:%S",
 		        },
-		        series: [{
-		            name: '日志源log1',
-		            data: (function () {
-		                // generate an array of random data
-		                var data = [],
-		                    time = (new Date()).getTime(), // 毫秒
-		                    i;
-		                for (i = -9; i <= 0; i += 1) {
-		                	var date_time = time + i * 1000 ; 
-		                	var count = Math.random() * 10;
-//		                	console.log('date_time : ' + date_time);
-//		                	console.log('count : ' + count);
-		                    data.push({
-		                        x: date_time,
-		                        y: count
-		                    });
-		                }
-		                console.log(data);
-		                return data;
-		            }())
-		        }]
+		        series: (function(){
+		        	var series_list = [], i;
+		        	for(i=0; i<results.length; i ++){
+		        		series_list.push({name: results[i]['logsrc_name'], data: results[i]['data']});
+		        	}
+		        	return series_list;
+		        }()),
+		        lang: {
+		            noData: "趋势图没有数据，请联系管理员"
+		        },		        
 		    });// highcharts
 }
 
