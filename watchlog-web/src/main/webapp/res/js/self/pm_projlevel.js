@@ -106,14 +106,17 @@ function draw_charts(div_charts_id, results){
 		          }},
 		        xAxis: {
 		            type: 'datetime',
-		            dateTimeLabelFormats: {
-		            	second: '%Y-%m-%d   %H:%M:%S',
-		            	minute: '%Y-%m-%d   %H:%M:00',
-		            	hour: '%Y-%m-%d  %H:00:00',
-		            	day: '%Y-%m-%d 00:00:00 ',
-		            	month: '%Y-%m-01 00:00:00',
-		            },		   
-		            tickPixelInterval : 50
+//		            dateTimeLabelFormats: {
+//		            	second: '%Y-%m-%d   %H:%M:%S',
+//		            	minute: '%Y-%m-%d   %H:%M:00',
+//		            	hour: '%Y-%m-%d  %H:00:00',
+//		            	day: '%Y-%m-%d 00:00:00 ',
+//		            	month: '%Y-%m-01 00:00:00',
+//		            },		   
+//		            tickPixelInterval : 50,
+//		            labels: {
+//		                rotation: -60
+//		            }
 		        },
 		        yAxis: {
 		            title: {
