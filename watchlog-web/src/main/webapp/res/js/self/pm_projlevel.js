@@ -21,6 +21,16 @@ var start_time_ct = decodeURIComponent(start_time).replace(/\+/g, ' ');
 var end_time_ct = decodeURIComponent(end_time).replace(/\+/g, ' ');
 
 
+//  手动转换datetime 为 timestamp        "2015-06-17 10:12:37" => 1434507157000
+function datetime2timestamp(datetime_str){        
+         var dt_arr=  datetime_str.split(' ');
+         var date_part_arr = dt_arr[0].split('-');
+         var time_part_arr = dt_arr[1].split(':');
+         var date = new Date(date_part_arr[0],  parseInt(date_part_arr[1], 10) - 1,  date_part_arr[2], time_part_arr[0],  time_part_arr[1], time_part_arr[2] );
+         return date.getTime(); 
+}
+
+
 $(function () {
 		$(document).ready(function() {
 					// 项目级聚合分析表格
@@ -29,28 +39,37 @@ $(function () {
 					}
 					// 项目级聚合分析趋势图
 					if($("#pm_projlevel_etc_chats" ).length != 0) {
-						// ajax 请求获取chart数据
-						$('#pm_projlevel_notice').css('display','none'); // 失败提示文字
-						$('#rt_loading').css('display','block');
-						$.ajax({
-							type: 'GET',
-							url : '/logsrc/pm_projlevel_etc_charts',
-							data: {proj: pid, 
-								report_id: report_id, 
-								start_time: start_time_ct, 
-								end_time: end_time_ct},
-							dataType: "json",
-							success : function(e){
-								$('#rt_loading').css('display','none');
-									if(e['status'] == 0){
-										draw_charts('#pm_projlevel_etc_chats', e['results']);
-									}
-									else{
-										$('#pm_projlevel_notice').css('display','block'); // 失败提示文字
-										$("#pm_projlevel_notice").html("<font color='red'>"+e['message']+"</font>")
-									}
-							} // success
-						}); // ajax
+							// 检测时间范围
+							var duration = datetime2timestamp(end_time_ct) -  datetime2timestamp(start_time_ct);
+							var MAX_GRAPH_TIME_RANGE = 7*24*3600*1000; // 不能超过的7天，精确到毫秒
+							if(duration > MAX_GRAPH_TIME_RANGE ){
+									$('#pm_projlevel_notice').css('display','block'); // 失败提示文字
+									$("#pm_projlevel_notice").html("<font color='red'>只支持查询7天内的数据</font>")
+							}
+							else{
+									// ajax 请求获取chart数据
+									$('#pm_projlevel_notice').css('display','none'); // 失败提示文字
+									$('#rt_loading').css('display','block');
+									$.ajax({
+										type: 'GET',
+										url : '/logsrc/pm_projlevel_etc_charts',
+										data: {proj: pid, 
+											report_id: report_id, 
+											start_time: start_time_ct, 
+											end_time: end_time_ct},
+										dataType: "json",
+										success : function(e){
+											$('#rt_loading').css('display','none');
+												if(e['status'] == 0){
+													draw_charts('#pm_projlevel_etc_chats', e['results']);
+												}
+												else{
+													$('#pm_projlevel_notice').css('display','block'); // 失败提示文字
+													$("#pm_projlevel_notice").html("<font color='red'>"+e['message']+"</font>")
+												}
+										} // success
+									}); // ajax							
+							}// else
 					}// 趋势图
 		} );  //document
 });
