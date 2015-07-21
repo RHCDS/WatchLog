@@ -601,22 +601,19 @@ public class WlogPMController {
 		logger.debug("### [route]/logsrc/pm_analyse/unknown_table  [key]rows : " + rows.toJSONString());
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
-	
-	
-	//  项目级聚合报告-未保存页面
+
+	// 项目级聚合报告-未保存页面
 	@RequestMapping(value = "/logsrc/pm_projlevel_unsave", method = RequestMethod.GET)
-    public String pm_projlevel_unsave(@RequestParam(value = "proj", required = false) String projectid,
-            @RequestParam(value = "start_time", required = false) String starttime,
-            @RequestParam(value = "end_time", required = false) String endtime,
-            Model model) {
-        model.addAttribute("controller", "WlogPM" );
-        model.addAttribute("action", "pm_projlevel_unsave" );
-        model.addAttribute("proj", projectid );
-        model.addAttribute("start_time", starttime );
-        model.addAttribute("end_time",  endtime );
-        return "logsrc/pm_projlevel_unsave";
+	public String pm_projlevel_unsave(@RequestParam(value = "proj", required = false) String projectid,
+			@RequestParam(value = "start_time", required = false) String starttime,
+			@RequestParam(value = "end_time", required = false) String endtime, Model model) {
+		model.addAttribute("controller", "WlogPM");
+		model.addAttribute("action", "pm_projlevel_unsave");
+		model.addAttribute("proj", projectid);
+		model.addAttribute("start_time", starttime);
+		model.addAttribute("end_time", endtime);
+		return "logsrc/pm_projlevel_unsave";
 	}
-	
 
 	@RequestMapping(value = "/logsrc/pm_projlevel_etc_table", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> getExceptionsByProject(
@@ -686,6 +683,47 @@ public class WlogPMController {
 		result.put("total", total);
 		result.put("rows", rows);
 		logger.debug("### [route]/logsrc/pm_projlevel_etc_table  [key]rows : " + rows.toJSONString());
+		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/logsrc/pm_projlevel_etc_charts", method = RequestMethod.GET)
+	public ResponseEntity<JSONObject> getDataByGraph(@RequestParam(value = "proj", required = false) String projectid,
+			@RequestParam(value = "report_id", required = false, defaultValue = "0") String reportid,
+			@RequestParam(value = "start_time", required = false) String startTime,
+			@RequestParam(value = "end_time", required = false) String endTime,
+			@RequestParam(value = "limit", required = false) String limit,
+			@RequestParam(value = "offset", required = false) String offset, Model model) {
+		int status = -1;
+		JSONObject result = new JSONObject();
+		Long start = null;
+		Long end = null;
+		int projectId = 0;
+		if (Integer.parseInt(reportid) == 0) {
+			projectId = Integer.parseInt(projectid);
+			try {
+				start = MathUtil.parse2Long(startTime);
+				end = MathUtil.parse2Long(endTime);
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+		} else {
+			Report report = reportService.getReportById(Integer.parseInt(reportid));
+			projectId = report.getProjectId();
+			try {
+				start = MathUtil.parse2Long(MathUtil.parse2Str(report.getStartTime()));
+				end = MathUtil.parse2Long(MathUtil.parse2Str(report.getEndTime()));
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		JSONArray results = readService.queryRecordsByTime(projectId, start, end);
+		status = 0;
+		result.put("message", Const.RESPONSE_SUCCESSFUL);
+		result.put("status", status);
+		result.put("results", results);
+		logger.debug("### [route]/logsrc/pm_projlevel_etc_charts  [key]results : " + status);
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 }

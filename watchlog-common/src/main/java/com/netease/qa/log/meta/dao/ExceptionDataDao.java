@@ -43,6 +43,10 @@ public interface ExceptionDataDao {
      */
     public ExceptionDataRecord findRecordsByLogSourceIdAndTime(int logSourceId, long startTime, long endTime);
     
+    /*
+     * 返回趋势图的totalcount
+     */
+    public Integer getTotalCountByLogsourceIdAndTime(int logSourceId, long startTime, long endTime);
     /**
      * 时间维度聚合，返回记录总数，分页用
      */

@@ -109,6 +109,18 @@
               ) b
     </select>
     
+    <!-- 返回趋势图的 total_count -->
+        <select id="getTotalCountByLogsourceIdAndTime" resultType="java.lang.Integer">
+              SELECT SUM(a.sub_count) total_count
+                 FROM(
+                          SELECT log_source_id,exception_id,SUM(exception_count) sub_count 
+                                   FROM exception_data WHERE log_source_id=${param1}
+                                           AND sample_time BETWEEN ${param2} AND ${param3}
+                                                 GROUP BY exception_id 
+                     ) a
+                          GROUP BY log_source_id
+    </select>
+    
      <!-- 聚合分析页面，时间维度聚合，返回总数据量 -->
     <select id="getTimeRecordsCountByLogSourceIdAndTime" resultType="java.lang.Integer">
          select count(a.sample_time) from 
