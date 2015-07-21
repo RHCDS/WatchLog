@@ -109,7 +109,7 @@ function draw_charts(div_charts_id, results){
 		            dateTimeLabelFormats: {
 		            	 second: '%Y-%m-%d %H:%M:%S',
 		            },		    
-		            reversed: true,
+//		            reversed: true,
 		            //tickInterval: 10 * 1000,  // interval : 10s
 		            tickPixelInterval : 50
 		        },
@@ -117,7 +117,7 @@ function draw_charts(div_charts_id, results){
 		            title: {
 		                text: '异常总数'
 		            },
-		            reversed: true
+//		            reversed: true
 		        },
 		        legend: {  
 		            enabled: true

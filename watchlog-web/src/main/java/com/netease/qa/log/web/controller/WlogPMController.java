@@ -162,7 +162,7 @@ public class WlogPMController {
 		}
 		Report report = new Report();
 		report.setProjectId(Integer.parseInt(projectid));
-		report.setLogSourceId(Integer.parseInt(logsrcId));
+		report.setLogSourceId(-1);
 		report.setStartTime(MathUtil.parse2Time(startTime));
 		report.setEndTime(MathUtil.parse2Time(endTime));
 		report.setCreatorId(1);

@@ -81,7 +81,6 @@ public class ReportServiceImpl implements ReportService{
 			record = new JSONObject();
 			report = reports.get(i);
 			record.put("report_id", report.getReportId());
-			LogSource logsource = logSourceDao.findByLogSourceId(report.getLogSourceId());
 			record.put("title", report.getTitle());
 			record.put("start_time", MathUtil.parse2Str(report.getStartTime()));
 			record.put("end_time", MathUtil.parse2Str(report.getEndTime()));

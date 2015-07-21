@@ -106,7 +106,7 @@ public class ReadServiceImpl implements ReadService {
 		// 获取时间区间，和次数
 		int timeRange = MathUtil.getTimeRange(start_time, end_time);
 		int num = (int) ((end_time - start_time) / timeRange);
-		Long formatEndTime = end_time / timeRange * timeRange;
+		Long formatStartTime = start_time / timeRange * timeRange;
 		JSONArray results = new JSONArray();
 		List<LogSource> logSources = logSourceDao.getSortedByProjectId(projectid, "modify_time", "desc", 100, 0);
 		for (int i = 0; i < logSources.size(); i++) {
@@ -114,8 +114,8 @@ public class ReadServiceImpl implements ReadService {
 			LogSource logSource = logSources.get(i);
 			JSONArray	datas = new JSONArray();
 			for (int j = 0; j < num; j++) {
-				long endTime = formatEndTime - timeRange * j;
-				long startTime = endTime - timeRange + 1;
+				long startTime = formatStartTime + timeRange * j + 1;
+				long endTime = startTime + timeRange ;
 				int totalCount = 0;
 				// between包含前后区间值，此处取前开后闭，以防止重复数据。
 				try {
