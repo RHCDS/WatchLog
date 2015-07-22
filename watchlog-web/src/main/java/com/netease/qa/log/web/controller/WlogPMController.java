@@ -188,20 +188,20 @@ public class WlogPMController {
 			@RequestParam(value = "end_time", required = false) String endTime, Model model) {
 		model.addAttribute("controller", "WlogPM");
 		model.addAttribute("action", "pm_analyse_unsave");
-		if (MathUtil.isEmpty(projectid, logsrcId, startTime, endTime)) {
+		if (MathUtil.isEmpty(projectid, logsrcId)) {
 			model.addAttribute("status", -1);
 			model.addAttribute("message", ConstCN.NULL_PARAM);
 			return "logsrc/pm_analyse_unsave";
 		}
-		model.addAttribute("log_id", Integer.parseInt(logsrcId));
-		model.addAttribute("start_time", startTime);
-		model.addAttribute("end_time", endTime);
+		
 		if (!MathUtil.isInteger(projectid)) {
 			model.addAttribute("status", -1);
 			model.addAttribute("message", ConstCN.ID_MUST_BE_NUM);
 			return "logsrc/pm_analyse_unsave";
 		}
 		LogSource logSource = logSourceService.getByLogSourceId(Integer.parseInt(logsrcId));
+		model.addAttribute("status", 0);
+		model.addAttribute("log_id", Integer.parseInt(logsrcId));
 		model.addAttribute("logsrc_name", logSource.getLogSourceName());
 		model.addAttribute("host_name", logSource.getHostname());
 		model.addAttribute("logsrc_path", logSource.getPath());
@@ -213,6 +213,8 @@ public class WlogPMController {
 		Long end = null;
 		if (Integer.parseInt(reportid) == 0) {
 			try {
+				model.addAttribute("start_time", startTime);
+				model.addAttribute("end_time", endTime);				
 				start = MathUtil.parse2Long(startTime);
 				end = MathUtil.parse2Long(endTime);
 			} catch (ParseException e) {
@@ -221,13 +223,16 @@ public class WlogPMController {
 		} else {
 			Report report = reportService.getReportById(Integer.parseInt(reportid));
 			try {
+				model.addAttribute("start_time", MathUtil.parse2Str(report.getStartTime()));
+				model.addAttribute("end_time", MathUtil.parse2Str(report.getEndTime()));				
 				start = MathUtil.parse2Long(MathUtil.parse2Str(report.getStartTime()));
-				start = MathUtil.parse2Long(MathUtil.parse2Str(report.getEndTime()));
+				end = MathUtil.parse2Long(MathUtil.parse2Str(report.getEndTime()));
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
+
 		JSONObject resultByTime = readService.queryTimeRecords(Integer.parseInt(logsrcId), start, end,
 				Const.ORDER_FIELD_SAMPLE_TIME, Const.ORDER_DESC, 10, 0);
 		model.addAttribute("pm_error_dist_table", resultByTime.getJSONArray("record"));

@@ -1,7 +1,7 @@
 <#import "../layout/defaultLayout.ftl" as layout>
 <@layout.myLayout>
 
-  <#if RequestParameters.proj?exists  >
+  <#if RequestParameters.proj?exists  && status==0 >
   		<#assign pid = RequestParameters.proj>	
 <div class="container-fluid">
     	<div class="row">
@@ -247,8 +247,6 @@
 				
 <#elseif  !RequestParameters.proj?exists >
 	   <div class="container  alert alert-warning"> 请先选择右上角项目</div>
-<#else>
-	<div class="container  alert alert-warning">其他位置错误，请联系管理员</div>
 </#if>
     
 
