@@ -116,6 +116,24 @@ function draw_charts(div_charts_id, results){
 		            height: 500,
 		            animation: Highcharts.svg, // don't animate in old IE
 		        },
+		        // 设置调用颜色顺序，暂时设定50种
+		        colors:[
+		                '#000000', //黑色
+		                '#0000FF', // 蓝色
+		                '#00FF00', // 绿色 
+		                '#00FFFF', //  草青色
+		                '#2F4F4F', //darkslategrey
+		                '#663399', //rebeccapurple
+		                '#708090', // slategrey
+		                '#808000', //olive
+		                '#A0522D', //sienna
+		                '#FF0000', //红色
+		                '#FF00FF', //  黄色
+		                '#FF69B4', // hotpink
+		                '#FF8C00',  //darkorange
+		                '#FFDAB9', //peachpuff
+		                '#FFFF00', //  水红
+		                ],
 		        title: { text: null},
 		        plotOptions: {
 		            series: {
@@ -150,6 +168,7 @@ function draw_charts(div_charts_id, results){
 		            title: {
 		                text: '异常总数'
 		            },
+		            min:0
 		        },
 		        legend: {  
 		            enabled: true
