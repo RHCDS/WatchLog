@@ -39,11 +39,11 @@
  		return "-";	  
  	  }
  	     var maxwidth = 20; 
- 	     value_show = value;
+ 	     var value_show = value;
  	     if (value.length > maxwidth) {
  	    	 value_show = value.substring(0, maxwidth) + '...'
  	     }
- 	  return  '<a class="like" title=' + value +' href="/logsrc/pm_analyse_saved?report_id=' + row.report_id + '&proj=' + pid + '" >' + value_show + '</a>';
+ 	  return  '<a class="like" title=' + value +' href="/logsrc/pm_projlevel_save?report_id=' + row.report_id + '&proj=' + pid + '" >' + value_show + '</a>';
   }
 
   // 操作

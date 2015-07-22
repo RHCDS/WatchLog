@@ -50,15 +50,6 @@
 	 <#if action == "debug">
 	 	<script src="/res/js/self/logsrc_debug.js"></script>
 	 </#if>	 
-	 
-	 <#if action == "pm_projlevel_unsave">
-	 	 <script src="/res/js/plugin/highcharts/highcharts.js"></script>
-		<script src="/res/js/plugin/highcharts/no-data-to-display.js"></script>
-	 	 
-	 	 <script src="/res/js/self/pm_projlevel.js"></script>
-	 </#if>	 	 
-	 
-
   </head>
   
   <body>

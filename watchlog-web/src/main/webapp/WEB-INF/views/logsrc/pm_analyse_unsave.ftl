@@ -7,42 +7,7 @@
     	<div class="row">
    		<div class="col-sm-1"></div>
     	<div class="col-sm-10 "> 
-  	
-							<!-- 保存聚合分析表单form-->
-							<form  id="pm_analyse_store_form"  onsubmit="return check_pm_report_name()" action="/logsrc/pm_analyse/store"  method="post"   class="form-horizontal" role="form"   accept-charset="UTF-8"   data-remote="true">     	  
-								<!-- 模态框（Modal）-->
-								<div class="modal fade" id="pm_analyse_store_modal" tabindex="-1" role="dialog"    aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
-									   <div class="modal-dialog">
-												      <div class="modal-content">
-												      		<input type="hidden" id="log_id" name="log_id"  />
-												      		<input type="hidden" id="proj" name="proj"  />
-												      		<input type="hidden" id="start_time" name="start_time"  />
-												      		<input type="hidden" id="end_time" name="end_time"  />
-												      		 <!-- header  -->
-													         <div class="modal-header">
-														            <button type="button" class="close"    data-dismiss="modal" aria-hidden="true">   &times;  </button>
-														            <h4 class="modal-title" id="myModalLabel"> 保存当前聚合报告 </h4>
-													         </div>
-													         <!-- body  -->
-													         <div class="modal-body"    style="height: 80px;">
-																		<label for="host_name" class="col-sm-2 control-label"  style="text-align: center;color: gray;font-weight: 100;">报告名<font color="red">&#160;*</font></label>
-																	      <div class="col-sm-10">
-																	         		<input type="text" class="form-control"    id="report_title"     name="title"   placeholder="请输入报告名">
-																	          		<div id="warn_report_comment"></div>
-																	      </div>
-																	      <div class="row" style="padding-left: 15px; padding-right: 15px; overflow: auto; ">
-																			  			<div class="col-sm-10 pull-right"  id="title_notice"></div>
-																			</div>
-													         </div>
-													         <!-- footer  -->
-													         <div class="modal-footer"  style="border-top: 0;">
-													           <button type="submit" class="btn btn-primary">  确定  </button>
-													            <button type="button" class="btn btn-default"    data-dismiss="modal"> 取消  </button>
-													         </div>
-												      </div><!-- /.modal-content -->
-										</div><!-- /.modal-dialog -->
-								</div><!-- 模态框（Modal） -->
-							</form>	  	
+
   	
   			<!-- 未保存聚合分析页面 导航条-->
 			<div class="row"   style="border-bottom: solid 1px #ddd;height: 45px;" >
@@ -53,7 +18,6 @@
 														<td class="col-sm-4"> <a href="/logsrc/pm_analyse?proj=${pid}"> 返回 &#62; </a>	&#160;&#160;<small>${logsrc_name}</small></td>
 														<td class="col-sm-3">开始时间：${start_time}</td>
 														<td class="col-sm-3">结束时间：${end_time}</td>
-														<td class="col-sm-2"><button id="remove" class="btn btn-primary  btn-xs"  onclick="pm_analyse_store(${log_id}, ${pid},'${start_time}','${end_time}')" >  &#160;&#160; 保存 &#160;&#160;</button></td>
 													</tr>		
 										</tbody>
 									</table>

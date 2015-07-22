@@ -143,9 +143,9 @@ public class WlogPMController {
 			@RequestParam(value = "end_time", required = false) String endTime,
 			@RequestParam(value = "title", required = false) String title, RedirectAttributes model) {
 		String ret_succ = "redirect:/logsrc/pm_analyse?proj=" + projectid;
-		String ret_fail = "redirect:/logsrc/pm_analyse_unsave?log_id=" + logsrcId + "&proj=" + projectid
-				+ "&start_time=" + startTime + "&end_time" + endTime;
-		if (MathUtil.isEmpty(projectid, logsrcId, startTime, endTime)) {
+		String ret_fail = "redirect:/logsrc/pm_projlevel_unsave?proj=" + projectid
+				+ "&start_time=" + startTime + "&end_time=" + endTime;
+		if (MathUtil.isEmpty(projectid, startTime, endTime)) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
 			return ret_fail;
@@ -574,11 +574,9 @@ public class WlogPMController {
 		} else {
 			Report report = reportService.getReportById(Integer.parseInt(reportid));
 			logsourceId = report.getLogSourceId();
-			System.out.println("logsourceId:" + logsourceId);
 			try {
 				start = MathUtil.parse2Long(MathUtil.parse2Str(report.getStartTime()));
 				end = MathUtil.parse2Long(MathUtil.parse2Str(report.getEndTime()));
-				System.out.println("start: " + start + ";end: " + end);
 			} catch (ParseException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -614,6 +612,23 @@ public class WlogPMController {
 		model.addAttribute("end_time", endtime);
 		return "logsrc/pm_projlevel_unsave";
 	}
+	
+	// 项目级聚合报告-保存页面
+	@RequestMapping(value = "/logsrc/pm_projlevel_save", method = RequestMethod.GET)
+	public String pm_projlevel_save(@RequestParam(value = "proj", required = false) String projectid,
+			@RequestParam(value = "report_id", required = false) String reportid, Model model) {
+		Report report = reportService.getReportById(Integer.parseInt(reportid));
+		model.addAttribute("controller", "WlogPM");
+		model.addAttribute("action", "pm_projlevel_save");
+		model.addAttribute("proj", projectid);
+		model.addAttribute("report_id", Integer.parseInt(reportid));
+		String startTime = MathUtil.parse2Str(report.getStartTime());
+		String endTime = MathUtil.parse2Str(report.getEndTime());		
+		model.addAttribute("start_time", startTime);
+		model.addAttribute("end_time", endTime);
+		model.addAttribute("title",  report.getTitle());
+		return "logsrc/pm_projlevel_saved";
+	}	
 
 	@RequestMapping(value = "/logsrc/pm_projlevel_etc_table", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> getExceptionsByProject(
@@ -674,6 +689,8 @@ public class WlogPMController {
 		for (LogSource logsource : logSources) {
 			temp = readService.queryExceptionByLogSourceIdAndTime(logsource.getLogSourceId(), start, end);
 			row = new JSONObject();
+			row.put("log_id", logsource.getLogSourceId());
+			row.put("report_id", Integer.parseInt(reportid));
 			row.put("logsrc_name", logsource.getLogSourceName());
 			row.put("error_tc", temp.getJSONArray("error_tc"));
 			row.put("total_count", temp.get("total_count"));
