@@ -1,4 +1,10 @@
 
+// popover 生效设置
+$(function () {
+	$("[data-toggle='popover']").popover(); 
+	});
+
+
 // 获取指定url和指定名字参数
 function getParam( name, href_str )
   {
@@ -37,19 +43,20 @@ function rt_analyse_refresh()
 						var rt_refresh_data = e['data'];  // rt_refresh_data是array
 						var i=0;
 						var rt_refresh_td_html = "<tr><th class='col-sm-4'>采样时间</th><th class='col-sm-6'>异常类型和数量</th><th class='col-sm-2'>异常总数</th></tr>";
-						console.log(rt_refresh_data);
 						for(i=0; i<rt_refresh_data.length; i++){
 							// 表格第一列
 							rt_refresh_td_html = rt_refresh_td_html  +  "<tr><td class='col-sm-4'> " + rt_refresh_data[i]['date_time']  + "</td><td class='col-sm-6'>";
-							// 表格第二列  
+							// 表格第二列 
 							var j=0;
 							var col2_data = rt_refresh_data[i]['error_tc'];
 							for(j=0; j<(col2_data.length-1); j++){
-								rt_refresh_td_html = rt_refresh_td_html  + "<a title="  + col2_data[j]['type']  + "   href ='#' >&#160;"  + col2_data[j]['count']  + "&#160;</a>,";
+								popover_loction = (j%2==0)? "top" : "bottom";
+								rt_refresh_td_html = rt_refresh_td_html  + "<a class='pointer_a'  data-toggle='popover' data-placement=" +popover_loction+ "  title="  + col2_data[j]['type']  + "   href ='#' >&#160;"  + col2_data[j]['count']  + "&#160;</a>,";
 							}
 							// 最后一个数字后面没有逗号
+							popover_loction = (j%2==0)? "top" : "bottom";
 							if(j<col2_data.length){
-								rt_refresh_td_html = rt_refresh_td_html  + "<a title="  + col2_data[j]['type']  + "   href ='#' >&#160;"  + col2_data[j]['count']  + "</a>";
+								rt_refresh_td_html = rt_refresh_td_html  + "<a class='pointer_a'  data-toggle='popover' data-placement=" +popover_loction+ "  title="   + col2_data[j]['type']  + "   href ='#' >&#160;"  + col2_data[j]['count']  + "</a>";
 							}
 							// 表格第三列
 							rt_refresh_td_html = rt_refresh_td_html  + "</td><td class='col-sm-2'>"  + rt_refresh_data[i]['total_count']; +  "</td></tr>";
@@ -57,6 +64,7 @@ function rt_analyse_refresh()
 						// 更新表格内容
 						$("#rt_refresh_body").html(rt_refresh_td_html);
 					}
+					$("[data-toggle='popover']").popover(); 	  
 			}// end success
 	}); // end ajax
 	

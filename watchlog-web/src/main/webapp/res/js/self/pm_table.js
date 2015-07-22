@@ -28,7 +28,10 @@
         //   聚合分析首页结束时间datatimepicker
         $('#pm_end_time_datetimepicker').datetimepicker({
 		    format: 'YYYY-MM-DD HH:mm:ss'   
-        });        
+        });   
+        
+        // unsave页面popover
+        $("[data-toggle='popover']").popover(); 	  		
 } );  //document
   
   

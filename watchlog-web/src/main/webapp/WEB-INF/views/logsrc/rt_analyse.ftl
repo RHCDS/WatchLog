@@ -54,10 +54,15 @@
 																		<td class='col-sm-4'>${data['date_time']}</td>
 																		<td class='col-sm-6'>
 																				<#list data['error_tc'] as dt>
-																						<#if dt_has_next>
-																								<a title="${dt['type']}"   href ="#" >&#160;${dt['count']}&#160;</a>,
+																						<#if dt_index%2==0>
+																							<#assign popover_loction="top">
 																						<#else>
-																								<a title="${dt['type']}"   href ="#" >&#160;${dt['count']}</a>
+																							<#assign popover_loction="bottom">		
+																						</#if>																				
+																						<#if dt_has_next>
+																								<a  class='pointer_a'  data-toggle='popover' data-placement='${popover_loction}'  title="${dt['type']}"   href ="#" >&#160;${dt['count']}&#160;</a>,
+																						<#else>
+																								<a  class='pointer_a'  data-toggle='popover' data-placement='${popover_loction}'  title="${dt['type']}"   href ="#" >&#160;${dt['count']}</a>
 																						</#if>
 																				 </#list>																			 
 																		 </td>																	

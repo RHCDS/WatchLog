@@ -27,6 +27,9 @@ var end_time_ct = end_time.replace(/\%20/g, ' ');
 					  // 聚合分析 - 异常分布情况 表格
 					  	$('#pm_error_dist_table').bootstrapTable({
 					  		url : "/logsrc/pm_analyse/error_dist_table",
+					  		onPostBody: function () {
+					  			$("[data-toggle='popover']").popover(); 	  		
+					  		  },	  						  		
 					  		sortName : "date_time",
 					  		sortOrder: "desc",
 					  		height: "900",
@@ -104,8 +107,13 @@ var end_time_ct = end_time.replace(/\%20/g, ' ');
 	  var content_arr = [];
 
 	  // 遍历数字，拼接type和count到超链接
+	  var i;
 	  for(i=0; i<value.length; i++){
-		  each_val = "<a title='"+value[i]['type']+ "'>"+value[i]['count']+" </a>";
+		  if((i%2) == 0 ){
+			  	each_val = "<a class='pointer_a'  data-toggle='popover' data-placement='top'  title='"+value[i]['type']+ "'>"+value[i]['count']+" </a>";
+		  }else{
+			  each_val = "<a class='pointer_a'  data-toggle='popover' data-placement='bottom'  title='"+value[i]['type']+ "'>"+value[i]['count']+" </a>";
+		  }
 		  content_arr.push(each_val);
 	  }
 	  var  content_str = content_arr.join(' , ');
@@ -152,8 +160,8 @@ var end_time_ct = end_time.replace(/\%20/g, ' ');
  	  else{
  		  // unsave  : log_id, start_time, end_time
  		  if(report_id == ""){
- 			  start_time_str = "'"+start_time_ct+"'";
- 			  end_time_str = "'"+end_time_ct+"'";
+ 			  var start_time_str = "'"+start_time_ct+"'";
+ 			  var end_time_str = "'"+end_time_ct+"'";
  	 		  return    '<a href="javascript:void(0)"   onclick="get_unsave_error_type_more_total('+row.exp_id+','+log_id+','+start_time_str+ ',' + end_time_str +')" >' + row.total_count + '</a>' ;
  		  }
  		  // saved : report_id

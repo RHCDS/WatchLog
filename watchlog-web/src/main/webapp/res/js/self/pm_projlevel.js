@@ -31,8 +31,10 @@ function datetime2timestamp(datetime_str){
 }
 
 
+
 $(function () {
 		$(document).ready(function() {
+			
 					// 项目级聚合分析表格 - 未保存
 					if($("#pm_projlevel_unsave_etc_table" ).length != 0) {
 						// 生成表格
@@ -45,7 +47,7 @@ $(function () {
 						render_table('#pm_projlevel_saved_etc_table');
 					}
 					
-					
+
 					// 项目级聚合分析趋势图
 					if($("#pm_projlevel_etc_chats" ).length != 0) {
 							// 检测时间范围
@@ -87,6 +89,9 @@ $(function () {
 function render_table(div_table_id){
 	  	$(div_table_id).bootstrapTable({
 	  		url : "/logsrc/pm_projlevel_etc_table",
+	  		onPostBody: function () {
+	  			$("[data-toggle='popover']").popover(); 	  		
+	  	    },	  		
 	  		pageList: "[10, 25, 50, 100, All]",
 	  		queryParams: function(p){
 	  			return {
@@ -118,21 +123,15 @@ function draw_charts(div_charts_id, results){
 		        },
 		        // 设置调用颜色顺序，暂时设定50种
 		        colors:[
-		                '#000000', //黑色
 		                '#0000FF', // 蓝色
-		                '#00FF00', // 绿色 
 		                '#00FFFF', //  草青色
-		                '#2F4F4F', //darkslategrey
-		                '#663399', //rebeccapurple
-		                '#708090', // slategrey
-		                '#808000', //olive
-		                '#A0522D', //sienna
+		                '#32CD32',
 		                '#FF0000', //红色
-		                '#FF00FF', //  黄色
-		                '#FF69B4', // hotpink
-		                '#FF8C00',  //darkorange
-		                '#FFDAB9', //peachpuff
-		                '#FFFF00', //  水红
+		                '#FFFF00', //  黄色
+		                '#FF00FF', 
+		                '#FF8C00',
+		                '#708090',
+		                '#7B68EE',
 		                ],
 		        title: { text: null},
 		        plotOptions: {
@@ -228,7 +227,11 @@ function pm_projlevel_etc_table_disterrorFormatter(value,row,index){
 		  // 遍历数字，拼接type和count到超链接
 		  var i;
 		  for(i=0; i<value.length; i++){
-			  each_val = "<a  title='"+value[i]['type']+ "'>"+value[i]['count']+" </a>";
+			  if((i%2) == 0 ){
+				  each_val = "<a   class='pointer_a'  data-toggle='popover' data-placement='top'   title='"+value[i]['type']+ "'>"+value[i]['count']+" </a>";
+			  }else{
+				  each_val = "<a   class='pointer_a'  data-toggle='popover' data-placement='bottom'   title='"+value[i]['type']+ "'>"+value[i]['count']+" </a>";
+			  }
 			  content_arr.push(each_val);
 		  }
 		  var  content_str = content_arr.join(' , ');

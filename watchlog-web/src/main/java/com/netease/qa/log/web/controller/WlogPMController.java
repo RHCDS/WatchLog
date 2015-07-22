@@ -244,46 +244,6 @@ public class WlogPMController {
 		return "logsrc/pm_analyse_unsave";
 	}
 
-	@RequestMapping(value = "/logsrc/pm_analyse_saved", method = RequestMethod.GET)
-	public String getReport(@RequestParam(value = "proj", required = false) String projectid,
-			@RequestParam(value = "report_id", required = false) String reportid, Model model) {
-		Report report = reportService.getReportById(Integer.parseInt(reportid));
-		model.addAttribute("controller", "WlogPM");
-		model.addAttribute("action", "pm_analyse_unsave");
-		model.addAttribute("log_id", report.getLogSourceId());
-		model.addAttribute("report_id", Integer.parseInt(reportid));
-		String startTime = MathUtil.parse2Str(report.getStartTime());
-		String endTime = MathUtil.parse2Str(report.getEndTime());
-		model.addAttribute("start_time", startTime);
-		model.addAttribute("end_time", endTime);
-		LogSource logSource = logSourceService.getByLogSourceId(report.getLogSourceId());
-		model.addAttribute("logsrc_name", logSource.getLogSourceName());
-		model.addAttribute("title", report.getTitle());
-		model.addAttribute("host_name", logSource.getHostname());
-		model.addAttribute("logsrc_path", logSource.getPath());
-		model.addAttribute("logsrc_file", logSource.getFilePattern());
-		model.addAttribute("start_regex", logSource.getLineStartRegex());
-		model.addAttribute("filter_keyword", logSource.getLineFilterKeyword());
-		model.addAttribute("reg_regex", logSource.getLineTypeRegex());
-		Long start = null;
-		Long end = null;
-		try {
-			start = MathUtil.parse2Long(startTime);
-			end = MathUtil.parse2Long(endTime);
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-		JSONObject resultByTime = readService.queryTimeRecords(report.getLogSourceId(), start, end,
-				Const.ORDER_FIELD_SAMPLE_TIME, Const.ORDER_DESC, 10, 0);
-		model.addAttribute("pm_error_dist_table", resultByTime.getJSONArray("record"));
-		logger.debug("### [route]/logsrc/pm_analyse_saved  [key]pm_error_dist_table : " + resultByTime.toJSONString());
-		JSONObject resultByError = readService.queryErrorRecords(report.getLogSourceId(), start, end,
-				Const.ORDER_FIELD_SAMPLE_TIME, Const.ORDER_DESC, 5, 0);
-		model.addAttribute("pm_error_type_table", resultByError.getJSONArray("error"));
-		logger.debug("### [route]/logsrc/pm_analyse_saved  [key]pm_error_type_table : "
-				+ resultByError.getJSONArray("error"));
-		return "logsrc/pm_analyse_saved";
-	}
 
 	@RequestMapping(value = "/logsrc/pm_analyse/error_dist_more", method = RequestMethod.GET)
 	public String moreDist(Model model) {
