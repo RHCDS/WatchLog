@@ -43,7 +43,7 @@
  	     if (value.length > maxwidth) {
  	    	 value_show = value.substring(0, maxwidth) + '...'
  	     }
- 	  return  '<a class="like" title=' + value +' href="/logsrc/pm_projlevel_save?report_id=' + row.report_id + '&proj=' + pid + '" >' + value_show + '</a>';
+ 	  return  '<a title=' + value +' href="/logsrc/pm_projlevel_save?report_id=' + row.report_id + '&proj=' + pid + '" >' + value_show + '</a>';
   }
 
   // 操作
@@ -58,7 +58,7 @@
 		            '<i class=" glyphicon glyphicon-trash"></i>',
 		            '</a>  ',	            
 		            // 查看详情
-		           '<a class="pmshow" title="详情" href="/logsrc/pm_analyse_saved?report_id=' + row.report_id + '&proj=' + pid + '" >',
+		           '<a class="pmshow" title="详情" href="/logsrc/pm_projlevel_save?report_id=' + row.report_id + '&proj=' + pid + '" >',
 		            '<i class="  glyphicon glyphicon-align-left"></i>',
 		            '</a>'
 		        ].join('');

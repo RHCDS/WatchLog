@@ -180,7 +180,7 @@ function pm_projlevel_unsave_etc_table_lognameFormatter(value, row, index){
 		     if (value.length > maxwidth-3) {
 		    	 value_show = value.substring(0, maxwidth-3) + '...'
 		     }
-		     var link_html =  '<a title=' + value +' href="/logsrc/pm_analyse_unsave?proj=' + pid + '&log_id=' + row.log_id +'&start_time=' + start_time_ct + '&end_time=' + end_time_ct + '" >&nbsp;&gt;&gt;查看详情</a>';	
+		     var link_html =  '<a target="_blank" title=' + value +' href="/logsrc/pm_analyse_unsave?proj=' + pid + '&log_id=' + row.log_id +'&start_time=' + start_time_ct + '&end_time=' + end_time_ct + '" >&nbsp;&gt;&gt;查看详情</a>';	
 		     var display_html = '<font size=1px>'+value_show+ link_html + '</font>';
 		  return  display_html;		  
 	  }
@@ -196,7 +196,7 @@ function pm_projlevel_saved_etc_table_lognameFormatter(value, row, index){
 		     if (value.length > maxwidth-3) {
 		    	 value_show = value.substring(0, maxwidth-3) + '...'
 		     }
-		     var link_html =  '<a title=' + value +' href="/logsrc/pm_analyse_unsave?proj=' + pid + '&report_id=' + row.report_id +'" >&nbsp;&gt;&gt;查看详情</a>';	
+		     var link_html =  '<a target="_blank"  title=' + value +' href="/logsrc/pm_analyse_unsave?proj=' + pid + '&report_id=' + row.report_id +'" >&nbsp;&gt;&gt;查看详情</a>';	
 		     var display_html = '<font size=1px>'+value_show+ link_html + '</font>';
 		  return  display_html;		  
 	  }

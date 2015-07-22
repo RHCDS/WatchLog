@@ -49,6 +49,7 @@
 														<table  class="table wratb  removebd">
 															<tbody>
 																		<tr>
+																		<td class="col-sm-2"> <a href="/logsrc/pm_analyse?proj=${pid}"> 返回 &#62; </a>	</td>
 																			<td class="col-sm-3">开始时间：${start_time}</td>
 																			<td class="col-sm-3">结束时间：${end_time}</td>
 																			<td class="col-sm-2"><button id="remove" class="btn btn-primary  btn-xs"  onclick="pm_analyse_store()" >  &#160;&#160; 保存 &#160;&#160;</button></td>

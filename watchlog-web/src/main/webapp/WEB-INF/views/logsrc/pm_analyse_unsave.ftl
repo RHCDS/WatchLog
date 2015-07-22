@@ -15,7 +15,7 @@
 									<table  class="table wratb  removebd">
 										<tbody>
 													<tr>
-														<td class="col-sm-4"> <a href="/logsrc/pm_analyse?proj=${pid}"> 返回 &#62; </a>	&#160;&#160;<small>${logsrc_name}</small></td>
+														<td class="col-sm-4">日志源：	&#160;&#160;<small>${logsrc_name}</small></td>
 														<td class="col-sm-3">开始时间：${start_time}</td>
 														<td class="col-sm-3">结束时间：${end_time}</td>
 													</tr>		
