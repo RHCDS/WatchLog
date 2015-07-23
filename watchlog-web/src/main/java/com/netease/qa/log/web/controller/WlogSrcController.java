@@ -519,23 +519,13 @@ public class WlogSrcController {
 			@RequestParam(value = "log_id") String logsourceId, @RequestParam(value = "debug_info") String debuginfo)
 			throws InterruptedException {
 	    LogSource logSource = logSourceService.getByLogSourceId(Integer.parseInt(logsourceId));
-//	    logSource.setLineStartRegex("\\d{4}\\-\\d{2}\\-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}.\\d{3}");
-//		LogSource logSource = new LogSource();
-//		logSource.setLogSourceName("zwj_test");
-//		logSource.setLineStartRegex("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}");
-//		logSource
-//				.setLineTypeRegex("(\\w+\\.)+(\\w)*Exception_OR_Forcing driver to exit uncleanly_OR_ThriftEventSink try connecto to ThriftServer fail! retrying...");
-//		logSource.setLineFilterKeyword("ERROR_OR_Exception");
-//		logSource.convertParams();
-
 		FileOutputStream fop = null;
-		File file;
+		File file = null;
 		String content = debuginfo;
-		
-		logger.info(content);
-		
+		String filename = "";
 		try {
-			file = new File("123.txt");
+			filename = logSource.getLogSourceName() + "_" + System.currentTimeMillis();
+			file = new File(filename);
 			fop = new FileOutputStream(file);
 			// if file doesnt exists, then create it
 			if (!file.exists()) {
@@ -546,23 +536,20 @@ public class WlogSrcController {
 			fop.write(contentInBytes);
 			fop.flush();
 			fop.close();
-			System.out.println("Done");
-			System.out.println("Path:" + file.getPath());
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException e) { 
+			logger.error("find exception when create debug file", e);
 		} finally {
 			try {
 				if (fop != null) {
 					fop.close();
 				}
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("find exception", e);
 			}
 		}
-		Debugger d = new Debugger(logSource, "123.txt");
-		System.out.println("---------undo debug-----------");
+		Debugger d = new Debugger(logSource, filename);
 		d.doDebug();
-		System.out.println("---------done debug-----------");
+		file.delete();//删除调试文件
 		HashMap<String, Integer> exceptionCountCache = d.getExceptionCountMap();
 		ArrayList<String> unknownCache = d.getUnknownList();
 		// message
@@ -590,6 +577,7 @@ public class WlogSrcController {
 		// 打印调试信息
 		logger.debug("### [route]/logsrc/debugvalidate   [key]error_tc : " + error_tc.toJSONString());
 		logger.debug("### [route]/logsrc/debugvalidate   [key]unknow_list : " + unknow_list.toJSONString());
+		
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 }
