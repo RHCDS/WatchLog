@@ -8,7 +8,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map.Entry;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -30,7 +29,6 @@ public class Debugger {
 	private HashMap<String, Integer> exceptionCountCache;
 	private ArrayList<String> unknownCache;
 	private Pattern logHeadPattern;
-
 	private ByteArrayOutputStream buff = null;
 	private static final int LEN = 1024;
 	private int lineCount = 0;
@@ -38,8 +36,6 @@ public class Debugger {
 	private static final int HEAD_LEN = 200;
 	private boolean end = false;
     private final static int  MAX_LINE_NUM   = 100;
-	
-
     
 	public Debugger(LogSource logSource, String fileName){
 		this.logSource = logSource;
@@ -47,7 +43,6 @@ public class Debugger {
 		this.exceptionCountCache = new HashMap<String, Integer>();
 		this.unknownCache = new ArrayList<String>();
 		this.logHeadPattern = Pattern.compile(logSource.getLineStartRegex());
-		logger.info("compile lineStartRegex: " + this.logHeadPattern.toString());
 		try {
 			fileReader =  new EncodingSupportRAFReader(new RandomAccessFile(fileName, "r"), "utf-8");
 			logger.info("debug for file: " + fileName + ", logsource: " + logSource.getLogSourceName());
@@ -62,38 +57,17 @@ public class Debugger {
 		return s;
 	}
 
-	public static void main(String []args){
-		
-		
-		LogSource logSource = new LogSource();
-		logSource.setLogSourceName("zwj_test");
-		logSource.setLineStartRegex("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}");
-		logSource.setLineTypeRegex("(\\w+\\.)+(\\w)*Exception_OR_Forcing driver to exit uncleanly_OR_ThriftEventSink try connecto to ThriftServer fail! retrying...");
-		logSource.setLineFilterKeyword("ERROR_OR_Exception");
-		logSource.convertParams();
-		
-		Debugger d = new Debugger(logSource, "a.txt");
-		
-		logger.info(""+ d.getS().equals("asd"));
-
-		
-		
-//		d.doDebug();
-//		HashMap<String, Integer> exceptionCountCache = d.getExceptionCountMap();
-//		ArrayList<String> unknownCache = d.getUnknownList();
-//		
-//		logger.info("======================================");
-//		for(Entry<String, Integer> e1: exceptionCountCache.entrySet(
-//				
-//				)){
-//			logger.info(e1.getKey() + " : " + e1.getValue());
-//		}
-//		logger.info("======================================");
-//		for(String error : unknownCache){
-//			logger.info(error);
-//		}
-//		logger.info("======================================");
-	}
+//	public static void main(String []args){
+//		LogSource logSource = new LogSource();
+//		logSource.setLogSourceName("zwj_test");
+//		logSource.setLineStartRegex("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2}");
+//		logSource.setLineTypeRegex("(\\w+\\.)+(\\w)*Exception_OR_Forcing driver to exit uncleanly_OR_ThriftEventSink try connecto to ThriftServer fail! retrying...");
+//		logSource.setLineFilterKeyword("ERROR_OR_Exception");
+//		logSource.convertParams();
+//		Debugger d = new Debugger(logSource, "a.txt");
+//		logger.info(""+ d.getS().equals("asd"));
+//
+//	}
 	
 	/**
 	 * 返回debug结果，类型和个数的map
@@ -102,7 +76,6 @@ public class Debugger {
 	public HashMap<String, Integer> getExceptionCountMap(){
 		return exceptionCountCache;
 	}
-
 	
 	/**
 	 * 返回debug结果，Unknown类型原始日志的List
@@ -112,14 +85,12 @@ public class Debugger {
 		return unknownCache;
 	}
 	
-	
 	public boolean doDebug(){
 		boolean isFileEnd = false;
 		while (!isFileEnd) {
 			String line = null; 
 			try {
 				line = fileReader.readLine();
-				logger.debug("read line:" + line);
 			}
 			catch (IOException e) {
 				return false;
@@ -137,14 +108,6 @@ public class Debugger {
 				continue;
 			}
 
-			/**
-			 * string 
-			 */
-			if (line == null)
-				line = " ";
-			else
-				line = line + " \\t";
-			logger.debug("-------append1--------");
 			append(line, logHeadPattern);
 			// current block end
 			if (isEnd()) {
@@ -158,7 +121,6 @@ public class Debugger {
 		return true;
 	}
 	
-	
 	/**
 	 * 如果行需要过滤，返回这行。 否则返回null.
 	 * @param line
@@ -166,34 +128,26 @@ public class Debugger {
 	 */
 	private String filter(String line){
 		String keywordStr = logSource.getLineFilterKeyword();
-		logger.info("filter line:" + line);
 		// 未指定过滤关键字， 不需要过滤
 		if (keywordStr.trim().equals(Const.FILTER_KEYWORD_NONE)) {
-			logger.info("not need filter");
 			return line;
 		}
 		// 需要过滤
 		else {
-			logger.info("need filter");
 			ArrayList<String> keywords = logSource.getLineFilterKeywords();
 			String condition = logSource.getLineFilterKeywordsCondition();
 			// OR 关键字过滤
-			
-			logger.info("start filter: " + condition);
 			if (condition.equals(Const.FILTER_KEYWORD_OR)) {
-				logger.info("need or filter");
 				for (String keyword : keywords) {
 					if (line.indexOf(keyword.trim()) != -1) {
 						logger.info("or get! " + keyword + ", " + line);
 						return line;
 					}
 				}
-				logger.info("drop! " + line);
 				return null;
 			}
 			// AND关键字过滤
 			else {
-				logger.info("need and filter");
 				boolean flag = true;
 				for (String keyword : keywords) {
 					if (line.indexOf(keyword.trim()) == -1) {
@@ -260,20 +214,16 @@ public class Debugger {
 		}
 	}
 	
-	
-	
 	private void append(String line, Pattern headPattern) {
 		if (line == null || line.trim().length() == 0) {
 			return;
 		}
-
         if (lineCount > MAX_LINE_NUM) {
             logger.error("can't detect LogHead with pattern:" + headPattern.toString() + "' over " + MAX_LINE_NUM
                      + ", we auto end this log for you, check your header regex.");
             this.end = true;
             return;
         }
-
 		try {
 			if (buff == null) {
 				// this is the first line of block, just add it anyway.
@@ -289,6 +239,9 @@ public class Debugger {
 					// send exception style line
 				}
 				else {
+					if(line.startsWith("        ")){
+						line = "\\t" + line.trim();
+					}
 					buff.write(str2byte(line));
 					lineCount++;
 				}
@@ -329,7 +282,6 @@ public class Debugger {
 		}
 	}
 
-
 	private boolean isHeadLine(String line, Pattern headPattern) {
 		if (headPattern == null) {
 			headPattern = DEFAULT_HEAD_PATTERN;
@@ -339,26 +291,18 @@ public class Debugger {
 		}
 
 		String theHead = line.substring(0, line.length() < HEAD_LEN ? line.length() : HEAD_LEN);
-
-		logger.debug("getLineStartRegex: " + this.logSource.getLineStartRegex());
-		logger.debug("pattern str: " + "\\d{4}\\-\\d{2}\\-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}.\\d{3}");
-		
 		Matcher m = headPattern.matcher(theHead);
 		boolean result = m.find();
-		logger.info("isHeadLine:" + result);
 		return result;
 	}
-
 
 	protected void setEnd(boolean end) {
 		this.end = end;
 	}
 
-
 	private boolean isEnd() {
 		return end;
 	}
-
 
 	private void reset() {
 		this.end = false;
@@ -366,16 +310,12 @@ public class Debugger {
 		lineCount = 0;
 	}
 
-
 	private byte[] getBytes() {
 		return (buff == null ? null : buff.toByteArray());
 	}
 
-
 	private boolean hasRemaining() {
 		return (buff != null && buff.size() > 0);
 	}
-
-
 
 }
