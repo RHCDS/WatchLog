@@ -122,11 +122,11 @@ var end_time_ct = end_time.replace(/\%20/g, ' ');
 	  // 遍历数字，拼接type和count到超链接
 	  var i;
 	  for(i=0; i<value.length; i++){
-		  if((i%2) == 0 ){
-			  	each_val = "<a class='pointer_a'  data-toggle='popover' data-placement='top'  data-content='"+value[i]['type']+ "'>"+value[i]['count']+" </a>";
-		  }else{
-			  each_val = "<a class='pointer_a'  data-toggle='popover' data-placement='bottom'  data-content='"+value[i]['type']+ "'>"+value[i]['count']+" </a>";
-		  }
+//		  if((i%2) == 0 ){
+			  	each_val = "<a class='pointer_a'  data-toggle='popover' data-placement='top'  title='异常类型' data-content='"+value[i]['type']+ "'>"+value[i]['count']+" </a>";
+//		  }else{
+//			  each_val = "<a class='pointer_a'  data-toggle='popover' data-placement='bottom'  title='异常类型'  data-content='"+value[i]['type']+ "'>"+value[i]['count']+" </a>";
+//		  }
 		  content_arr.push(each_val);
 	  }
 	  var  content_str = content_arr.join(' , ');
