@@ -122,6 +122,21 @@ function check_create_logsrc(){
 
 //修改日志源非空校验
 function check_update_logsrc(){
+	// 表单添加上一个页面是否为调试
+	var previous_url = document.referrer;
+	if (previous_url.indexOf("debug") >= 0){
+			$('<input>').attr({
+			    type: 'hidden',
+			    name: 'pre_page',
+			    value: 'debug'
+			}).appendTo('form');
+	}else{
+			$('<input>').attr({
+			    type: 'hidden',
+			    name: 'pre_page',
+			    value: 'other'   
+			}).appendTo('form');
+	}
 	// 日志源名称验证
 	var logsrc_name = $.trim($('#logsrc_name').val());
 	if(logsrc_name == ""){
