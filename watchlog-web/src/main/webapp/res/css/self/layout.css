@@ -109,3 +109,7 @@ div.log_info_border{
 .pointer_a{
 	cursor: pointer;
 }
+
+.popover-content {
+    word-wrap: break-word;
+}

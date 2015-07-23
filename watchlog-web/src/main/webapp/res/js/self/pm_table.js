@@ -31,7 +31,7 @@
         });   
         
         // unsave页面popover
-        $("[data-toggle='popover']").popover(); 	  		
+        popover_setting();
 } );  //document
   
   

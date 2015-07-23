@@ -28,7 +28,20 @@ var end_time_ct = end_time.replace(/\%20/g, ' ');
 					  	$('#pm_error_dist_table').bootstrapTable({
 					  		url : "/logsrc/pm_analyse/error_dist_table",
 					  		onPostBody: function () {
-					  			$("[data-toggle='popover']").popover(); 	  		
+					  				// 启动popover 
+						  			$("[data-toggle='popover']").popover(); 	  		
+						  			// 每次点击只展示当前点击的popover
+						  			$("[data-toggle='popover']").on('click', function (e) {
+						  			    $("[data-toggle='popover']").not(this).popover('hide');
+						  			});				
+						  			// 点击空白处所有popover消失
+						  			$('body').on('click', function (e) {
+						  			    //did not click a popover toggle or popover
+						  			    if ($(e.target).data('toggle') !== 'popover'
+						  			        && $(e.target).parents('.popover.in').length === 0) { 
+						  			        $('[data-toggle="popover"]').popover('hide');
+						  			    }
+						  			});						  			
 					  		  },	  						  		
 					  		sortName : "date_time",
 					  		sortOrder: "desc",
@@ -110,9 +123,9 @@ var end_time_ct = end_time.replace(/\%20/g, ' ');
 	  var i;
 	  for(i=0; i<value.length; i++){
 		  if((i%2) == 0 ){
-			  	each_val = "<a class='pointer_a'  data-toggle='popover' data-placement='top'  title='"+value[i]['type']+ "'>"+value[i]['count']+" </a>";
+			  	each_val = "<a class='pointer_a'  data-toggle='popover' data-placement='top'  data-content='"+value[i]['type']+ "'>"+value[i]['count']+" </a>";
 		  }else{
-			  each_val = "<a class='pointer_a'  data-toggle='popover' data-placement='bottom'  title='"+value[i]['type']+ "'>"+value[i]['count']+" </a>";
+			  each_val = "<a class='pointer_a'  data-toggle='popover' data-placement='bottom'  data-content='"+value[i]['type']+ "'>"+value[i]['count']+" </a>";
 		  }
 		  content_arr.push(each_val);
 	  }

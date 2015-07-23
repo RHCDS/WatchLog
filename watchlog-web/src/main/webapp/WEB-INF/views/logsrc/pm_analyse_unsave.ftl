@@ -50,9 +50,9 @@
 																											<#assign popover_loction="bottom">		
 																										</#if>
 																										<#if dt_has_next>
-																												<a class='pointer_a'  data-toggle='popover' data-placement='${popover_loction}' title='${dt['type']}'   href ="#" >&#160;${dt['count']}&#160;</a> ,
+																												<a class='pointer_a'  data-toggle='popover' data-placement='${popover_loction}' data-content='${dt['type']}'   href ="#" >&#160;${dt['count']}&#160;</a> ,
 																										<#else>
-																												<a class='pointer_a'  data-toggle='popover' data-placement='${popover_loction}' title='${dt['type']}'   href ="#" >&#160;${dt['count']}</a>
+																												<a class='pointer_a'  data-toggle='popover' data-placement='${popover_loction}' data-content='${dt['type']}'   href ="#" >&#160;${dt['count']}</a>
 																										</#if>
 																								 </#list>
 																					 </td>																	

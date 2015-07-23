@@ -90,7 +90,7 @@ function render_table(div_table_id){
 	  	$(div_table_id).bootstrapTable({
 	  		url : "/logsrc/pm_projlevel_etc_table",
 	  		onPostBody: function () {
-	  			$("[data-toggle='popover']").popover(); 	  		
+	  			popover_setting();
 	  	    },	  		
 	  		pageList: "[10, 25, 50, 100, All]",
 	  		queryParams: function(p){
@@ -193,13 +193,13 @@ function draw_charts(div_charts_id, results){
 // 聚合报告-项目级-异常分布    日志源显示格式   未保存
 function pm_projlevel_unsave_etc_table_lognameFormatter(value, row, index){
 	  if(value!=undefined){
-		     var maxwidth = 20; 
+		     var maxwidth = 28; 
 		     var value_show = value;
 		     if (value.length > maxwidth-3) {
 		    	 value_show = value.substring(0, maxwidth-3) + '...'
 		     }
 		     var link_html =  '<a target="_blank" title=' + value +' href="/logsrc/pm_analyse_unsave?proj=' + pid + '&log_id=' + row.log_id +'&start_time=' + start_time_ct + '&end_time=' + end_time_ct + '" >&nbsp;&gt;&gt;查看详情</a>';	
-		     var display_html = '<font size=1px>'+value_show+ link_html + '</font>';
+		     var display_html = '<font size=2px>'+value_show+ link_html + '</font>';
 		  return  display_html;		  
 	  }
 }
@@ -209,13 +209,13 @@ function pm_projlevel_unsave_etc_table_lognameFormatter(value, row, index){
 //聚合报告-项目级-异常分布    日志源显示格式   保存
 function pm_projlevel_saved_etc_table_lognameFormatter(value, row, index){
 	  if(value!=undefined){
-		     var maxwidth = 20; 
+		     var maxwidth = 28; 
 		     var value_show = value;
 		     if (value.length > maxwidth-3) {
 		    	 value_show = value.substring(0, maxwidth-3) + '...'
 		     }
 		     var link_html =  '<a target="_blank"  title=' + value +' href="/logsrc/pm_analyse_unsave?proj=' + pid + '&log_id=' + row.log_id + '&report_id=' + row.report_id +'" >&nbsp;&gt;&gt;查看详情</a>';	
-		     var display_html = '<font size=1px>'+value_show+ link_html + '</font>';
+		     var display_html = '<font size=2px>'+value_show+ link_html + '</font>';
 		  return  display_html;		  
 	  }
 }
@@ -228,9 +228,9 @@ function pm_projlevel_etc_table_disterrorFormatter(value,row,index){
 		  var i;
 		  for(i=0; i<value.length; i++){
 			  if((i%2) == 0 ){
-				  each_val = "<a   class='pointer_a'  data-toggle='popover' data-placement='top'   title='"+value[i]['type']+ "'>"+value[i]['count']+" </a>";
+				  each_val = "<a   class='pointer_a'  data-toggle='popover' data-placement='top'   data-content='"+value[i]['type']+ "'>"+value[i]['count']+" </a>";
 			  }else{
-				  each_val = "<a   class='pointer_a'  data-toggle='popover' data-placement='bottom'   title='"+value[i]['type']+ "'>"+value[i]['count']+" </a>";
+				  each_val = "<a   class='pointer_a'  data-toggle='popover' data-placement='bottom'   data-content='"+value[i]['type']+ "'>"+value[i]['count']+" </a>";
 			  }
 			  content_arr.push(each_val);
 		  }
