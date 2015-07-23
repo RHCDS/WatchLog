@@ -519,7 +519,7 @@ public class WlogSrcController {
 			@RequestParam(value = "log_id") String logsourceId, @RequestParam(value = "debug_info") String debuginfo)
 			throws InterruptedException {
 	    LogSource logSource = logSourceService.getByLogSourceId(Integer.parseInt(logsourceId));
-	    logSource.setLineStartRegex("\\d{4}\\-\\d{2}\\-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}.\\d{3}");
+//	    logSource.setLineStartRegex("\\d{4}\\-\\d{2}\\-\\d{2}\\s\\d{2}:\\d{2}:\\d{2}.\\d{3}");
 //		LogSource logSource = new LogSource();
 //		logSource.setLogSourceName("zwj_test");
 //		logSource.setLineStartRegex("\\d{4}-\\d{2}-\\d{2} \\d{2}:\\d{2}:\\d{2},\\d{3}");
