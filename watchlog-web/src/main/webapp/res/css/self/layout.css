@@ -104,3 +104,12 @@ div.log_info_border{
 	margin-left: 20px; 
 	padding-top: 8px;	
 }
+
+
+.pointer_a{
+	cursor: pointer;
+}
+
+.popover-content {
+    word-wrap: break-word;
+}

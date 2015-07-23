@@ -23,23 +23,21 @@
   
   // 日志源名称显示   
  function logsrcnameFormatter(value, row, index) {
-  
 	  if(value!=undefined){
 		     var maxwidth = 15; 
-		     value_show = value;
+		     var value_show = value;
 		     if (value.length > maxwidth) {
 		    	 value_show = value.substring(0, maxwidth) + '...'
 		     }
 		  return  '<a class="like" title=' + value +' href="/logsrc/' + row.id + '?proj=' + pid + '" >' + value_show + '</a>';		  
 	  }
-
  }
  
  // 服务器地址显示：限制长度截断+hover显示所有文字
  function hostnameFormatter(value, row, index){
 	  if(value!=undefined){
 			     var maxwidth = 40; 
-			     value_show = value;
+			     var value_show = value;
 			     if (value.length > maxwidth) {
 			    	 value_show = value.substring(0, maxwidth) + '...'
 			     }
@@ -53,7 +51,7 @@
  function logsrcpathFormatter(value, row, index){
 	  if(value!=undefined){
 			     var maxwidth = 70; 
-			     value_show = value;
+			     var value_show = value;
 			     if (value.length > maxwidth) {
 			    	 value_show = value.substring(0, maxwidth) + '...'
 			     }
@@ -66,7 +64,7 @@
  function logsrcfileFormatter(value, row, index){
 	  if(value!=undefined){
 		     var maxwidth = 20; 
-		     value_show = value;
+		     var value_show = value;
 		     if (value.length > maxwidth) {
 		    	 value_show = value.substring(0, maxwidth) + '...'
 		     }

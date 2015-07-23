@@ -12,6 +12,7 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.netease.qa.log.meta.ExceptionData;
 import com.netease.qa.log.meta.ExceptionDataRecord;
+import com.netease.qa.log.meta.LogSource;
 import com.netease.qa.log.meta.UkExceptionData;
 import com.netease.qa.log.meta.dao.ExceptionDao;
 import com.netease.qa.log.meta.dao.ExceptionDataDao;
@@ -97,6 +98,49 @@ public class ReadServiceImpl implements ReadService {
 		}
 		result.put("record", records);
 		return result;
+	}
+
+	@Override
+	public JSONArray queryRecordsByTime(int projectid, long start_time, long end_time) {
+		// 时间精度取整： xx:xx:00 、xx:xx:30两种精度
+		// 获取时间区间，和次数
+		int timeRange = MathUtil.getTimeRange(start_time, end_time);
+		int num = (int) ((end_time - start_time) / timeRange);
+		Long formatStartTime = start_time / timeRange * timeRange;
+		JSONArray results = new JSONArray();
+		List<LogSource> logSources = logSourceDao.getSortedByProjectId(projectid, "modify_time", "desc", 100, 0);
+		for (int i = 0; i < logSources.size(); i++) {
+			JSONObject result = new JSONObject();
+			LogSource logSource = logSources.get(i);
+			JSONArray	datas = new JSONArray();
+			for (int j = 0; j < num; j++) {
+				long startTime = formatStartTime + timeRange * j + 1;
+				long endTime = startTime + timeRange ;
+				int totalCount = 0;
+				// between包含前后区间值，此处取前开后闭，以防止重复数据。
+				try {
+					int logSourceId = logSource.getLogSourceId();
+					Integer total = exceptionDataDao.getTotalCountByLogsourceIdAndTime(
+							logSourceId, startTime, endTime);
+					if(total != null){
+						totalCount = total;
+					}else{
+						totalCount = 0;
+					}
+					JSONObject data = new JSONObject();
+					data.put("x", endTime * 1000);
+					data.put("y", totalCount);
+					datas.add(data);
+				} catch (Exception e) {
+					logger.error("error", e);
+					return null;
+				}
+			}
+			result.put("logsrc_name", logSource.getLogSourceName());
+			result.put("data", datas);
+			results.add(result);
+		}
+		return results;
 	}
 
 	@Override
@@ -205,7 +249,7 @@ public class ReadServiceImpl implements ReadService {
 		result.put("logsourceid", logSourceId);
 		JSONObject error = new JSONObject();
 		JSONArray errors = new JSONArray();
-		//当unknown不为空，且第一页，才把error装入array中
+		// 当unknown不为空，且第一页，才把error装入array中
 		if (unknownexception != null && offset == 0) {
 			com.netease.qa.log.meta.Exception ukexception = exceptionDao.findByExceptionId(unknownexception
 					.getExceptionId());
@@ -291,6 +335,39 @@ public class ReadServiceImpl implements ReadService {
 		}
 		result.put("details", details);
 		return result;
+	}
+
+	@Override
+	public JSONObject queryExceptionByLogSourceIdAndTime(int logSourceId, long startTime, long endTime) {
+		ExceptionDataRecord exceptionDataRecord = null;
+		try {
+			exceptionDataRecord = exceptionDataDao.findRecordsByLogSourceIdAndTime(logSourceId, startTime, endTime);
+		} catch (Exception e) {
+			logger.error("error", e);
+			return null;
+		}
+		// 组装数据
+		JSONObject result = new JSONObject();
+		JSONArray details = new JSONArray();
+		if (exceptionDataRecord != null) {
+			String[] eids = exceptionDataRecord.getExceptionIds().split(",");
+			String[] ecounts = exceptionDataRecord.getExceptionCounts().split(",");
+			for (int i = 0; i < eids.length; i++) {
+				int exceptionId = Integer.valueOf(eids[i].trim());
+				String type = exceptionDao.findByExceptionId(exceptionId).getExceptionType();
+				JSONObject detail = new JSONObject();
+				detail.put("type", type);
+				detail.put("count", ecounts[i]);
+				details.add(detail);
+			}
+			result.put("error_tc", details);
+			result.put("total_count", exceptionDataRecord.getTotalCount());
+			return result;
+		} else {
+			result.put("error_tc", details);
+			result.put("total_count", 0);
+			return result;
+		}
 	}
 
 }

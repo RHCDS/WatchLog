@@ -39,6 +39,15 @@ public interface ExceptionDataDao {
     		String orderBy, String order, int limit, int offset);
     
     /**
+     * 项目级别，返回某一个确定日志源的所有数据
+     */
+    public ExceptionDataRecord findRecordsByLogSourceIdAndTime(int logSourceId, long startTime, long endTime);
+    
+    /*
+     * 返回趋势图的totalcount
+     */
+    public Integer getTotalCountByLogsourceIdAndTime(int logSourceId, long startTime, long endTime);
+    /**
      * 时间维度聚合，返回记录总数，分页用
      */
     public int getTimeRecordsCountByLogSourceIdAndTime(int logSourceId, long startTime, long endTime);

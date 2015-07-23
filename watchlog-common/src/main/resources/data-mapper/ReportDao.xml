@@ -34,13 +34,13 @@
 	
 	<select id="getTotalCountByProjectId" parameterType="java.lang.Integer"
 	    resultType="java.lang.Integer">
-	     select count(report_id) as num from report where project_id=#{projectId}
+	     select count(report_id) as num from report where project_id=#{projectId} and log_source_id=-1;
 	</select>
 	
 	<select id="getSortedByProjectId" resultType="com.netease.qa.log.meta.Report">
 	   select
 	      <include refid="allColumn" />
-	      from report where project_id=${param1} order by ${param2} ${param3} limit ${param4} offset ${param5}
+	      from report where project_id=${param1} and log_source_id=-1 order by ${param2} ${param3} limit ${param4} offset ${param5}
 	</select>
 	</mapper>
 	

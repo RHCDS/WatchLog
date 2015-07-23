@@ -19,19 +19,19 @@ public class MathUtil {
 		boolean isEng = str.matches("^(?!_)(?!.*?_$)[0-9a-zA-Z_]+$");
 		return isEng;
 	}
-	
-	public static final boolean isName(String str){
-		//只含有汉字、数字、字母、下划线,并且不能以下划线开头和结尾,长度1-100之间
+
+	public static final boolean isName(String str) {
+		// 只含有汉字、数字、字母、下划线,并且不能以下划线开头和结尾,长度1-100之间
 		boolean isName = str.matches("^(?!_)(?!.*?_$)[0-9a-zA-Z_\u4e00-\u9fa5]{1,100}$");
 		return isName;
 	}
-	
-	public static final boolean isTitle(String str){
-		//只含有汉字、数字、字母、下划线,并且不能以下划线开头和结尾,长度1-255之间
+
+	public static final boolean isTitle(String str) {
+		// 只含有汉字、数字、字母、下划线,并且不能以下划线开头和结尾,长度1-255之间
 		boolean isName = str.matches("^(?!_)(?!.*?_$)[0-9a-zA-Z_\u4e00-\u9fa5]{1,255}$");
 		return isName;
 	}
-	
+
 	public static Long parse2Long(String time) throws ParseException {
 		SimpleDateFormat format = new SimpleDateFormat(Const.TIME_FORMAT);
 		Date date = format.parse(time);
@@ -42,8 +42,8 @@ public class MathUtil {
 		SimpleDateFormat sdf = new SimpleDateFormat(Const.TIME_FORMAT);
 		return sdf.format(new Date(time * 1000));
 	}
-	
-	public static String parse2Str(Date time){
+
+	public static String parse2Str(Date time) {
 		SimpleDateFormat sdf = new SimpleDateFormat(Const.TIME_FORMAT);
 		return sdf.format(time);
 	}
@@ -52,7 +52,7 @@ public class MathUtil {
 		SimpleDateFormat sdf = new SimpleDateFormat(Const.TIME_FORMAT);
 		return sdf.format(time);
 	}
-	
+
 	public static Timestamp parse2Time(String str) {
 		SimpleDateFormat sdf = new SimpleDateFormat(Const.TIME_FORMAT);
 		Timestamp time = null;
@@ -96,16 +96,16 @@ public class MathUtil {
 		else
 			return "modify_time";
 	}
-	
-	public static String getReportField(String str){
+
+	public static String getReportField(String str) {
 		String str0 = str.trim();
-		if(str0.equals("start_time"))
+		if (str0.equals("start_time"))
 			return "start_time";
-		if(str0.equals("end_time"))
+		if (str0.equals("end_time"))
 			return "end_time";
-		if(str0.equals("create_time"))
+		if (str0.equals("create_time"))
 			return "create_time";
-		if(str0.equals("title"))
+		if (str0.equals("title"))
 			return "title";
 		else
 			return "create_time";
@@ -121,31 +121,59 @@ public class MathUtil {
 	}
 
 	public static String parse2Str(String[] strs, String con) {
-		ArrayList<String> newStrs =  new ArrayList<String>();
-		for(int i = 0; i < strs.length; i++){
-			if(!strs[i].trim().isEmpty())
-			newStrs.add(strs[i].trim());
+		ArrayList<String> newStrs = new ArrayList<String>();
+		for (int i = 0; i < strs.length; i++) {
+			if (!strs[i].trim().isEmpty())
+				newStrs.add(strs[i].trim());
 		}
-		if(newStrs.size() == 0)
-		{
-			if(con.equals(Const.FILITER_TYPE))
+		if (newStrs.size() == 0) {
+			if (con.equals(Const.FILITER_TYPE))
 				return " ";
 			else
-			return "NONE";
+				return "NONE";
 		}
 		StringBuffer sb = new StringBuffer();
 		if (con.trim().toLowerCase().equals("and")) {
 			for (int i = 0; i < newStrs.size() - 1; i++) {
-					sb.append(newStrs.get(i)).append(Const.FILTER_KEYWORD_AND);
+				sb.append(newStrs.get(i)).append(Const.FILTER_KEYWORD_AND);
 			}
 		} else {
 			for (int i = 0; i < newStrs.size() - 1; i++) {
-					sb.append(newStrs.get(i)).append(Const.FILTER_KEYWORD_OR);
+				sb.append(newStrs.get(i)).append(Const.FILTER_KEYWORD_OR);
 			}
-			
+
 		}
-		sb.append(newStrs.get(newStrs.size()-1));
+		sb.append(newStrs.get(newStrs.size() - 1));
 		return sb.toString();
 	}
 
+	/*
+	 * 返回时间粒度，单位秒
+	 */
+	public static int getTimeRange(long start, long end) {
+		long temp = end - start;
+		int timeRange = 0;
+		if (temp <= 3600) {
+			// 区间小于(0,1h]
+			timeRange = 30;
+		} else if (temp <= 10800) {
+			// 区间(1h,3h]
+			timeRange = 60;
+		} else if (temp <= 21600) {
+			// 区间(3h,6h]
+			timeRange = 120;
+		} else if (temp <= 86400) {
+			// 区间(6h,1d]
+			timeRange = 600;
+		} else if (temp <= 259200) {
+			// 区间(1d,3d]
+			timeRange = 1800;
+		} else if (temp <= 604800) {
+			// 区间(3d,7d]
+			timeRange = 3600;
+		} else {
+			timeRange = 0;
+		}
+		return timeRange;
+	}
 }
