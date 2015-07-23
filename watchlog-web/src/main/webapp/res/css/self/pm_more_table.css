@@ -7,3 +7,11 @@
 .custom_a:hover{
 		text-decoration: none;
 }
+
+.pointer_a{
+	cursor: pointer;
+}
+
+.popover-content {
+    word-wrap: break-word;
+}

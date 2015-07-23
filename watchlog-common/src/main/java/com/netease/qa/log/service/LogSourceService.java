@@ -38,5 +38,7 @@ public interface LogSourceService {
 	public int changeMonitorStatus(int[] ids, int status);
 	
 	public ArrayList<LogSource> selectAllByProjectId(int projectId);
+	
+	public ArrayList<LogSource> getLogsourcesByProjectId(int projectId, int limit, int offset);
 
 }

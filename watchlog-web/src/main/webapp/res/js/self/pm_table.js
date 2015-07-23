@@ -1,38 +1,38 @@
 
   $(document).ready(function() {
-	  // 聚合表格分页设置
-	  	$('#pmtable').bootstrapTable({
-	  		url : "/logsrc/pm_analyse/pmtable",
-	  		sortName : "create_time",
-	  		sortOrder: "desc",
-	  		pageList: "[10, 25, 50, 100, All]",
-	  		queryParams: function(p){
-	  			return {
-	  				proj : pid,
-	  				limit: p.limit,
-	  				offset : p.offset,
-	  				sort: p.sort,
-	  				order: p.order
-	  			}
-	  		}
-	  	});//  表格end
+	// 聚合分析首页表格
+	  if($("#pmtable" ).length != 0) {
+			  	$('#pmtable').bootstrapTable({
+			  		url : "/logsrc/pm_analyse/pmtable",
+			  		sortName : "create_time",
+			  		sortOrder: "desc",
+			  		pageList: "[10, 25, 50, 100, All]",
+			  		queryParams: function(p){
+			  			return {
+			  				proj : pid,
+			  				limit: p.limit,
+			  				offset : p.offset,
+			  				sort: p.sort,
+			  				order: p.order
+			  			}
+			  		}
+			  	});
+	  }//  表格end
 	  	
-	  	//  日志源选择下拉列表
-	  	$('#pm_logsrc_select').select2();
-	  	
-	  	// 开始时间datatimepicker
+	  	//  聚合分析首页 开始时间datatimepicker
         $('#pm_start_time_datetimepicker').datetimepicker({
 		   // format: 'YYYY-MM-DD HH:mm'
         	  format: 'YYYY-MM-DD HH:mm:ss'   
         });
         
-        // 结束时间datatimepicker
+        //   聚合分析首页结束时间datatimepicker
         $('#pm_end_time_datetimepicker').datetimepicker({
 		    format: 'YYYY-MM-DD HH:mm:ss'   
-        });        
-	  	
-	  	
-    } );  //document
+        });   
+        
+        // unsave页面popover
+        popover_setting();
+} );  //document
   
   
   
@@ -42,26 +42,13 @@
  		return "-";	  
  	  }
  	     var maxwidth = 20; 
- 	     value_show = value;
+ 	     var value_show = value;
  	     if (value.length > maxwidth) {
  	    	 value_show = value.substring(0, maxwidth) + '...'
  	     }
- 	  return  '<a class="like" title=' + value +' href="/logsrc/pm_analyse_saved?report_id=' + row.report_id + '&proj=' + pid + '" >' + value_show + '</a>';
+ 	  return  '<a title=' + value +' href="/logsrc/pm_projlevel_save?report_id=' + row.report_id + '&proj=' + pid + '" >' + value_show + '</a>';
   }
-  
-  // 聚合报告日志源名称显示
-  function pmlogsrcnameFormatter(value, row, index){
- 	  if(row.report_id==undefined){
- 	 		return "-";	  
- 	 	  }
- 	 	     var maxwidth = 20; 
- 	 	     value_show = value;
- 	 	     if (value.length > maxwidth) {
- 	 	    	 value_show = value.substring(0, maxwidth) + '...'
- 	 	     }
- 	 	     return value_show;
-  }
-  
+
   // 操作
   function pmoperateFormatter(value, row, index){
 	  if(row.report_id==undefined){
@@ -74,7 +61,7 @@
 		            '<i class=" glyphicon glyphicon-trash"></i>',
 		            '</a>  ',	            
 		            // 查看详情
-		           '<a class="pmshow" title="详情" href="/logsrc/pm_analyse_saved?report_id=' + row.report_id + '&proj=' + pid + '" >',
+		           '<a class="pmshow" title="详情" href="/logsrc/pm_projlevel_save?report_id=' + row.report_id + '&proj=' + pid + '" >',
 		            '<i class="  glyphicon glyphicon-align-left"></i>',
 		            '</a>'
 		        ].join('');
@@ -91,6 +78,5 @@
 	}
   
  
-	
 
   

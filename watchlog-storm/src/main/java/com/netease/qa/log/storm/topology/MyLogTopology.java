@@ -46,9 +46,9 @@ public class MyLogTopology {
 		
 		// Topology definition
 		TopologyBuilder builder = new TopologyBuilder();
-		builder.setSpout("mq-consumer", new MQConsumer(), 2);
-		builder.setBolt("log-normalizer", new LogNormalizer(), 2).shuffleGrouping("mq-consumer");
-		builder.setBolt("log-filter", new LogFilter(), 2).shuffleGrouping("log-normalizer");
+		builder.setSpout("mq-consumer", new MQConsumer(), 3);
+		builder.setBolt("log-normalizer", new LogNormalizer(), 3).shuffleGrouping("mq-consumer");
+		builder.setBolt("log-filter", new LogFilter(), 3).shuffleGrouping("log-normalizer");
 		builder.setBolt("log-analyser", new LogAnalyser()).shuffleGrouping("log-filter");
 		builder.setBolt("result-writer", new ResultWriter()).shuffleGrouping("log-analyser");
 
@@ -57,11 +57,11 @@ public class MyLogTopology {
 		conf.setDebug(false);
 		
 		// Topology run
-		conf.put(Config.TOPOLOGY_WORKERS, 2);
+		conf.put(Config.TOPOLOGY_WORKERS, 3);
 		conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, 1);
 		conf.put(Config.TOPOLOGY_ACKER_EXECUTORS, 0);
 		
-		StormSubmitter.submitTopology("perf_watchlog_online", conf, builder.createTopology());
+		StormSubmitter.submitTopology("perf_watchlog_online2", conf, builder.createTopology());
 
 		
 	}
