@@ -406,8 +406,8 @@ public class WlogSrcController {
 			@RequestParam(value = "filter_keyword_con", required = false) String filter_keyword_con,
 			@RequestParam(value = "reg_regex_con", required = false) String reg_regex_con,
 			@RequestParam(value = "logsourcecreatorname", required = false, defaultValue = "none") String creatorname,
+			@RequestParam(value = "pre_page", required = false) String prepage,
 			RedirectAttributes model) {
-		String ret_succ = "redirect:/logsrc/manage?proj=" + projectid;
 		String ret_fail = "redirect:/logsrc/" + logsourceid + "/edit?proj=" + projectid;
 		if (MathUtil.isEmpty(logsourceid, logsourceName, projectid, hostname, path, filepattern, linestart,
 				filter_keyword_con, reg_regex_con, creatorname)) {
@@ -415,6 +415,7 @@ public class WlogSrcController {
 			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
 			return ret_fail;
 		}
+
 		if (filterkeywords == null || typeregexs == null) {
 			model.addFlashAttribute("status", -1);
 			model.addFlashAttribute("message", ConstCN.NULL_PARAM);
@@ -466,8 +467,16 @@ public class WlogSrcController {
 			model.addFlashAttribute("message", ConstCN.INNER_ERROR);
 			return ret_fail;
 		} else {
-			model.addFlashAttribute("status", 0);
-			model.addFlashAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);
+			// 如果上一个页面是调试页面，并且logsourceid不为空，设置成功修改后，跳转到页面为：调试页面
+			String ret_succ ;
+			if(prepage.equals("debug")){
+				 model.addFlashAttribute("status", 0);
+				 ret_succ = "redirect:/logsrc/"+logsourceid+"/debug?proj=" + projectid;
+			}else{
+				model.addFlashAttribute("status", 0);
+				model.addFlashAttribute("message", ConstCN.RESPONSE_SUCCESSFUL);				
+				ret_succ = "redirect:/logsrc/manage?proj=" + projectid;
+			}
 			return ret_succ;
 		}
 	}
