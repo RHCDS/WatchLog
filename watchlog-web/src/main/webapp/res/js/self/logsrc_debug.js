@@ -83,8 +83,9 @@ function start_debug_validate(proj, log_id)
 		  } else{
 			  $('#warn_debug_notice').html("");
 				// loading 等待
-				$(".ajax_content").html("");
+				$("#debug_tc_comment").html("");
 				$("#debug_fail").css("display",  "none");
+				$(".debug_tc_div").css("display",  "none");
 				$('#debug_loader_div').modal('show');	  
 				console.log(count);
 				// ajax 请求后端
@@ -99,6 +100,7 @@ function start_debug_validate(proj, log_id)
 								// 调试成功
 								if(e['status'] == 0)
 								{
+									$(".debug_tc_div").css("display",  "block");
 										// 渲染debug的2个表格
 										var error_tc_list = e['error_tc'];
 										var unknow_list = e['unknow_list'];
@@ -114,7 +116,6 @@ function start_debug_validate(proj, log_id)
 													debug_tc_body_html = debug_tc_body_html + "<tr><td class='col-sm-10' style='color:blue'>" +error_tc_item + "</td>" + "<td class='col-sm-2' style='text-align: center;'>"+error_tc_list[i]['count']+"</td></tr>";
 												}
 												else{
-													
 													debug_tc_body_html = debug_tc_body_html + "<tr><td class='col-sm-10'>" + error_tc_item + "</td>" + "<td class='col-sm-2' style='text-align: center;'>"+error_tc_list[i]['count']+"</td></tr>";
 												}
 											}				
@@ -136,6 +137,12 @@ function start_debug_validate(proj, log_id)
 											// 表格更新
 											$("#debug_unknow_body").html(debug_unknow_body_html);					
 										}
+										
+										// 无返回结果
+										if(error_tc_list.length==0 && unknow_list.length==0 ){
+											$("#debug_tc_comment").html("<br>无");				
+										}
+										
 								}
 								// 调试失败
 								else{
