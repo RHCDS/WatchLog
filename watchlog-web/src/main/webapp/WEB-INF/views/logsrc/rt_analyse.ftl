@@ -1,6 +1,11 @@
 <#import "../layout/defaultLayout.ftl" as layout>
 <@layout.myLayout>
 
+
+<link rel="stylesheet" href="/res/css/self/logsrc_rt.css" />
+<script src="/res/js/self/rt_crud.js"></script>
+	  	
+	  	
   <#if RequestParameters.proj?exists  && logs?has_content >
   	<#assign pid = RequestParameters.proj>	
   	
@@ -55,9 +60,9 @@
 																		<td class='col-sm-6'>
 																				<#list data['error_tc'] as dt>																
 																						<#if dt_has_next>
-																								<a  class='pointer_a'  data-toggle='popover' data-placement='top'  data-content="${dt['type']}"   href ="#" >&#160;${dt['count']}&#160;</a>,
+																								<a  class='pointer_a'  data-toggle='popover' data-placement='top'   title='异常类型'  data-content="${dt['type']}"   href ="#" >&#160;${dt['count']}&#160;</a>,
 																						<#else>
-																								<a  class='pointer_a'  data-toggle='popover' data-placement='top'  data-content="${dt['type']}"   href ="#" >&#160;${dt['count']}</a>
+																								<a  class='pointer_a'  data-toggle='popover' data-placement='top'   title='异常类型'  data-content="${dt['type']}"   href ="#" >&#160;${dt['count']}</a>
 																						</#if>
 																				 </#list>																			 
 																		 </td>																	

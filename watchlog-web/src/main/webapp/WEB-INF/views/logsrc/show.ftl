@@ -1,6 +1,10 @@
 <#import "../layout/defaultLayout.ftl" as layout>
 <@layout.myLayout>
 
+<!--self defined-->
+<link rel="stylesheet" href="/res/css/self/logsrc_manage.css" />
+ <script src="/res/js/self/show.js"></script>
+  
   <#if RequestParameters.proj?exists >
   	<#assign pid = RequestParameters.proj>
   	
@@ -38,7 +42,7 @@
 													<table  class="table wratb  removebd">
 														<tbody>
 																	<tr>
-																		<td class="col-sm-9"> <a href="/logsrc/pm_analyse?proj=${pid}"> 返回 &#62; </a>	&#160;&#160;<small>${logsrc_name}</small></td>
+																		<td class="col-sm-9"> <a href="/logsrc/manage?proj=${pid}"> 返回 &#62; </a>	&#160;&#160;<small>${logsrc_name}</small></td>
 																		<td class="col-sm-1"> <a class="btn btn-primary btn-xs"  style="margin-right: 15px;" href="/logsrc/${id}/edit?proj=${pid}" role="button">修改日志源</a></td>
 																		<td class="col-sm-1">  <button id="remove" class="btn btn-primary  btn-xs"  onclick="delete_logsrc_single(${id}, ${pid})" > 删除日志源 </button></td>
 																		<td class="col-sm-1"> <a class="btn btn-primary btn-xs"  style="margin-right: 15px;" href="/logsrc/${id}/debug?proj=${pid}" role="button">调试日志源</a></td>

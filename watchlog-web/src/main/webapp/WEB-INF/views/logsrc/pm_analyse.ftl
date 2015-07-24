@@ -1,6 +1,14 @@
 <#import "../layout/defaultLayout.ftl" as layout>
 <@layout.myLayout>
 
+<!-- plugin: datetime-picker-->
+<link href="/res/css/plugin/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />	 
+<script src="/res/js/plugin/datetimepicker/moment.min.js"></script>
+ <script src="/res/js/plugin/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+		 
+<!-- self defined-->		 
+<link rel="stylesheet" href="/res/css/self/logsrc_pm.css" />
+<script src="/res/js/self/pm_analyse.js"></script>
 
   <#if RequestParameters.proj?exists  >
   	<#assign pid = RequestParameters.proj>
