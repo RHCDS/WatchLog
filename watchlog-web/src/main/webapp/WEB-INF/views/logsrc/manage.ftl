@@ -1,7 +1,10 @@
 <#import "../layout/defaultLayout.ftl" as layout>
 <@layout.myLayout>
 
-
+<!--self defined-->
+<link rel="stylesheet" href="/res/css/self/logsrc_manage.css" />
+ <script src="/res/js/self/manage.js"></script>
+		  
   <#if RequestParameters.proj?exists >
   	<#assign pid = RequestParameters.proj>
     <div class="container-fluid">

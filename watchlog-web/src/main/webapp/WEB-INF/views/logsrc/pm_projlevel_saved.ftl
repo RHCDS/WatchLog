@@ -1,6 +1,22 @@
 <#import "../layout/defaultLayout.ftl" as layout>
 <@layout.myLayout>
 
+<!-- plugin: datetime-picker-->
+<link href="/res/css/plugin/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />	 
+<script src="/res/js/plugin/datetimepicker/moment.min.js"></script>
+ <script src="/res/js/plugin/datetimepicker/bootstrap-datetimepicker.min.js"></script>
+ <!-- plugin: highcharts-->
+  <script src="/res/js/plugin/highcharts/highcharts.js"></script>
+<script src="/res/js/plugin/highcharts/no-data-to-display.js"></script>
+		 
+<!--self defined-->		 
+<link rel="stylesheet" href="/res/css/self/logsrc_pm.css" />
+<script src="/res/js/self/common_pm.js"></script>
+ <script src="/res/js/self/pm_projlevel_saved.js"></script>
+
+  
+ 
+ 
   <#if RequestParameters.proj?exists  >
   		<#assign pid = RequestParameters.proj>	
 <div class="container-fluid">
@@ -97,9 +113,5 @@
 	<div class="container  alert alert-warning">其他位置错误，请联系管理员</div>
 </#if>
   
-  <!-- js文件-->
- <script src="/res/js/plugin/highcharts/highcharts.js"></script>
-<script src="/res/js/plugin/highcharts/no-data-to-display.js"></script>
- <script src="/res/js/self/pm_projlevel.js"></script>
- 
+
 </@layout.myLayout>

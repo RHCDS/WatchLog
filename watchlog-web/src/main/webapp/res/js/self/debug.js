@@ -104,7 +104,7 @@ function start_debug_validate(proj, log_id)
 										// 渲染debug的2个表格
 										var error_tc_list = e['error_tc'];
 										var unknow_list = e['unknow_list'];
-										var i=0;
+										var i=0,error_tc_item, unknow_item;
 										// error_tc表格
 										if(error_tc_list.length>0){
 											// 表格第一行

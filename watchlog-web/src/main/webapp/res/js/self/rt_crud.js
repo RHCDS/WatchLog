@@ -52,12 +52,12 @@ function rt_analyse_refresh()
 							var col2_data = rt_refresh_data[i]['error_tc'];
 							for(j=0; j<(col2_data.length-1); j++){
 								popover_loction = (j%2==0)? "top" : "bottom";
-								rt_refresh_td_html = rt_refresh_td_html  + "<a class='pointer_a'  data-toggle='popover' data-placement=" +popover_loction+ "  data-content="  + col2_data[j]['type']  + "   href ='#' >&#160;"  + col2_data[j]['count']  + "&#160;</a>,";
+								rt_refresh_td_html = rt_refresh_td_html  + "<a class='pointer_a'  data-toggle='popover'  title='异常类型'   data-placement=" +popover_loction+ "  data-content="  + col2_data[j]['type']  + "   href ='#' >&#160;"  + col2_data[j]['count']  + "&#160;</a>,";
 							}
 							// 最后一个数字后面没有逗号
 							popover_loction = (j%2==0)? "top" : "bottom";
 							if(j<col2_data.length){
-								rt_refresh_td_html = rt_refresh_td_html  + "<a class='pointer_a'  data-toggle='popover' data-placement=" +popover_loction+ "  data-content="   + col2_data[j]['type']  + "   href ='#' >&#160;"  + col2_data[j]['count']  + "</a>";
+								rt_refresh_td_html = rt_refresh_td_html  + "<a class='pointer_a'  data-toggle='popover'  title='异常类型'  data-placement=" +popover_loction+ "  data-content="   + col2_data[j]['type']  + "   href ='#' >&#160;"  + col2_data[j]['count']  + "</a>";
 							}
 							// 表格第三列
 							rt_refresh_td_html = rt_refresh_td_html  + "</td><td class='col-sm-2'>"  + rt_refresh_data[i]['total_count']; +  "</td></tr>";
