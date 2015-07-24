@@ -1,5 +1,6 @@
 package com.netease.qa.log.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
 public interface ReadService {
@@ -26,4 +27,8 @@ public interface ReadService {
 			String order, int limit, int offset);
 
 	public JSONObject queryUnknownExceptions(int logSourceId, long startTime, long endTime, int limit, int offset);
+	
+	public JSONObject queryExceptionByLogSourceIdAndTime(int logSourceId, long startTime, long endTime);
+
+	public JSONArray queryRecordsByTime(int projectid, long start_time, long end_time);
 }

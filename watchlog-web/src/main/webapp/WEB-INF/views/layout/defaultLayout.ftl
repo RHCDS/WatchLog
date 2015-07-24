@@ -19,40 +19,9 @@
 	     <link href="/res/css/plugin/table/bootstrap-table.min.css" rel="stylesheet" />
 		<script src="/res/js/plugin/table/bootstrap-table.min.js"></script>	 
 		
-		<!--datetime picker -->
-	 <#if controller == "WlogPM">
-		<link href="/res/css/plugin/datetimepicker/bootstrap-datetimepicker.min.css" rel="stylesheet" />	 
-	 	<script src="/res/js/plugin/datetimepicker/moment.min.js"></script>
-		 <script src="/res/js/plugin/datetimepicker/bootstrap-datetimepicker.min.js"></script>
-	 </#if>		
-
      <!--  self defined  -->    
-	 <link rel="stylesheet" href="/res/css/self/layout.css" />
-	 <script src="/res/js/self/layout.js" ></script>
-	 	 
-	 <#if controller == "WlogManage">
-	  	<link rel="stylesheet" href="/res/css/self/logsrc_manage.css" />
-		 <script src="/res/js/self/logsrc_table.js"></script>
-		  <script src="/res/js/self/logsrc_crud.js"></script>
-	 </#if>
-	 
-	 <#if action == "debug">
-	 	<script src="/res/js/self/logsrc_debug.js"></script>
-	 </#if>
-	 
-	 <#if controller == "WlogRT">
-	  	<link rel="stylesheet" href="/res/css/self/logsrc_rt.css" />
-	  	<script src="/res/js/self/rt_crud.js"></script>
-	 </#if>	
-	 
-	 <#if controller == "WlogPM">
-	  	<link rel="stylesheet" href="/res/css/self/logsrc_pm.css" />
-		 <script src="/res/js/self/pm_table.js"></script>
-		 <script src="/res/js/self/pm_crud.js"></script>
-	 </#if>
-	 
-	 
-
+	 <link rel="stylesheet" href="/res/css/self/common.css" />
+	 <script src="/res/js/self/common.js" ></script>
   </head>
   
   <body>

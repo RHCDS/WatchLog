@@ -16,30 +16,26 @@
 	  			}
 	  		}
 	  	});//  表格end
-	  	
-
     } );
   
   
   // 日志源名称显示   
  function logsrcnameFormatter(value, row, index) {
-  
 	  if(value!=undefined){
 		     var maxwidth = 15; 
-		     value_show = value;
+		     var value_show = value;
 		     if (value.length > maxwidth) {
 		    	 value_show = value.substring(0, maxwidth) + '...'
 		     }
 		  return  '<a class="like" title=' + value +' href="/logsrc/' + row.id + '?proj=' + pid + '" >' + value_show + '</a>';		  
 	  }
-
  }
  
  // 服务器地址显示：限制长度截断+hover显示所有文字
  function hostnameFormatter(value, row, index){
 	  if(value!=undefined){
 			     var maxwidth = 40; 
-			     value_show = value;
+			     var value_show = value;
 			     if (value.length > maxwidth) {
 			    	 value_show = value.substring(0, maxwidth) + '...'
 			     }
@@ -53,7 +49,7 @@
  function logsrcpathFormatter(value, row, index){
 	  if(value!=undefined){
 			     var maxwidth = 70; 
-			     value_show = value;
+			     var value_show = value;
 			     if (value.length > maxwidth) {
 			    	 value_show = value.substring(0, maxwidth) + '...'
 			     }
@@ -66,7 +62,7 @@
  function logsrcfileFormatter(value, row, index){
 	  if(value!=undefined){
 		     var maxwidth = 20; 
-		     value_show = value;
+		     var value_show = value;
 		     if (value.length > maxwidth) {
 		    	 value_show = value.substring(0, maxwidth) + '...'
 		     }
@@ -137,8 +133,6 @@
       });
   }
   
-  
-
   // 表格：删除日志源+二次确认 (可能有多个)
 	function delete_logsrc_table(){
 	  	  var ids = getIdSelections(); //待删除id数组
@@ -153,15 +147,6 @@
 				 $('#proj').val(pid);  //post请求参数 projj
 				$('#destroy_logsrc_modal').modal('show');  //弹窗modal
 		  }
-	}
-	
-	// 详情：删除日志源 + 二次确认 ( 单个删除)
-	function delete_logsrc_single(id, proj){
-		console.log(id);
-		console.log(pid);
-		 $('#ids').val(id);  //post请求参数 ids
-		 $('#proj').val(proj);  //post请求参数 projj
-		$('#destroy_logsrc_single_modal').modal('show');  //弹窗modal		
 	}
 
 	
@@ -215,26 +200,7 @@
     	  }	//--else--  		
       }      
       
-      
-      
+           
 
-
-  
-//  // 复制日志源
-//  function logsrc_copy(logsrcid){
-//	  console.log(logsrcid)
-//	  $('#copy_logsrc_id').val(logsrcid);
-//	  $("#copy_logsrc_modal").modal('show');
-//  }
-    
-
-//function test(){
-//	$.ajax({
-//		url: '/api/logsource/1',
-//		success :function(data){
-//			$('#result').html(data);
-//		}
-//	})
-//}
 
 
