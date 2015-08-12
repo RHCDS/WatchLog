@@ -16,6 +16,7 @@
 	  if($("#pmtable" ).length != 0) {
 			  	$('#pmtable').bootstrapTable({
 			  		url : "/logsrc/pm_analyse/pmtable",
+			  		striped: true,
 			  		sortName : "create_time",
 			  		sortOrder: "desc",
 			  		pageList: "[10, 25, 50, 100, All]",

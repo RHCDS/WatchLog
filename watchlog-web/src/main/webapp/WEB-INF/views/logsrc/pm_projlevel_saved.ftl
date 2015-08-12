@@ -74,7 +74,7 @@
 								</div>									
 								<!-- 聚合分析 异常分布表格-->
 								<div class="row"   >
-							            <table id="pm_projlevel_saved_etc_table"     data-toggle="toolbar"  data-height="400" data-side-pagination="server"  data-pagination="true" data-search="false">
+							            <table id="pm_projlevel_saved_etc_table"     data-toggle="toolbar"   data-side-pagination="server"  data-pagination="true" data-search="false">
 									            <thead>
 											            <tr>
 											            			<th data-field="report_id"  data-visible="false" >id</th>

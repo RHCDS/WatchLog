@@ -46,12 +46,12 @@
 				 
  						<div id="js_notice" class="row"   style="padding-left: 15px; padding-right: 15px;" > </div></br>
  
-				        <table id="logtable"     data-toggle="toolbar"   data-height="500"    data-side-pagination="server"   data-pagination="true"   data-search="false">
+				        <table id="logtable"    data-toggle="toolbar"     data-side-pagination="server"   data-pagination="true"   data-search="false">
 				            <thead>
 						            <tr>
 						                <th data-field="state" data-checkbox="true" ></th>
 						                <th data-field="id"  data-sortable="true"  data-visible="false">ID</th>
-						                <th data-field="logsrc_name"   data-sortable="true"   data-formatter="logsrcnameFormatter"  >日志源名称</th>
+						                <th data-field="logsrc_name"   data-sortable="true"   data-formatter="logsrcnameFormatter"  >aa日志源名称</th>
 						                <th data-field="host_name" data-sortable="true"    data-formatter="hostnameFormatter">服务器地址</th>
 						                 <th data-field="logsrc_path" data-sortable="true"   data-formatter="logsrcpathFormatter" >日志源地址 </th>
 						                 <th data-field="logsrc_file" data-sortable="true"  data-formatter="logsrcfileFormatter" >日志文件名称</th>

@@ -34,7 +34,7 @@
 											</div><!-- /.modal-dialog -->
 									</div><!-- 模态框（Modal） -->					
 						
-							           <table id="pm_error_type_table"    data-toggle="toolbar"     data-height="500"     data-side-pagination="server"            data-pagination="true"      data-search="false">
+							           <table id="pm_error_type_table"    data-toggle="toolbar"        data-side-pagination="server"            data-pagination="true"      data-search="false">
 									            <thead>
 											            <tr>
 											                <th data-field="error_type"     data-formatter="pmtypeTypeFormatter"  > 异常类型 </th>

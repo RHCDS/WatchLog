@@ -87,7 +87,7 @@
 								</div><!-- 模态框（Modal） -->
 							</form>	    
 						    
-						            <table id="pmtable"    data-toggle="toolbar"  data-height="500" data-side-pagination="server"  data-pagination="true" data-search="false">
+						            <table id="pmtable"    data-toggle="toolbar"    data-side-pagination="server"  data-pagination="true" data-search="false">
 								            <thead>
 										            <tr>
 										              			<th data-field="title" data-sortable="true"  data-formatter="pmreportnameFormatter">报告名称</th>
