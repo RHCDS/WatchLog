@@ -205,32 +205,32 @@
 										</div><!-- /.modal-dialog -->
 								</div><!-- 模态框（Modal） -->
 						<!-- 异常分布表格-->
-						<div class="col-sm-12"    style="/*border:solid 1px yellow*/">
-												<table  class="table table-bordered">
+						<div class="col-sm-12"  >
+												<table  class="table table-bordered wratb">
 													<tbody>
 													<#if  pm_error_type_table?has_content>
 																<tr>
-																	<th class="col-sm-4">异常类型</th>
-																	<th class="col-sm-7">原始日志实例</th>
-																	<th class="col-sm-1">异常总数</th>
+																	<th class="col-sm-5"  >异常类型</th>
+																	<th class="col-sm-6"  >原始日志实例</th>
+																	<th class="col-sm-1"  >异常总数</th>
 																</tr>		
 																<#list pm_error_type_table as data>
 																	<#assign error_type_str = data['error_type']?replace("\\t", "<br/>  &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;")>
 																	<#assign error_example_str = data['error_example']?replace("\\t", "<br/> &ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;&ensp;")>
 																	<tr>
-																			<td class="col-sm-4">${error_type_str}</td>
+																			<td >${error_type_str}</td>
 																			<#if error_type_str == "unknown">
-																					<td class="col-sm-7">部分日志无法解析类型，
+																					<td>部分日志无法解析类型，
 																						<a class="custom_a"  target="_blank" 
 																						href="/logsrc/pm_analyse/unknown?log_id=${log_id}&proj=${pid}&start_time=${start_time}&end_time=${end_time}">
 																						点击查看所有unknown类型原始日志
 																						</a>
 																					</td>
 																			<#else>
-																					<td class="col-sm-7">${error_example_str}</td>
+																					<td>${error_example_str}</td>
 																			</#if>
 																																							
-																		<td class="col-sm-1"><a  href="javascript:void(0)"  
+																		<td><a  href="javascript:void(0)"  
 																		onclick="get_unsave_error_type_total(${log_id}, ${data['exp_id']},  '${start_time}','${end_time}')">${data['total_count']}</a></td>																		
 																	</tr>																 
 															</#list>		

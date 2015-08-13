@@ -34,12 +34,12 @@
 											</div><!-- /.modal-dialog -->
 									</div><!-- 模态框（Modal） -->					
 						
-							           <table id="pm_error_type_table"    data-toggle="toolbar"        data-side-pagination="server"            data-pagination="true"      data-search="false">
+							           <table id="pm_error_type_table"    class="wratb" data-toggle="toolbar"        data-side-pagination="server"            data-pagination="true"      data-search="false">
 									            <thead>
 											            <tr>
-											                <th data-field="error_type"     data-formatter="pmtypeTypeFormatter"  > 异常类型 </th>
-											                <th data-field="error_example"   data-formatter="pmtypeExampleFormatter"  > 原始日志实例</th>
-											                 <th data-field="total_count" data-sortable="true"  data-formatter="pmtypeTotalFormatter" > 异常总数 </th>
+											                <th data-field="error_type"     data-width="42%" data-formatter="pmtypeTypeFormatter"  > 异常类型 </th>
+											                <th data-field="error_example"   data-width="50%"  data-formatter="pmtypeExampleFormatter"  > 原始日志实例</th>
+											                 <th data-field="total_count" data-width="8%"  data-sortable="true"  data-formatter="pmtypeTotalFormatter" > 异常总数 </th>
 											            </tr>
 									            </thead>
 							        </table>

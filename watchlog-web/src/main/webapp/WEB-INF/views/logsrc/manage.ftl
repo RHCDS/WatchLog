@@ -51,7 +51,7 @@
 						            <tr>
 						                <th data-field="state" data-checkbox="true" ></th>
 						                <th data-field="id"  data-sortable="true"  data-visible="false">ID</th>
-						                <th data-field="logsrc_name"   data-sortable="true"   data-formatter="logsrcnameFormatter"  >aa日志源名称</th>
+						                <th data-field="logsrc_name"   data-sortable="true"   data-formatter="logsrcnameFormatter"  >日志源名称</th>
 						                <th data-field="host_name" data-sortable="true"    data-formatter="hostnameFormatter">服务器地址</th>
 						                 <th data-field="logsrc_path" data-sortable="true"   data-formatter="logsrcpathFormatter" >日志源地址 </th>
 						                 <th data-field="logsrc_file" data-sortable="true"  data-formatter="logsrcfileFormatter" >日志文件名称</th>
