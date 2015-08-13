@@ -54,7 +54,7 @@
  	  if(row.report_id==undefined){
  		return "-";	  
  	  }
- 	     var maxwidth = 20; 
+ 	     var maxwidth = 40; 
  	     var value_show = value;
  	     if (value.length > maxwidth) {
  	    	 value_show = value.substring(0, maxwidth) + '...'

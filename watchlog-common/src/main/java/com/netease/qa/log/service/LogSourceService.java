@@ -39,6 +39,10 @@ public interface LogSourceService {
 	
 	public ArrayList<LogSource> selectAllByProjectId(int projectId);
 	
+	public ArrayList<LogSource> selectAllByProjectIdOrderByName(int projectId);
+	
 	public ArrayList<LogSource> getLogsourcesByProjectId(int projectId, int limit, int offset);
+	
+	public ArrayList<LogSource> getLogsourcesByProjectIdOrderByName(int projectId, int limit, int offset);
 
 }

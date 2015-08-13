@@ -619,7 +619,7 @@ public class WlogPMController {
 		JSONArray rows = new JSONArray();
 		int total = 0;
 		JSONObject result = new JSONObject();
-
+		// 判断参数limit,offset是否为空
 		if (MathUtil.isEmpty(limit, offset)) {
 			message = ConstCN.NULL_PARAM;
 			result.put("message", message);
@@ -627,6 +627,7 @@ public class WlogPMController {
 			result.put("rows", rows);
 			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 		}
+		// 判断limit,offset是否为整形
 		if (!MathUtil.isInteger(limit) || !MathUtil.isInteger(offset)) {
 			message = ConstCN.LIMIT_AND_OFFSET_MUST_BE_NUM;
 			result.put("message", message);
@@ -637,7 +638,7 @@ public class WlogPMController {
 		Long start = null;
 		Long end = null;
 		int projectId = 0;
-
+		// 没传report_id,根据startTime和endTime处理业务
 		if (Integer.parseInt(reportid) == 0) {
 			projectId = Integer.parseInt(projectid);
 			try {
@@ -647,7 +648,9 @@ public class WlogPMController {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-		} else {
+		}
+		// 有report_id，根据report_id处理业务
+		else {
 			Report report = reportService.getReportById(Integer.parseInt(reportid));
 			projectId = report.getProjectId();
 			try {
@@ -658,9 +661,11 @@ public class WlogPMController {
 				e.printStackTrace();
 			}
 		}
+		// 获取日志源总数
 		total = logSourceService.getTotalCountByProjectId(projectId);
-		List<LogSource> logSources = logSourceService.getLogsourcesByProjectId(projectId, Integer.parseInt(limit),
-				Integer.parseInt(offset));
+		// 获取日志源列表，默认按照日志源名称升序排列
+		List<LogSource> logSources = logSourceService.getLogsourcesByProjectIdOrderByName(projectId, Integer.parseInt(limit),Integer.parseInt(offset));
+		// 封装返回数据
 		JSONObject row = new JSONObject();
 		JSONObject temp = null;
 		for (LogSource logsource : logSources) {
