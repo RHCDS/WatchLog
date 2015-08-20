@@ -7,6 +7,7 @@ import javax.annotation.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
@@ -16,6 +17,7 @@ import com.netease.qa.log.meta.Project;
 import com.netease.qa.log.meta.dao.LogSourceDao;
 import com.netease.qa.log.meta.dao.ProjectDao;
 import com.netease.qa.log.service.ProjectService;
+import com.netease.qbs.QbsService;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
@@ -27,6 +29,7 @@ public class ProjectServiceImpl implements ProjectService {
 	
 	@Resource
 	private LogSourceDao logSourceDao;
+	
 	
 	@Override
 	public int createProject(Project project) {
@@ -111,6 +114,7 @@ public class ProjectServiceImpl implements ProjectService {
 		}
 		return records;
 	}
+	
 
 	@Override
 	public boolean checkProjectExsit(int projectid) {
@@ -125,6 +129,9 @@ public class ProjectServiceImpl implements ProjectService {
 		Project project = projectDao.findByName(name);
 		return project != null;
 	}
+
+
+	
 
 }
 

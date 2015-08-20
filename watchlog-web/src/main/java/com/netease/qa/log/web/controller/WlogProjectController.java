@@ -1,9 +1,14 @@
 package com.netease.qa.log.web.controller;
 
+import java.util.List;
+
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,8 +18,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.netease.qa.log.exception.ApiExceptionHandler;
+import com.netease.qa.log.service.ProjectQbsService;
 import com.netease.qa.log.service.ProjectService;
 import com.netease.qa.log.util.Const;
+import com.netease.qbs.QbsService;
+import com.netease.qbs.meta.Project;
+import com.netease.qbs.meta.User;
 
 @Controller
 @RequestMapping(value = "/")
@@ -25,13 +34,16 @@ public class WlogProjectController {
 	@Resource
 	private ApiExceptionHandler apiException;
 	@Resource
-	private ProjectService projectService;
+	private ProjectQbsService projectQbsService;
+	
 	
 	@RequestMapping(value = "/projects", method = RequestMethod.GET)
-	public ResponseEntity<JSONObject> getAllProjects() {
+	public ResponseEntity<JSONObject> getAllProjects(HttpSession session) {
 	
+		User user = (User) session.getAttribute("user");
+		logger.info("userId:" + user.getId() + ";user email:" + user.getEmail() + ";user name:" + user.getFullname());
 		String message = Const.RESPONSE_SUCCESSFUL;
-		JSONArray data = projectService.getAllProjects();
+		JSONArray data = projectQbsService.getAllProjectsByQbs(user);
 		if(data == null){
 			message = Const.RESPONSE_NOTSUCCESSFUL;
 		}
