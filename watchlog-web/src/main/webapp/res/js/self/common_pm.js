@@ -10,6 +10,7 @@ var end_time_ct = decodeURIComponent(end_time).replace(/\+/g, ' ');
 function render_table(div_table_id){
 	  	$(div_table_id).bootstrapTable({
 	  		url : "/logsrc/pm_projlevel_etc_table",
+	  		striped: true,
 	  		onPostBody: function () {
 	  			popover_setting();
 	  	    },	  		

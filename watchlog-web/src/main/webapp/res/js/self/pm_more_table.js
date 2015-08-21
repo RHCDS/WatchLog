@@ -27,6 +27,7 @@ var end_time_ct = end_time.replace(/\%20/g, ' ');
 					  // 聚合分析 - 异常分布情况 表格
 					  	$('#pm_error_dist_table').bootstrapTable({
 					  		url : "/logsrc/pm_analyse/error_dist_table",
+					  		striped: true,
 					  		onPostBody: function () {
 					  				// 启动popover 
 						  			$("[data-toggle='popover']").popover(); 	  		
@@ -45,7 +46,6 @@ var end_time_ct = end_time.replace(/\%20/g, ' ');
 					  		  },	  						  		
 					  		sortName : "date_time",
 					  		sortOrder: "desc",
-					  		height: "900",
 					  		pageList: "[20, 40, 80, 100]",  
 					  		pageSize: "20",  // 默认展示条目个数
 					  		queryParams: function(p){
@@ -69,9 +69,9 @@ var end_time_ct = end_time.replace(/\%20/g, ' ');
 				  // 聚合分析 - 异常分布情况 表格
 				  	$('#pm_error_type_table').bootstrapTable({
 				  		url : "/logsrc/pm_analyse/error_type_table",
+				  		striped: true,
 				  		sortName : "total_count",
 				  		sortOrder: "desc",
-				  		height: "900",
 				  		pageList: "[20, 40, 80, 100]",
 				  		pageSize: "20",
 				  		queryParams: function(p){
@@ -95,7 +95,7 @@ var end_time_ct = end_time.replace(/\%20/g, ' ');
 				  // 聚合分析 - 异常分布情况 表格
 				  	$('#pm_unknow_list_table').bootstrapTable({
 				  		url : "/logsrc/pm_analyse/unknown_table",
-				  		height: "900",
+				  		striped: true,
 				  		pageList: "[50, 80, 100]",
 				  		pageSize: "50",
 				  		queryParams: function(p){

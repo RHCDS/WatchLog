@@ -16,6 +16,7 @@
 	  if($("#pmtable" ).length != 0) {
 			  	$('#pmtable').bootstrapTable({
 			  		url : "/logsrc/pm_analyse/pmtable",
+			  		striped: true,
 			  		sortName : "create_time",
 			  		sortOrder: "desc",
 			  		pageList: "[10, 25, 50, 100, All]",
@@ -53,7 +54,7 @@
  	  if(row.report_id==undefined){
  		return "-";	  
  	  }
- 	     var maxwidth = 20; 
+ 	     var maxwidth = 40; 
  	     var value_show = value;
  	     if (value.length > maxwidth) {
  	    	 value_show = value.substring(0, maxwidth) + '...'

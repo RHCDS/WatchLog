@@ -69,6 +69,13 @@
 		from log_source where <![CDATA[status<>3]]> and project_id=#{projectId}
 	</select>
 	
+	<select id="selectAllByProjectIdOrderByName" parameterType="java.lang.Integer"
+		resultType="com.netease.qa.log.meta.LogSource">
+		select
+		<include refid="allColumn" />
+		from log_source where <![CDATA[status<>3]]> and project_id=#{projectId} order by log_source_name asc;
+	</select>	
+	
 	<select id="getTotalCountByProjectId" parameterType="java.lang.Integer"
 	     resultType="java.lang.Integer">
 	     select count(log_source_id) as num from log_source where <![CDATA[status<>3]]> and project_id=#{projectId}

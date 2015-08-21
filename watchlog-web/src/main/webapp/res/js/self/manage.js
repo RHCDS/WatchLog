@@ -3,6 +3,7 @@
 	  // 表格分页设置
 	  	$('#logtable').bootstrapTable({
 	  		url : "manage/logtable",
+	  		striped: true,
 	  		sortName : "update_time",
 	  		sortOrder: "desc",
 	  		pageList: "[10, 25, 50, 100, All]",

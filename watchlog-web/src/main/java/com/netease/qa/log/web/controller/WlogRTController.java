@@ -42,7 +42,7 @@ public class WlogRTController {
 		ArrayList<String> logs = new ArrayList<String>();
 		ArrayList<LogSource> logsources = new ArrayList<LogSource>();
 		if (projectid != null) {
-			logsources = logSourceService.selectAllByProjectId(Integer.parseInt(projectid));
+			logsources = logSourceService.selectAllByProjectIdOrderByName(Integer.parseInt(projectid));
 			for (int i = 0; i < logsources.size(); i++) {
 				logs.add(logsources.get(i).getLogSourceId() + "#" + logsources.get(i).getLogSourceName());
 			}
