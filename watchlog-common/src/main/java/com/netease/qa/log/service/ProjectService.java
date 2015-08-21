@@ -1,24 +1,14 @@
 package com.netease.qa.log.service;
 
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.netease.qa.log.meta.Project;
+import com.netease.qbs.meta.Project;
 import com.netease.qbs.meta.User;
 
 public interface ProjectService {
 
-	public int createProject(Project project);
+	public JSONArray getAllProjectsByQbs(User user);
 	
-	public int updateProject(Project project);
+	public boolean checkProjectExsit(int projectId);
 	
-	public JSONObject getDetailByProjectId(int projectid);
-	
-	public Project getByProjectId(int projectid);
-	
-	public JSONArray getAllProjects();
-	
-	public boolean checkProjectExsit(int projectid);
-
-	public boolean checkProjectExsit(String name);
-	
+	public Project findByProjectId(int projectId);
 }

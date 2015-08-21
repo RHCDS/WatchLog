@@ -1,5 +1,6 @@
 package com.netease.qbs.meta;
 
+
 public class Role extends BaseEntity {
 	/**
 	 *

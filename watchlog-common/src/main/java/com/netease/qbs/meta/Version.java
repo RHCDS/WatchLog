@@ -2,6 +2,7 @@ package com.netease.qbs.meta;
 
 import java.util.Date;
 
+
 public class Version extends BaseEntity {
 	/**
 	 *

@@ -13,7 +13,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.netease.qa.log.meta.LogSource;
 import com.netease.qa.log.meta.dao.LogSourceDao;
-import com.netease.qa.log.meta.dao.ProjectDao;
 import com.netease.qa.log.service.LogSourceService;
 import com.netease.qa.log.util.MathUtil;
 
@@ -25,10 +24,6 @@ public class LogsourceServiceImpl implements LogSourceService{
 	
 	@Resource
 	private LogSourceDao logSourceDao;
-	
-	@Resource 
-	private ProjectDao projectDao;
-	
 	
 	@Override
 	public int createLogSource(LogSource logSource) {

@@ -2,6 +2,7 @@ package com.netease.qbs.meta;
 
 import java.util.List;
 
+
 public class Member extends BaseEntity {
 	/**
 	 *

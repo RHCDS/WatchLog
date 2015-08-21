@@ -8,10 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.netease.qa.log.meta.LogSource;
-import com.netease.qa.log.meta.Project;
 import com.netease.qa.log.meta.dao.LogSourceDao;
-import com.netease.qa.log.meta.dao.ProjectDao;
+import com.netease.qa.log.service.ProjectService;
+import com.netease.qa.log.service.impl.ProjectServiceImp;
 import com.netease.qa.log.storm.util.MybatisUtil;
+import com.netease.qbs.meta.Project;
 
 
 /**
@@ -26,11 +27,13 @@ public class ConfigDataService {
 	private static ConcurrentHashMap<String, LogSource> logSourceCache;
 	private static ConcurrentHashMap<Integer, LogSource> logSourceIdCache;
 	private static ConcurrentHashMap<Integer, Project> projectCache;
+	private static ProjectService projectService;
 
 	static{
 		logSourceCache = new ConcurrentHashMap<String, LogSource>();
 		logSourceIdCache = new ConcurrentHashMap<Integer, LogSource>();
 		projectCache = new ConcurrentHashMap<Integer, Project>();
+		projectService = new ProjectServiceImp();
 	}
 	
 	 
@@ -53,8 +56,7 @@ public class ConfigDataService {
 
 				int projectId = logSource.getProjectId();
 				if(!projectCache.containsKey(projectId)){
-					ProjectDao projectDao = sqlSession.getMapper(ProjectDao.class);
-					Project project = projectDao.findByProjectId(projectId);
+					Project project = projectService.findByProjectId(projectId);
 					if(project == null) return null;// CACHE 、DB中都没有数据，但是datastream有—— ds agent可能未及时更新，数据应该丢弃，等待内存数据定时更新
 
 					projectCache.put(projectId, project); 
@@ -86,8 +88,7 @@ public class ConfigDataService {
 				
 				int projectId = logSource.getProjectId();
 				if(!projectCache.containsKey(projectId)){
-					ProjectDao projectDao = sqlSession.getMapper(ProjectDao.class);
-					Project project = projectDao.findByProjectId(projectId);
+					Project project = projectService.findByProjectId(projectId);
 					if(project == null) return null;
 					
 					projectCache.put(projectId, project); 
@@ -109,8 +110,7 @@ public class ConfigDataService {
 			SqlSession sqlSession = MybatisUtil.getSqlSessionFactory().openSession(true);
 			try{
 				logger.info("---get project from DB---");
-				ProjectDao projectDao = sqlSession.getMapper(ProjectDao.class);
-				Project project = projectDao.findByProjectId(projectId);
+				Project project = projectService.findByProjectId(projectId);
 				if(project == null) return null;
 				projectCache.put(projectId, project); 
 				return project;
@@ -127,8 +127,6 @@ public class ConfigDataService {
 		SqlSession sqlSession = MybatisUtil.getSqlSessionFactory().openSession(true);
 		try{
 			LogSourceDao logSourceDao = sqlSession.getMapper(LogSourceDao.class);
-			ProjectDao projectDao = sqlSession.getMapper(ProjectDao.class);
-
 			//更新logSourceIdCache
 			for(Entry<Integer, LogSource> l: logSourceIdCache.entrySet()){
 				logSourceIdCache.remove(l.getKey());
@@ -153,10 +151,10 @@ public class ConfigDataService {
 			// 更新projectCache
 			for (Entry<Integer, Project> p : projectCache.entrySet()) {
 				projectCache.remove(p.getKey());
-				Project project = projectDao.findByProjectId(p.getKey());
+				Project project = projectService.findByProjectId(p.getKey());
 				if(project != null){ 
 					projectCache.put(p.getKey(), project);
-					logger.info("reload config for project: " + project.getProjectName());
+					logger.info("reload config for project: " + project.getName());
 				}
 			}
 			logger.info("logSourceCache:   " + logSourceCache.size()); 

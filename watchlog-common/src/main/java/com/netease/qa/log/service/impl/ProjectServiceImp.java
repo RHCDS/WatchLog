@@ -7,13 +7,13 @@ import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
-import com.netease.qa.log.service.ProjectQbsService;
+import com.netease.qa.log.service.ProjectService;
 import com.netease.qbs.QbsService;
 import com.netease.qbs.meta.Project;
 import com.netease.qbs.meta.User;
 
 @Service
-public class ProjectQbsServiceImp implements ProjectQbsService{
+public class ProjectServiceImp implements ProjectService{
 
 	@Autowired
     private QbsService qbsService;
@@ -37,6 +37,20 @@ public class ProjectQbsServiceImp implements ProjectQbsService{
 			i++;
 		}
 		return records;
-	}//urs、datastream、timeline
+	}
+
+	@Override
+	public boolean checkProjectExsit(int projectId) {
+		Project project = qbsService.getProjectById(projectId);
+		if(project != null){
+			return true;
+		}
+		return false;
+	}
+
+	@Override
+	public Project findByProjectId(int projectId) {
+		return qbsService.getProjectById(projectId);
+	}
 
 }
