@@ -13,6 +13,14 @@
     <!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
     <context:component-scan base-package="com.netease.qa.log" />  
     <!--避免IE执行AJAX时，返回JSON出现下载文件 -->
+    
+           <!--配置数据源属性文件  -->  
+    <bean id="propertyConfigurer"  
+        class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">  
+        <property name="location">  
+            <value>classpath:jdbc.properties</value>
+        </property>  
+    </bean> 
       
     <bean id="mappingJacksonHttpMessageConverter"
         class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
@@ -28,6 +36,11 @@
         <property name="supportedMediaTypes" value="application/json"/>
     </bean>
  
+  <!-- 事务管理 -->
+    <bean id="qbsService" class="com.netease.qbs.QbsServiceBean">
+        <constructor-arg index="0" value="${qbs.baseURL}" />
+        <constructor-arg index="1" value="${qbs.token}" />
+    </bean>
     
     <bean
         class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">

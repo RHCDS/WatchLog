@@ -1,6 +1,8 @@
 package com.netease.qa.log.web.controller;
 
+
 import javax.annotation.Resource;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,6 +17,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.netease.qa.log.exception.ApiExceptionHandler;
 import com.netease.qa.log.service.ProjectService;
 import com.netease.qa.log.util.Const;
+import com.netease.qbs.meta.User;
 
 @Controller
 @RequestMapping(value = "/")
@@ -27,11 +30,14 @@ public class WlogProjectController {
 	@Resource
 	private ProjectService projectService;
 	
-	@RequestMapping(value = "/projects", method = RequestMethod.GET)
-	public ResponseEntity<JSONObject> getAllProjects() {
 	
+	@RequestMapping(value = "/projects", method = RequestMethod.GET)
+	public ResponseEntity<JSONObject> getAllProjects(HttpSession session) {
+	
+		User user = (User) session.getAttribute("user");
+		logger.info("userId:" + user.getId() + ";user email:" + user.getEmail() + ";user name:" + user.getFullname());
 		String message = Const.RESPONSE_SUCCESSFUL;
-		JSONArray data = projectService.getAllProjects();
+		JSONArray data = projectService.getAllProjectsByQbs(user);
 		if(data == null){
 			message = Const.RESPONSE_NOTSUCCESSFUL;
 		}

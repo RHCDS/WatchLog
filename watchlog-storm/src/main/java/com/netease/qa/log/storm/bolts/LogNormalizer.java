@@ -16,9 +16,9 @@ import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 
 import com.netease.qa.log.meta.LogSource;
-import com.netease.qa.log.meta.Project;
 import com.netease.qa.log.storm.service.ConfigDataService;
 import com.netease.qa.log.storm.service.ConfigDataLoadTask;
+import com.netease.qbs.meta.Project;
 
 public class LogNormalizer implements IBasicBolt {
 
@@ -48,7 +48,7 @@ public class LogNormalizer implements IBasicBolt {
 		
 		// 日志源启动了监控
 		if (logsource.getLogSourceStatus() == 1) {
-			collector.emit(new Values(input.getString(0), logsource.getLogSourceId(), project.getProjectId(), input.getValue(4)));
+			collector.emit(new Values(input.getString(0), logsource.getLogSourceId(), project.getId(), input.getValue(4)));
 		}
 
 	}

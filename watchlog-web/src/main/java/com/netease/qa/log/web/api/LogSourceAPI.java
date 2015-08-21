@@ -30,9 +30,9 @@ public class LogSourceAPI {
 	@Resource
 	private LogSourceService logsourceService;
 	@Resource
-	private ProjectService projectService;
-	@Resource
 	private ApiExceptionHandler apiException;
+	@Resource
+	private ProjectService projectService;
 
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> addLogsource(
