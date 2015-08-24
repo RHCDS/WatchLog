@@ -1,5 +1,7 @@
 package com.netease.qa.log.service;
 
+import java.util.List;
+
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 
@@ -31,4 +33,6 @@ public interface ReadService {
 	public JSONObject queryExceptionByLogSourceIdAndTime(int logSourceId, long startTime, long endTime);
 
 	public JSONArray queryRecordsByTime(int projectid, long start_time, long end_time);
+	
+	public JSONObject queryErrorRecordsByLogSourceIds(List<Integer> logSourceIds, long start_time, long end_time);
 }
