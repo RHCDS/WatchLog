@@ -19,6 +19,11 @@
 	     <link href="/res/css/plugin/table/bootstrap-table.min.css" rel="stylesheet" />
 		<script src="/res/js/plugin/table/bootstrap-table.min.js"></script>	 
 		
+		<!-- 导航 -->
+      <link rel="stylesheet" media="all" href="/res/css/qadev-main-nav.css" >
+      <script src="/res/js/qadev-main-nav-platforms.js"></script>
+      <script src="/res/js/qadev-main-nav.js"></script>
+      		
      <!--  self defined  -->    
 	 <link rel="stylesheet" href="/res/css/self/common.css" />
 	 <script src="/res/js/self/common.js" ></script>
