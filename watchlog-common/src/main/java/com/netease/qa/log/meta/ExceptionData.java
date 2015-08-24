@@ -7,7 +7,16 @@ public class ExceptionData {
 	private int logSourceId;
 	private Long sampleTime;
 	private int exceptionId;
+	private String exceptionType;
 	private int exceptionCount;
+	
+	public String getExceptionType() {
+		return exceptionType;
+	}
+
+	public void setExceptionType(String exceptionType) {
+		this.exceptionType = exceptionType;
+	}
 	
 	public int getExceptionDataId() {
 		return exceptionDataId;

@@ -39,6 +39,12 @@
          b.total_count as totalCount
     </sql>
     
+    <sql id="ab_error_record">
+         e.exception_id as exceptionId, 
+         e.exception_type as exceptionType, 
+         a.count as exceptionCount
+    </sql>
+    
 	<insert id="insert" parameterType="com.netease.qa.log.meta.ExceptionData"
 		useGeneratedKeys="true" keyProperty="exceptionDataId">
 		insert into exception_data(log_source_id, sample_time, exception_id, exception_count) 
@@ -172,6 +178,23 @@
                 (select distinct sample_time from exception_data  where log_source_id=${param1}  and exception_id =${param2}  
                  and sample_time between ${param3} and ${param4} 
                  group by sample_time) a;  
+    </select>
+    
+    <!-- AB平台上的，按照机器聚合 -->
+    <!-- 获取日志源异常在起止时间内的异常总数 -->
+    <select id="getLogSourceExceptionTotalCountByTime" resultType="java.lang.Integer">
+    SELECT SUM(exception_count) FROM exception_data 
+         WHERE log_source_id = ${param1} AND sample_time BETWEEN ${param2} AND ${param3};
+    </select>
+    
+    <!-- 获取想起异常类型维度表 -->
+    <select id="findErrorRecordsByLogSourceIdAndTimeByAB" resultType="com.netease.qa.log.meta.ExceptionData">
+    SELECT 
+       <include refid="ab_error_record"/>
+     FROM  (SELECT exception_id, SUM(exception_count) AS COUNT FROM exception_data
+                   WHERE log_source_id = ${param1} AND sample_time BETWEEN ${param2} AND ${param3} GROUP BY exception_id) a, 
+           exception e
+       WHERE a.exception_id = e.exception_id;
     </select>
     
 </mapper>

@@ -88,5 +88,12 @@ public interface ExceptionDataDao {
      */
     public int getErrorRecordsCountByLogSourceIdAndExceptionIdAndTime(int logSourceId,  int exceptionId, 
     		long startTime, long endTime);
+    
+    /**
+     * AB平台，按照机器聚合,得到某一个日志源在一段时间内的所有的异常数量
+     */
+    public Integer getLogSourceExceptionTotalCountByTime(int logSourceId, long startTime, long endTime);
+    
+    public List<ExceptionData> findErrorRecordsByLogSourceIdAndTimeByAB(int logSourceId, long startTime, long endTime);
 
 }
