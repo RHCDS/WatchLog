@@ -222,5 +222,23 @@ public class LogSourceAPI {
 			return new ResponseEntity<JSONObject>(new JSONObject(), HttpStatus.OK);
 		}
 	}
+	
+	@RequestMapping(value = "/getstatus/{logsourceid}", method = RequestMethod.GET)
+	public ResponseEntity<JSONObject> getStatus(@PathVariable String logsourceid){
+		if (MathUtil.isEmpty(logsourceid)) {
+			NullParamException ne = new NullParamException(Const.NULL_PARAM);
+			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+		}
+		if (!MathUtil.isInteger(logsourceid)) {
+			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
+			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
+		}
+		if(!logsourceService.checkLogSourceExist(Integer.parseInt(logsourceid))){
+			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
+			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
+		}
+		JSONObject result = logsourceService.getStatusByLogsourceId(Integer.parseInt(logsourceid));
+		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+	}
 
 }

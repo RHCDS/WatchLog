@@ -277,6 +277,11 @@ public class LogsourceServiceImpl implements LogSourceService{
 	}
 
 
-
-
+	@Override
+	public JSONObject getStatusByLogsourceId(int logSourceid) {
+		LogSource logsource = logSourceDao.findByLogSourceId(logSourceid);
+		JSONObject result = new JSONObject();
+		result.put("status", logsource.getLogSourceStatus());
+		return result;
+	}
 }
