@@ -44,9 +44,9 @@ public class LogSourceAPI {
 			@RequestParam(value = "linestart", required = false) String linestart,
 			@RequestParam(value = "filterkeyword", required = false) String filterkeyword,
 			@RequestParam(value = "typeregex", required = false) String typeregex,
-			@RequestParam(value = "logsourcecreatorname", required = false) String creatorname, Model model) {
+			@RequestParam(value = "creatorid", required = false) String creatorid, Model model) {
 		if (MathUtil.isEmpty(logsourceName, projectid, hostname, path, filepattern, linestart, filterkeyword,
-				typeregex, creatorname)) {
+				typeregex, creatorid)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
@@ -81,6 +81,7 @@ public class LogSourceAPI {
 		logSource.setLineStartRegex(linestart);
 		logSource.setLineFilterKeyword(filterkeyword);
 		logSource.setLineTypeRegex(typeregex);
+		logSource.setLogSourceCreatorId(Integer.parseInt(creatorid));
 		int result = logsourceService.createLogSource(logSource);
 		if (result == 0) {
 			InvalidRequestException ex = new InvalidRequestException(Const.INNER_ERROR);
@@ -160,7 +161,6 @@ public class LogSourceAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-
 		JSONObject logSource = logsourceService.getDetailByLogSourceId(Integer.parseInt(logsourceid));
 		if (logSource == null) {
 			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);

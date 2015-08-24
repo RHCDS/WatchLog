@@ -22,7 +22,7 @@
 		insert into log_source(log_source_name,project_id,create_time, hostname, path, file_pattern, line_start_regex, 
 		line_filter_keyword, line_type_regex, creator_id, status)
 		values(#{logSourceName},#{projectId}, now(), #{hostname}, #{path}, #{filePattern}, #{lineStartRegex},
-		 #{lineFilterKeyword}, #{lineTypeRegex}, 1, 0)
+		 #{lineFilterKeyword}, #{lineTypeRegex}, #{logSourceCreatorId}, 0)
 	</insert>
 
 	<update id="update" parameterType="com.netease.qa.log.meta.LogSource">
