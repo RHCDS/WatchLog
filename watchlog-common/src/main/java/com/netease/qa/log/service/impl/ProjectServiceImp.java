@@ -2,12 +2,17 @@ package com.netease.qa.log.service.impl;
 
 import java.util.List;
 
+import javax.annotation.Resource;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.netease.qa.log.meta.LogSource;
+import com.netease.qa.log.meta.dao.LogSourceDao;
 import com.netease.qa.log.service.ProjectService;
+import com.netease.qa.log.util.MathUtil;
 import com.netease.qbs.QbsService;
 import com.netease.qbs.meta.Project;
 import com.netease.qbs.meta.User;
@@ -17,6 +22,8 @@ public class ProjectServiceImp implements ProjectService{
 
 	@Autowired
     private QbsService qbsService;
+	@Resource
+	private LogSourceDao logSourceDao;
 	
 	@Override
 	public JSONArray getAllProjectsByQbs(User user) {
@@ -51,6 +58,39 @@ public class ProjectServiceImp implements ProjectService{
 	@Override
 	public Project findByProjectId(int projectId) {
 		return qbsService.getProjectById(projectId);
+	}
+
+	@Override
+	public JSONObject findAllLogSourcesByProjectId(int projectId) {
+		List<LogSource> logSources = logSourceDao.selectAllByProjectId(projectId);
+		Project project = qbsService.getProjectById(projectId);
+		JSONObject result = new JSONObject();
+		JSONArray logsources = new JSONArray();
+		JSONObject logsource = new JSONObject();
+		if(logSources != null && logSources.size() > 0){
+			for(LogSource logSource : logSources){
+				logsource = new JSONObject();
+				logsource.put("logsourceid", logSource.getLogSourceId());
+				logsource.put("logsourcename", logSource.getLogSourceName());
+				logsource.put("modifytime", MathUtil.parse2Str(logSource.getModifyTime()));
+				logsource.put("hostname", logSource.getHostname());
+				logsource.put("path", logSource.getPath());
+				logsource.put("filepattern", logSource.getFilePattern());
+				logsource.put("linestart", logSource.getLineStartRegex());
+				logsource.put("filterkeyword", logSource.getLineFilterKeyword());
+				logsource.put("typeregex", logSource.getLineTypeRegex());
+				logsource.put("creatorid", logSource.getLogSourceCreatorId());
+				logsource.put("status", logSource.getLogSourceStatus());
+				logsources.add(logsource);
+			}
+		}else{
+			logsources.add(logsource);
+		}
+		
+		result.put("projectid", project.getId());
+		result.put("name", project.getName());
+		result.put("logsources", logsources);
+		return result;
 	}
 
 }
