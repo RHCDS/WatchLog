@@ -1,9 +1,13 @@
-   <header >      
-		    <div class="navbar ">
-				    <div class="row"  style="margin-left: -16px;margin-top: -1px;">
-				    		 <div class="col-sm-2">
-				 					<a class="brand" href="#"><img src="/res/img/logo.jpg" /></a>
-				 			</div>
-				 	</div>
-		</div>
-	</header>
+<!-- 头部开始 -->
+<div id="qadev-main-nav">
+</div>
+
+<script>
+	<#if user ? exists>
+	$("#qadev-main-nav").qadev_main_nav("WL", '${user.fullname ! "匿名"}');
+	<#else>
+	$("#qadev-main-nav").qadev_main_nav("WL", null);
+	</#if>
+</script>
+
+<!-- 头部结束 -->
