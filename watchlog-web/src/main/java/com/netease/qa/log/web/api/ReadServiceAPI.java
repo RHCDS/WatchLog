@@ -1,6 +1,7 @@
 package com.netease.qa.log.web.api;
 
 import java.text.ParseException;
+import java.util.List;
 
 import javax.annotation.Resource;
 
@@ -11,11 +12,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-
 
 import com.alibaba.fastjson.JSONObject;
 import com.netease.qa.log.exception.ApiExceptionHandler;
@@ -38,7 +39,7 @@ public class ReadServiceAPI {
 
 	@Resource
 	private LogSourceService logsourceService;
-	
+
 	@Resource
 	private ApiExceptionHandler apiException;
 
@@ -63,7 +64,7 @@ public class ReadServiceAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.LIMIT_AND_OFFSET_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		if(!logsourceService.checkLogSourceExist(Integer.valueOf(id))){ 
+		if (!logsourceService.checkLogSourceExist(Integer.valueOf(id))) {
 			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
 		}
@@ -78,11 +79,12 @@ public class ReadServiceAPI {
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
 
-		JSONObject jsonObject = readService.queryTimeRecords(Integer.parseInt(id), startTime, endTime, "sample_time", "desc",
-				Integer.parseInt(limit), Integer.parseInt(offset));
+		JSONObject jsonObject = readService.queryTimeRecords(Integer.parseInt(id), startTime, endTime, "sample_time",
+				"desc", Integer.parseInt(limit), Integer.parseInt(offset));
 		if (jsonObject == null) {
 			NotFoundRequestException nr = new NotFoundRequestException(Const.INNER_ERROR);
-			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
 	}
@@ -92,9 +94,9 @@ public class ReadServiceAPI {
 	 */
 	@RequestMapping(value = "/error/{id}", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JSONObject> readByError(@PathVariable String id, 
-			@RequestParam(value = "start",required = false) String start,
-			@RequestParam(value = "end", required = false) String end, 
+	public ResponseEntity<JSONObject> readByError(@PathVariable String id,
+			@RequestParam(value = "start", required = false) String start,
+			@RequestParam(value = "end", required = false) String end,
 			@RequestParam(value = "limit", required = false) String limit,
 			@RequestParam(value = "offset", required = false) String offset, Model model) {
 		if (MathUtil.isEmpty(start, end, limit, offset)) {
@@ -109,7 +111,7 @@ public class ReadServiceAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.LIMIT_AND_OFFSET_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		if(!logsourceService.checkLogSourceExist(Integer.valueOf(id))){
+		if (!logsourceService.checkLogSourceExist(Integer.valueOf(id))) {
 			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
 		}
@@ -119,29 +121,29 @@ public class ReadServiceAPI {
 			startTime = MathUtil.parse2Long(start);
 			endTime = MathUtil.parse2Long(end);
 		} catch (ParseException e) {
-			logger.error("error", e); 
+			logger.error("error", e);
 			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_TIME_FORMAT);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
 
-		JSONObject jsonObject = readService.queryErrorRecordsWithTimeDetail(Integer.parseInt(id), startTime, endTime, "exception_count", "desc",
-				Integer.parseInt(limit), Integer.parseInt(offset));
+		JSONObject jsonObject = readService.queryErrorRecordsWithTimeDetail(Integer.parseInt(id), startTime, endTime,
+				"exception_count", "desc", Integer.parseInt(limit), Integer.parseInt(offset));
 		if (jsonObject == null) {
 			NotFoundRequestException nr = new NotFoundRequestException(Const.INNER_ERROR);
-			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
 	}
 
-	
 	/**
 	 * 获取unknown类型异常
 	 */
 	@RequestMapping(value = "/unknown/{id}", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JSONObject> readByUnknow(@PathVariable String id, 
-			@RequestParam(value = "start",required = false) String start,
-			@RequestParam(value = "end", required = false) String end, 
+	public ResponseEntity<JSONObject> readByUnknow(@PathVariable String id,
+			@RequestParam(value = "start", required = false) String start,
+			@RequestParam(value = "end", required = false) String end,
 			@RequestParam(value = "limit", required = false) String limit,
 			@RequestParam(value = "offset", required = false) String offset, Model model) {
 		if (MathUtil.isEmpty(start, end, limit, offset)) {
@@ -156,7 +158,7 @@ public class ReadServiceAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.LIMIT_AND_OFFSET_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		if(!logsourceService.checkLogSourceExist(Integer.valueOf(id))){
+		if (!logsourceService.checkLogSourceExist(Integer.valueOf(id))) {
 			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
 		}
@@ -175,9 +177,40 @@ public class ReadServiceAPI {
 				Integer.parseInt(limit), Integer.parseInt(offset));
 		if (jsonObject == null) {
 			NotFoundRequestException nr = new NotFoundRequestException(Const.INNER_ERROR);
-			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.INTERNAL_SERVER_ERROR);
+			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr),
+					HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/batch", method = RequestMethod.POST)
+	@ResponseBody
+	public ResponseEntity<JSONObject> findErrorBylogSourceIds(
+			@RequestParam(value = "logsourceIds", required = false) List<Integer> logSourceIds,
+			@RequestParam(value = "start", required = false) String start,
+			@RequestParam(value = "end", required = false) String end) {
+		if(logSourceIds == null || logSourceIds.size() == 0){
+			NullParamException ne = new NullParamException(Const.NULL_PARAM);
+			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+		}
+		if(MathUtil.isEmpty(start, end)){
+			NullParamException ne = new NullParamException(Const.NULL_PARAM);
+			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+		}
+		Long startTime = null;
+		Long endTime = null;
+		try {
+			startTime = MathUtil.parse2Long(start);
+			endTime = MathUtil.parse2Long(end);
+		} catch (ParseException e) {
+			logger.error("error", e);
+			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_TIME_FORMAT);
+			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
+		}
+		JSONObject result = readService.queryErrorRecordsByLogSourceIds(logSourceIds, startTime, endTime);
+//		JSONObject result = new JSONObject();
+//		result.put("logsourceIds.size()=", logSourceIds.size());
+		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 
 }

@@ -1,6 +1,9 @@
 package com.netease.qa.log.service.impl;
 
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -112,19 +115,18 @@ public class ReadServiceImpl implements ReadService {
 		for (int i = 0; i < logSources.size(); i++) {
 			JSONObject result = new JSONObject();
 			LogSource logSource = logSources.get(i);
-			JSONArray	datas = new JSONArray();
+			JSONArray datas = new JSONArray();
 			for (int j = 0; j < num; j++) {
 				long startTime = formatStartTime + timeRange * j + 1;
-				long endTime = startTime + timeRange ;
+				long endTime = startTime + timeRange;
 				int totalCount = 0;
 				// between包含前后区间值，此处取前开后闭，以防止重复数据。
 				try {
 					int logSourceId = logSource.getLogSourceId();
-					Integer total = exceptionDataDao.getTotalCountByLogsourceIdAndTime(
-							logSourceId, startTime, endTime);
-					if(total != null){
+					Integer total = exceptionDataDao.getTotalCountByLogsourceIdAndTime(logSourceId, startTime, endTime);
+					if (total != null) {
 						totalCount = total;
-					}else{
+					} else {
 						totalCount = 0;
 					}
 					JSONObject data = new JSONObject();
@@ -370,4 +372,66 @@ public class ReadServiceImpl implements ReadService {
 		}
 	}
 
+	/**
+	 * AB平台
+	 */
+	@Override
+	public JSONObject queryErrorRecordsByLogSourceIds(List<Integer> logSourceIds, long start_time, long end_time) {
+		JSONObject result = new JSONObject();
+		Map<String, JSONArray> temp = new HashMap<String, JSONArray>();
+		for (int i = 0; i < logSourceIds.size(); i++) {
+			JSONObject detail = new JSONObject(); // detail
+			int logsourceId = logSourceIds.get(i);
+			detail.put("logsourceid", logsourceId);
+			LogSource logSource = logSourceDao.findByLogSourceId(logsourceId);
+			String serverName = logSource.getHostname().trim();
+			Integer total_count = exceptionDataDao.getLogSourceExceptionTotalCountByTime(logsourceId, start_time,
+					end_time);
+			if (total_count == null) {
+				total_count = 0;
+			}
+			detail.put("total_count", total_count);
+			logger.info("logsourceId=" + logsourceId + ";total_count=" + total_count);
+			// 获取error_tc数组
+			JSONArray error_tcs = new JSONArray();
+			JSONObject error_tc;
+			List<ExceptionData> exceptionDatas = exceptionDataDao.findErrorRecordsByLogSourceIdAndTimeByAB(logsourceId,
+					start_time, end_time);
+			if (exceptionDatas != null && exceptionDatas.size() > 0) {
+				for (ExceptionData exceptionData : exceptionDatas) {
+					error_tc = new JSONObject();
+					error_tc.put("type", exceptionData.getExceptionType());
+					error_tc.put("count", exceptionData.getExceptionCount());
+					error_tcs.add(error_tc);
+				}
+			}
+			detail.put("error_tc", error_tcs);
+			JSONArray details = null;
+			if (!temp.containsKey(serverName)) {
+				details = new JSONArray();
+				details.add(detail);
+			} else {
+				details = temp.get(serverName);
+				details.add(detail);
+			}
+			temp.put(serverName, details);
+		}
+		// 把hashmap中的数据封装起来
+		JSONArray records = new JSONArray();
+		JSONObject record = null;
+		@SuppressWarnings("rawtypes")
+		Iterator iter = temp.entrySet().iterator();
+		while (iter.hasNext()) {
+			record = new JSONObject();
+			@SuppressWarnings("rawtypes")
+			Map.Entry entry = (Map.Entry) iter.next();
+			String key = (String) entry.getKey();
+			JSONArray val = (JSONArray) entry.getValue();
+			record.put("hostname", key);
+			record.put("detail", val);
+			records.add(record);
+		}
+		result.put("record", records);
+		return result;
+	}
 }
