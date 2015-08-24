@@ -66,8 +66,7 @@ public class LogsourceServiceImpl implements LogSourceService{
 		result.put("linestart", logSource.getLineStartRegex());
 		result.put("filterkeyword", logSource.getLineFilterKeyword());
 		result.put("typeregex", logSource.getLineTypeRegex());
-		result.put("creator", logSource.getLogSourceCreatorId());
-		result.put("status", logSource.getLogSourceStatus());
+		result.put("creatorid", logSource.getLogSourceCreatorId());
 		logger.debug(result.toJSONString());
 		return result;
 	}
