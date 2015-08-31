@@ -1,5 +1,6 @@
 package com.netease.qa.log.web.controller;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.ArrayList;
@@ -31,42 +32,61 @@ public class UserController extends BaseController {
 
     private static NeteaseOpenIdAuthService openAuthService = new NeteaseOpenIdAuthService();
 
+    private static final String LOCATION_NAME = "_NTES_LOCATION_";
+
+    /**
+     * OpenID登录页 .
+     * @param request
+     * @return
+     */
     @RequestMapping("/login")
-    public RedirectView loginWithOpenID(HttpServletRequest request) {
+    public RedirectView loginWithOpenId(HttpServletRequest request) {
         String uri = request.getRequestURI();
         String url = request.getRequestURL().toString();
         String realm = url.substring(0, url.indexOf(uri));
-        String realURL = request.getParameter("cb");
+        String realUrl = request.getParameter("cb");
         String returnTo = realm + "/user/callback";
-        if (realURL != null && realURL != "") {
-            returnTo += "?cb=" + realURL;
+        if (realUrl != null && realUrl != "") {
+            returnTo += "?cb=" + realUrl;
         }
-        String redirectUrl = openAuthService.getRedirectUrl(returnTo, realm);
+        String redirectUrl = openAuthService.getRedirectUrl(returnTo, realm, request.getSession());
+        logger.debug(request.getHeader("Refer"));
         return new RedirectView(redirectUrl);
     }
 
+    /**
+     * 登录成功回调页面 .
+     * @param request
+     * @param session
+     * @return
+     */
     @RequestMapping("/callback")
     public Object openIdDoLogin(HttpServletRequest request, HttpSession session) {
         String assocHandle = request.getParameter("openid.assoc_handle");
-        if (openAuthService.authSuccess(request.getQueryString(), assocHandle)) {
-            String name = request.getParameter("openid.sreg.nickname");
-            String fullname = request.getParameter("openid.sreg.fullname");
-            String email = request.getParameter("openid.sreg.email");
-            authSuccess(name, fullname, email, session);
-            String redirectUrl = request.getParameter("cb");
-            if (redirectUrl == null) {
-                redirectUrl = "/";
-            } else {
-                try {
-                    redirectUrl = URLDecoder.decode(redirectUrl, "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    logger.error("redirect url decode error", e);
+        try {
+            String macKey = (String) session.getAttribute(assocHandle);
+            if (openAuthService.checkSignature(request.getQueryString(), assocHandle, macKey)) {
+                String name = request.getParameter("openid.sreg.nickname");
+                String fullname = request.getParameter("openid.sreg.fullname");
+                String email = request.getParameter("openid.sreg.email");
+                authSuccess(name, fullname, email, session);
+                String redirectUrl = request.getParameter("cb");
+                if (redirectUrl == null) {
+                    redirectUrl = "/";
+                } else {
+                    try {
+                        redirectUrl = URLDecoder.decode(redirectUrl, "UTF-8");
+                    } catch (UnsupportedEncodingException e) {
+                        logger.error("redirect url decode error", e);
+                    }
                 }
+
+                return new RedirectView(redirectUrl);
             }
-            return new RedirectView(redirectUrl);
-        } else {
-            return new RedirectView("login");
+        } catch (IOException e) {
+            logger.error("认证失败", e);
         }
+        return new RedirectView("login");
     }
 
     /**
@@ -93,7 +113,6 @@ public class UserController extends BaseController {
             projects = new ArrayList<Project>();
         } else {
             projects = qbsService.getProjects(user.getId());
-            System.out.println("get projects end .....projects.size():" + projects.size());
         }
         session.setAttribute("user", user);
         session.setAttribute("projects", projects);
