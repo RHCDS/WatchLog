@@ -32,7 +32,7 @@
         <filter-class>com.netease.qa.log.web.filter.CheckLoginFilter</filter-class>
         <init-param>
             <param-name>exclude</param-name>
-            <param-value>/res/.*|(/.+\.(html|jpg|jpeg|png|gif|js|css|swf|ico))|((/user)?/(login|callback))</param-value>
+            <param-value>/res/.*|(/.+\.(html|jpg|jpeg|png|gif|js|css|swf|ico))|((/user)?/(login|callback))|(/api/.*)</param-value>
         </init-param>
         <init-param>
             <param-name>logined</param-name>
