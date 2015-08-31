@@ -24,7 +24,9 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 	
+	
 	 <!-- 登录检测 -->
+	 
     <filter>
         <filter-name>CheckLogin</filter-name>
         <filter-class>com.netease.qa.log.web.filter.CheckLoginFilter</filter-class>
