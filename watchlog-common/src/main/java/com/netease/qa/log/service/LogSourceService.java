@@ -44,5 +44,7 @@ public interface LogSourceService {
 	public ArrayList<LogSource> getLogsourcesByProjectId(int projectId, int limit, int offset);
 	
 	public ArrayList<LogSource> getLogsourcesByProjectIdOrderByName(int projectId, int limit, int offset);
+	
+	public JSONObject getStatusByLogsourceId(int logSourceid);
 
 }

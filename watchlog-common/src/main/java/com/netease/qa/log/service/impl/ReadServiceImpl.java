@@ -378,6 +378,7 @@ public class ReadServiceImpl implements ReadService {
 	@Override
 	public JSONObject queryErrorRecordsByLogSourceIds(List<Integer> logSourceIds, long start_time, long end_time) {
 		JSONObject result = new JSONObject();
+		//map用来临时
 		Map<String, JSONArray> temp = new HashMap<String, JSONArray>();
 		for (int i = 0; i < logSourceIds.size(); i++) {
 			JSONObject detail = new JSONObject(); // detail
