@@ -48,7 +48,9 @@ public class LogsourceServiceImpl implements LogSourceService{
 		}
 	}
 
-	
+	/**
+	 * 
+	 */
 	@Override
 	public JSONObject getDetailByLogSourceId(int logsourceid) {
 		LogSource logSource = logSourceDao.findByLogSourceId(logsourceid);  
@@ -56,17 +58,17 @@ public class LogsourceServiceImpl implements LogSourceService{
 			return null;
 		
 		JSONObject result = new JSONObject();
-		result.put("logsourceid", logSource.getLogSourceId());
-		result.put("logsourcename", logSource.getLogSourceName());
-		result.put("projectid", logSource.getProjectId());
-		result.put("modifytime", logSource.getModifyTime().toString());
+		result.put("log_source_id", logSource.getLogSourceId());
+		result.put("log_source_name", logSource.getLogSourceName());
+		result.put("project_id", logSource.getProjectId());
+		result.put("modify_time", logSource.getModifyTime().toString());
 		result.put("hostname", logSource.getHostname());
 		result.put("path", logSource.getPath());
-		result.put("filepattern", logSource.getFilePattern());
-		result.put("linestart", logSource.getLineStartRegex());
-		result.put("filterkeyword", logSource.getLineFilterKeyword());
-		result.put("typeregex", logSource.getLineTypeRegex());
-		result.put("creatorid", logSource.getLogSourceCreatorId());
+		result.put("file_pattern", logSource.getFilePattern());
+		result.put("line_start", logSource.getLineStartRegex());
+		result.put("filter_keyword", logSource.getLineFilterKeyword());
+		result.put("type_regex", logSource.getLineTypeRegex());
+		result.put("creator_id", logSource.getLogSourceCreatorId());
 		logger.debug(result.toJSONString());
 		return result;
 	}

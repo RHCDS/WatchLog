@@ -27,21 +27,21 @@ public class ProjectAPI {
 	@Resource
 	private ApiExceptionHandler apiException;
 	
-	@RequestMapping(value = "/{projectid}", method = RequestMethod.GET)
-	public ResponseEntity<JSONObject> findAllLogSourceByProjectId(@PathVariable String projectid){
-		if (MathUtil.isEmpty(projectid)) {
+	@RequestMapping(value = "/{project_id}", method = RequestMethod.GET)
+	public ResponseEntity<JSONObject> findAllLogSourceByProjectId(@PathVariable String project_id){
+		if (MathUtil.isEmpty(project_id)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
-		if (!MathUtil.isInteger(projectid)) {
+		if (!MathUtil.isInteger(project_id)) {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		if(!projectService.checkProjectExsit(Integer.parseInt(projectid))){
+		if(!projectService.checkProjectExsit(Integer.parseInt(project_id))){
 			NotFoundRequestException nr = new NotFoundRequestException(Const.PROJECT_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
 		}
-		JSONObject result = projectService.findAllLogSourcesByProjectId(Integer.parseInt(projectid));
+		JSONObject result = projectService.findAllLogSourcesByProjectId(Integer.parseInt(project_id));
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 }

@@ -36,15 +36,15 @@ public class LogSourceAPI {
 
 	@RequestMapping(method = RequestMethod.POST)
 	public ResponseEntity<JSONObject> addLogsource(
-			@RequestParam(value = "logsourcename", required = false) String logsourceName,
-			@RequestParam(value = "projectid", required = false) String projectid,
+			@RequestParam(value = "log_source_name", required = false) String logsourceName,
+			@RequestParam(value = "project_id", required = false) String projectid,
 			@RequestParam(value = "hostname", required = false) String hostname,
 			@RequestParam(value = "path", required = false) String path,
-			@RequestParam(value = "filepattern", required = false) String filepattern,
-			@RequestParam(value = "linestart", required = false) String linestart,
-			@RequestParam(value = "filterkeyword", required = false) String filterkeyword,
-			@RequestParam(value = "typeregex", required = false) String typeregex,
-			@RequestParam(value = "creatorid", required = false) String creatorid, Model model) {
+			@RequestParam(value = "file_pattern", required = false) String filepattern,
+			@RequestParam(value = "line_start", required = false) String linestart,
+			@RequestParam(value = "filter_keyword", required = false) String filterkeyword,
+			@RequestParam(value = "type_regex", required = false) String typeregex,
+			@RequestParam(value = "creator_id", required = false) String creatorid, Model model) {
 		if (MathUtil.isEmpty(logsourceName, projectid, hostname, path, filepattern, linestart, filterkeyword,
 				typeregex, creatorid)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
@@ -89,21 +89,21 @@ public class LogSourceAPI {
 					HttpStatus.INTERNAL_SERVER_ERROR);
 		} else {
 			JSONObject json = new JSONObject();
-			json.put("logsourceid", result);
+			json.put("log_source_id", result);
 			return new ResponseEntity<JSONObject>(json, HttpStatus.OK);
 		}
 	}
 
-	@RequestMapping(value = "/{logsourceid}", method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> updateLogsource(@PathVariable String logsourceid,
-			@RequestParam(value = "logsourcename", required = false) String logsourcename,
+	@RequestMapping(value = "/{log_source_id}", method = RequestMethod.POST)
+	public ResponseEntity<JSONObject> updateLogsource(@PathVariable String log_source_id,
+			@RequestParam(value = "log_source_name", required = false) String logsourcename,
 			@RequestParam(value = "hostname", required = false) String hostname,
 			@RequestParam(value = "path", required = false) String path,
-			@RequestParam(value = "filepattern", required = false) String filepattern,
-			@RequestParam(value = "linestart", required = false) String linestart,
-			@RequestParam(value = "filterkeyword", required = false) String filterkeyword,
-			@RequestParam(value = "typeregex", required = false) String typeregex, Model model) {
-		if (MathUtil.isEmpty(logsourceid, logsourcename, hostname, path, filepattern, linestart, filterkeyword,
+			@RequestParam(value = "file_pattern", required = false) String filepattern,
+			@RequestParam(value = "line_start", required = false) String linestart,
+			@RequestParam(value = "filter_keyword", required = false) String filterkeyword,
+			@RequestParam(value = "type_regex", required = false) String typeregex, Model model) {
+		if (MathUtil.isEmpty(log_source_id, logsourcename, hostname, path, filepattern, linestart, filterkeyword,
 				typeregex)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
@@ -112,15 +112,17 @@ public class LogSourceAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_NAME);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		if (!MathUtil.isInteger(logsourceid)) {
+		if (!MathUtil.isInteger(log_source_id)) {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		LogSource logSource = logsourceService.getByLogSourceId(Integer.parseInt(logsourceid));
+		LogSource logSource = logsourceService.getByLogSourceId(Integer.parseInt(log_source_id));
 		if (logSource == null) {
 			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
 		}
+		System.out.println("logsource_name:" + logSource.getLogSourceName());
+		System.out.println("logsourcename:" + logsourcename );
 
 		if (!logSource.getLogSourceName().trim().equals(logsourcename)) {
 			if (logsourceService.checkLogSourceExist(logsourcename)) {
@@ -155,13 +157,19 @@ public class LogSourceAPI {
 		}
 	}
 
-	@RequestMapping(value = "/{logsourceid}", method = RequestMethod.GET)
-	public ResponseEntity<JSONObject> findLogSource(@PathVariable String logsourceid, Model model) {
-		if (!MathUtil.isInteger(logsourceid)) {
+	/**
+	 * 查询日志源详情
+	 * @param logsourceid
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/{log_source_id}", method = RequestMethod.GET)
+	public ResponseEntity<JSONObject> findLogSource(@PathVariable String log_source_id, Model model) {
+		if (!MathUtil.isInteger(log_source_id)) {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		JSONObject logSource = logsourceService.getDetailByLogSourceId(Integer.parseInt(logsourceid));
+		JSONObject logSource = logsourceService.getDetailByLogSourceId(Integer.parseInt(log_source_id));
 		if (logSource == null) {
 			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
@@ -170,18 +178,18 @@ public class LogSourceAPI {
 		}
 	}
 
-	@RequestMapping(value = "/{logsourceid}", method = RequestMethod.DELETE)
-	public ResponseEntity<JSONObject> deleteLogSource(@PathVariable String logsourceid, Model model) {
-		if (!MathUtil.isInteger(logsourceid)) {
+	@RequestMapping(value = "/{log_source_id}", method = RequestMethod.DELETE)
+	public ResponseEntity<JSONObject> deleteLogSource(@PathVariable String log_source_id, Model model) {
+		if (!MathUtil.isInteger(log_source_id)) {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		if (!logsourceService.checkLogSourceExist(Integer.parseInt(logsourceid))) {
+		if (!logsourceService.checkLogSourceExist(Integer.parseInt(log_source_id))) {
 			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
 		}
 
-		int result = logsourceService.deleteLogSource(Integer.parseInt(logsourceid));
+		int result = logsourceService.deleteLogSource(Integer.parseInt(log_source_id));
 		if (result == 0) {
 			InvalidRequestException ex = new InvalidRequestException(Const.INNER_ERROR);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex),
@@ -191,14 +199,14 @@ public class LogSourceAPI {
 		}
 	}
 
-	@RequestMapping(value = "/changestatus/{logsourceid}", method = RequestMethod.POST)
-	public ResponseEntity<JSONObject> changeStatus(@PathVariable String logsourceid,
+	@RequestMapping(value = "/changestatus/{log_source_id}", method = RequestMethod.POST)
+	public ResponseEntity<JSONObject> changeStatus(@PathVariable String log_source_id,
 			@RequestParam(value = "status", required = false) String status, Model model) {
 		if (MathUtil.isEmpty(status)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
-		if (!MathUtil.isInteger(logsourceid)) {
+		if (!MathUtil.isInteger(log_source_id)) {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
@@ -206,7 +214,7 @@ public class LogSourceAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.STATUS_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		LogSource logSource = logsourceService.getByLogSourceId(Integer.parseInt(logsourceid));
+		LogSource logSource = logsourceService.getByLogSourceId(Integer.parseInt(log_source_id));
 		if (logSource == null) {
 			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
@@ -223,21 +231,21 @@ public class LogSourceAPI {
 		}
 	}
 	
-	@RequestMapping(value = "/getstatus/{logsourceid}", method = RequestMethod.GET)
-	public ResponseEntity<JSONObject> getStatus(@PathVariable String logsourceid){
-		if (MathUtil.isEmpty(logsourceid)) {
+	@RequestMapping(value = "/getstatus/{log_source_id}", method = RequestMethod.GET)
+	public ResponseEntity<JSONObject> getStatus(@PathVariable String log_source_id){
+		if (MathUtil.isEmpty(log_source_id)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
-		if (!MathUtil.isInteger(logsourceid)) {
+		if (!MathUtil.isInteger(log_source_id)) {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		if(!logsourceService.checkLogSourceExist(Integer.parseInt(logsourceid))){
+		if(!logsourceService.checkLogSourceExist(Integer.parseInt(log_source_id))){
 			NotFoundRequestException nr = new NotFoundRequestException(Const.LOG_NOT_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
 		}
-		JSONObject result = logsourceService.getStatusByLogsourceId(Integer.parseInt(logsourceid));
+		JSONObject result = logsourceService.getStatusByLogsourceId(Integer.parseInt(log_source_id));
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 

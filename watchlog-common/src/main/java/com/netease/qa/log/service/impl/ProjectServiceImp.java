@@ -70,16 +70,16 @@ public class ProjectServiceImp implements ProjectService{
 		if(logSources != null && logSources.size() > 0){
 			for(LogSource logSource : logSources){
 				logsource = new JSONObject();
-				logsource.put("logsourceid", logSource.getLogSourceId());
-				logsource.put("logsourcename", logSource.getLogSourceName());
-				logsource.put("modifytime", MathUtil.parse2Str(logSource.getModifyTime()));
+				logsource.put("log_source_id", logSource.getLogSourceId());
+				logsource.put("log_source_name", logSource.getLogSourceName());
+				logsource.put("modify_time", MathUtil.parse2Str(logSource.getModifyTime()));
 				logsource.put("hostname", logSource.getHostname());
 				logsource.put("path", logSource.getPath());
-				logsource.put("filepattern", logSource.getFilePattern());
-				logsource.put("linestart", logSource.getLineStartRegex());
-				logsource.put("filterkeyword", logSource.getLineFilterKeyword());
-				logsource.put("typeregex", logSource.getLineTypeRegex());
-				logsource.put("creatorid", logSource.getLogSourceCreatorId());
+				logsource.put("file_pattern", logSource.getFilePattern());
+				logsource.put("line_start", logSource.getLineStartRegex());
+				logsource.put("filter_keyword", logSource.getLineFilterKeyword());
+				logsource.put("type_regex", logSource.getLineTypeRegex());
+				logsource.put("creator_id", logSource.getLogSourceCreatorId());
 				logsource.put("status", logSource.getLogSourceStatus());
 				logsources.add(logsource);
 			}
@@ -87,9 +87,9 @@ public class ProjectServiceImp implements ProjectService{
 			logsources.add(logsource);
 		}
 		
-		result.put("projectid", project.getId());
+		result.put("project_id", project.getId());
 		result.put("name", project.getName());
-		result.put("logsources", logsources);
+		result.put("log_sources", logsources);
 		return result;
 	}
 

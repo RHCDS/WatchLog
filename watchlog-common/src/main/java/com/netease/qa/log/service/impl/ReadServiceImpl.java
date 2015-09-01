@@ -160,8 +160,8 @@ public class ReadServiceImpl implements ReadService {
 		}
 		// 组装数据
 		JSONObject result = new JSONObject();
-		result.put("projectid", logSourceDao.findByLogSourceId(logSourceId).getProjectId());
-		result.put("logsourceid", logSourceId);
+		result.put("project_id", logSourceDao.findByLogSourceId(logSourceId).getProjectId());
+		result.put("log_source_id", logSourceId);
 
 		JSONArray records = new JSONArray();
 		for (ExceptionDataRecord eRecord : exceptionDataRecords) {
@@ -247,8 +247,8 @@ public class ReadServiceImpl implements ReadService {
 		}
 		// 组装数据
 		JSONObject result = new JSONObject();
-		result.put("projectid", logSourceDao.findByLogSourceId(logSourceId).getProjectId());
-		result.put("logsourceid", logSourceId);
+		result.put("project_id", logSourceDao.findByLogSourceId(logSourceId).getProjectId());
+		result.put("log_source_id", logSourceId);
 		JSONObject error = new JSONObject();
 		JSONArray errors = new JSONArray();
 		// 当unknown不为空，且第一页，才把error装入array中
@@ -305,8 +305,8 @@ public class ReadServiceImpl implements ReadService {
 		}
 		// 组装数据
 		JSONObject result = new JSONObject();
-		result.put("projectid", this.logSourceDao.findByLogSourceId(logSourceId).getProjectId());
-		result.put("logsourceid", logSourceId);
+		result.put("project_id", this.logSourceDao.findByLogSourceId(logSourceId).getProjectId());
+		result.put("log_source_id", logSourceId);
 		// 查不到数据，unknown部分为空
 		if (ukExceptionDatas.size() == 0) {
 			result.put("unknowns", new JSONArray());
@@ -383,7 +383,7 @@ public class ReadServiceImpl implements ReadService {
 		for (int i = 0; i < logSourceIds.size(); i++) {
 			JSONObject detail = new JSONObject(); // detail
 			int logsourceId = logSourceIds.get(i);
-			detail.put("logsourceid", logsourceId);
+			detail.put("log_source_id", logsourceId);
 			LogSource logSource = logSourceDao.findByLogSourceId(logsourceId);
 			String serverName = logSource.getHostname().trim();
 			Integer total_count = exceptionDataDao.getLogSourceExceptionTotalCountByTime(logsourceId, start_time,
@@ -392,7 +392,6 @@ public class ReadServiceImpl implements ReadService {
 				total_count = 0;
 			}
 			detail.put("total_count", total_count);
-			logger.info("logsourceId=" + logsourceId + ";total_count=" + total_count);
 			// 获取error_tc数组
 			JSONArray error_tcs = new JSONArray();
 			JSONObject error_tc;
