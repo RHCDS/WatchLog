@@ -185,7 +185,7 @@ public class ReadServiceAPI {
 	@RequestMapping(value = "/batch", method = RequestMethod.POST)
 	@ResponseBody
 	public ResponseEntity<JSONObject> findErrorBylogSourceIds(
-			@RequestParam(value = "logsource_list", required = false) List<Integer> logSourceIds,
+			@RequestParam(value = "log_source_list", required = false) List<Integer> logSourceIds,
 			@RequestParam(value = "start", required = false) String start,
 			@RequestParam(value = "end", required = false) String end) {
 		if(logSourceIds == null || logSourceIds.size() == 0){
