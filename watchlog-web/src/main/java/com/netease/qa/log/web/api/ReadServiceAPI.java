@@ -1,6 +1,7 @@
 package com.netease.qa.log.web.api;
 
 import java.text.ParseException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -195,6 +196,19 @@ public class ReadServiceAPI {
 		if(MathUtil.isEmpty(start, end)){
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+		}
+		//判断list中，是否有不存在日志源id
+		String nums = "";
+		for(int i=0;i<logSourceIds.size();i++){
+			if(!logsourceService.checkLogSourceExist(logSourceIds.get(i))){
+				nums += logSourceIds.get(i) + ",";
+			}
+		}
+		//存在一个日志源id不在数据库中的情况
+		if(!nums.equals("")){
+			nums = nums + " are not exist in database!";
+			InvalidRequestException ie = new InvalidRequestException(nums);
+			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ie), HttpStatus.BAD_REQUEST);
 		}
 		Long startTime = null;
 		Long endTime = null;
