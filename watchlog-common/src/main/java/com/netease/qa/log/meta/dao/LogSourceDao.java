@@ -9,7 +9,11 @@ public interface LogSourceDao {
 	
 	public int insert(LogSource logSource);
 	
+	public int insertAll(LogSource logSource);
+	
 	public int update(LogSource logSource);
+	
+	public int updateAll(LogSource logSource);
 
 	public int delete(int logSourceId);
     

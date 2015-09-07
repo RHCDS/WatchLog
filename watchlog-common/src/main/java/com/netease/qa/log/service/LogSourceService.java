@@ -9,7 +9,11 @@ public interface LogSourceService {
 
 	public int createLogSource(LogSource logSource);
 	
+	public int createAllLogSource(LogSource logSource);
+	
 	public int updateLogSource(LogSource logSource);
+	
+	public int updateAllLogSource(LogSource logSource);
 	
 	public JSONObject getDetailByLogSourceId(int logSourceid);
 	

@@ -12,6 +12,7 @@ public class Const {
 
 
     public static final String ID_MUST_BE_NUM = "id must be a number";
+    public static final String TYPE_MUST_BE_NUM="type must be a number of 0 or 1 ";
     public static final String STATUS_MUST_BE_NUM = "status must be 0 or 1";
     public static final String ACCURACY_MUST_BE_NUM = "accuracy must be a number";
     public static final String LIMIT_AND_OFFSET_MUST_BE_NUM = " limit or offset  must be a number";
