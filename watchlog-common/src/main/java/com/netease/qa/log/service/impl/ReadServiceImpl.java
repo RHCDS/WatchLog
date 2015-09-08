@@ -383,8 +383,9 @@ public class ReadServiceImpl implements ReadService {
 		for (int i = 0; i < logSourceIds.size(); i++) {
 			JSONObject detail = new JSONObject(); // detail
 			int logsourceId = logSourceIds.get(i);
-			detail.put("log_source_id", logsourceId);
 			LogSource logSource = logSourceDao.findByLogSourceId(logsourceId);
+			detail.put("log_source_id", logSource.getLogSourceId());
+			detail.put("log_source_name", logSource.getLogSourceName());
 			String serverName = logSource.getHostname().trim();
 			Integer total_count = exceptionDataDao.getLogSourceExceptionTotalCountByTime(logsourceId, start_time,
 					end_time);
