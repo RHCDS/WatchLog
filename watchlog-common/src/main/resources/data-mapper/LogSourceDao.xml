@@ -5,6 +5,7 @@
 	<sql id="allColumn">
 		log_source_id as logSourceId,
 		log_source_name as logSourceName,
+		type as type,
 		project_id as projectId,
 		create_time as createTime,
 		modify_time as modifyTime,
@@ -14,17 +15,26 @@
 		line_start_regex as lineStartRegex,
 		line_filter_keyword as lineFilterKeyword,
 		line_type_regex as lineTypeRegex,
+		log_format as logFormat,
 		creator_id as logSourceCreatorId,
 		status as logSourceStatus
 	</sql>
 
 	<insert id="insert" parameterType="com.netease.qa.log.meta.LogSource" useGeneratedKeys="true" keyProperty="logSourceId">
-		insert into log_source(log_source_name,project_id,create_time, hostname, path, file_pattern, line_start_regex, 
+		insert into log_source(log_source_name,project_id,type, create_time, hostname, path, file_pattern, line_start_regex, 
 		line_filter_keyword, line_type_regex, creator_id, status)
-		values(#{logSourceName},#{projectId}, now(), #{hostname}, #{path}, #{filePattern}, #{lineStartRegex},
+		values(#{logSourceName},#{projectId}, 0, now(), #{hostname}, #{path}, #{filePattern}, #{lineStartRegex},
 		 #{lineFilterKeyword}, #{lineTypeRegex}, #{logSourceCreatorId}, 0)
 	</insert>
+	
+	<insert id="insertAll" parameterType="com.netease.qa.log.meta.LogSource" useGeneratedKeys="true" keyProperty="logSourceId">
+	      insert into log_source(log_source_name, project_id, type, create_time, hostname, path, file_pattern, line_start_regex, 
+	                              line_filter_keyword, line_type_regex, log_format, creator_id, status) 
+	            values(#{logSourceName},#{projectId}, #{type}, now(), #{hostname}, #{path}, #{filePattern},#{lineStartRegex},
+		                 #{lineFilterKeyword}, #{lineTypeRegex}, #{logFormat}, #{logSourceCreatorId}, 0)
+	</insert>
 
+<!-- 为了不影响到web controller,单独更新nginx -->
 	<update id="update" parameterType="com.netease.qa.log.meta.LogSource">
 		update log_source set 
 		log_source_name=#{logSourceName},
@@ -38,6 +48,23 @@
 		status=#{logSourceStatus} 
 		where log_source_id=#{logSourceId}
 	</update>
+	
+	<update id="updateAll" parameterType="com.netease.qa.log.meta.LogSource">
+	    update log_source set 
+		log_source_name=#{logSourceName},
+		type=#{type},
+		project_id=#{projectId}, 
+		hostname=#{hostname},
+		path=#{path}, 
+		file_pattern=#{filePattern},
+		line_start_regex=#{lineStartRegex},
+		line_filter_keyword=#{lineFilterKeyword},
+		line_type_regex=#{lineTypeRegex},
+		log_format=#{logFormat},
+		status=#{logSourceStatus} 
+		where log_source_id=#{logSourceId}
+	</update>
+
 
 	<delete id="delete" parameterType="java.lang.Integer">
 		update log_source set status = 3  where log_source_id=#{logSourceId}

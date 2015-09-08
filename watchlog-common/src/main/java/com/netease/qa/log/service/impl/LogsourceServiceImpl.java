@@ -35,12 +35,34 @@ public class LogsourceServiceImpl implements LogSourceService{
 			return 0;
 		}	
 	}
+	
+	@Override
+	public int createAllLogSource(LogSource logSource) {
+		try {
+			logSourceDao.insertAll(logSource);
+			return logSource.getLogSourceId();
+		} catch (Exception e) {
+			logger.error("error", e);
+			return 0;
+		}	
+	}
 
 	
 	@Override
 	public int updateLogSource(LogSource logSource) {
 		try {
 			logSourceDao.update(logSource);
+			return 1;
+		} catch (Exception e) {
+			logger.error("error", e);
+			return 0;
+		}
+	}
+	
+	@Override
+	public int updateAllLogSource(LogSource logSource) {
+		try {
+			logSourceDao.updateAll(logSource);
 			return 1;
 		} catch (Exception e) {
 			logger.error("error", e);
@@ -60,14 +82,23 @@ public class LogsourceServiceImpl implements LogSourceService{
 		JSONObject result = new JSONObject();
 		result.put("log_source_id", logSource.getLogSourceId());
 		result.put("log_source_name", logSource.getLogSourceName());
+		result.put("type", logSource.getType());
 		result.put("project_id", logSource.getProjectId());
 		result.put("modify_time", logSource.getModifyTime().toString());
 		result.put("hostname", logSource.getHostname());
 		result.put("path", logSource.getPath());
 		result.put("file_pattern", logSource.getFilePattern());
-		result.put("line_start", logSource.getLineStartRegex());
-		result.put("filter_keyword", logSource.getLineFilterKeyword());
-		result.put("type_regex", logSource.getLineTypeRegex());
+		if(logSource.getType() == 0){
+			result.put("line_start", logSource.getLineStartRegex());
+			result.put("filter_keyword", logSource.getLineFilterKeyword());
+			result.put("type_regex", logSource.getLineTypeRegex());
+			result.put("log_source_format", "");
+		}else{
+			result.put("line_start", "");
+			result.put("filter_keyword", "");
+			result.put("type_regex", "");
+			result.put("log_source_format", logSource.getLogFormat());
+		}
 		result.put("creator_id", logSource.getLogSourceCreatorId());
 		logger.debug(result.toJSONString());
 		return result;

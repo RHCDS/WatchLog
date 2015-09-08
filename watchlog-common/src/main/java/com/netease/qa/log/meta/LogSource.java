@@ -12,6 +12,7 @@ public class LogSource {
 	
 	private int logSourceId;
 	private String logSourceName;
+	private int type;
 	private int projectId;
 	private Timestamp  createTime;
 	private Timestamp  modifyTime;
@@ -21,6 +22,7 @@ public class LogSource {
 	private String lineStartRegex;
 	private String lineFilterKeyword;
 	private String lineTypeRegex;
+	private String logFormat;
 	private int logSourceCreatorId;
 	private int logSourceStatus;
 	
@@ -219,6 +221,22 @@ public class LogSource {
 
 	public void setLogSourceCreatorId(int logSourceCreatorId) {
 		this.logSourceCreatorId = logSourceCreatorId;
+	}
+	
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public String getLogFormat() {
+		return logFormat;
+	}
+
+	public void setLogFormat(String logFormat) {
+		this.logFormat = logFormat;
 	}
 
 	public String toString(){
