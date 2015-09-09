@@ -84,7 +84,7 @@ public class LogSourceAPI {
 		LogSource logSource = new LogSource();
 		logSource.setLogSourceName(logsourceName);
 		logSource.setProjectId(Integer.parseInt(projectid));
-		logSource.setType(Integer.parseInt(type));
+		logSource.setLogType(Integer.parseInt(type));
 		logSource.setHostname(hostname);
 		logSource.setPath(path);
 		logSource.setFilePattern(filepattern);
@@ -173,13 +173,13 @@ public class LogSourceAPI {
 		logSource.setFilePattern(filepattern);
 		//修改异常日志源
 		if(Integer.parseInt(type) == 0){
-			logSource.setType(0);
+			logSource.setLogType(0);
 			logSource.setLineStartRegex(linestart);
 			logSource.setLineFilterKeyword(filterkeyword);
 			logSource.setLineTypeRegex(typeregex);
 			logSource.setLogFormat("");
 		}else{
-			logSource.setType(1);
+			logSource.setLogType(1);
 			logSource.setLineStartRegex("");
 			logSource.setLineFilterKeyword("");
 			logSource.setLineTypeRegex("");
