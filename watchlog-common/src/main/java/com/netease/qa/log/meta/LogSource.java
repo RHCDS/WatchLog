@@ -12,7 +12,7 @@ public class LogSource {
 	
 	private int logSourceId;
 	private String logSourceName;
-	private int type;
+	private int logType;
 	private int projectId;
 	private Timestamp  createTime;
 	private Timestamp  modifyTime;
@@ -134,6 +134,14 @@ public class LogSource {
 	public void setLogSourceName(String logSourceName) {
 		this.logSourceName = logSourceName;
 	}
+	
+	public int getLogType() {
+		return logType;
+	}
+
+	public void setLogType(int logType) {
+		this.logType = logType;
+	}
 	public int getProjectId() {
 		return projectId;
 	}
@@ -223,13 +231,6 @@ public class LogSource {
 		this.logSourceCreatorId = logSourceCreatorId;
 	}
 	
-	public int getType() {
-		return type;
-	}
-
-	public void setType(int type) {
-		this.type = type;
-	}
 
 	public String getLogFormat() {
 		return logFormat;

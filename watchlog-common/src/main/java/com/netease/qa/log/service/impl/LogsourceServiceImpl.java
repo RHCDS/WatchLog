@@ -82,13 +82,13 @@ public class LogsourceServiceImpl implements LogSourceService{
 		JSONObject result = new JSONObject();
 		result.put("log_source_id", logSource.getLogSourceId());
 		result.put("log_source_name", logSource.getLogSourceName());
-		result.put("type", logSource.getType());
+		result.put("type", logSource.getLogType());
 		result.put("project_id", logSource.getProjectId());
 		result.put("modify_time", logSource.getModifyTime().toString());
 		result.put("hostname", logSource.getHostname());
 		result.put("path", logSource.getPath());
 		result.put("file_pattern", logSource.getFilePattern());
-		if(logSource.getType() == 0){
+		if(logSource.getLogType() == 0){
 			result.put("line_start", logSource.getLineStartRegex());
 			result.put("filter_keyword", logSource.getLineFilterKeyword());
 			result.put("type_regex", logSource.getLineTypeRegex());

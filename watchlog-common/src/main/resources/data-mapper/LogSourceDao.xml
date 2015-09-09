@@ -5,7 +5,7 @@
 	<sql id="allColumn">
 		log_source_id as logSourceId,
 		log_source_name as logSourceName,
-		type as type,
+		log_type as logType,
 		project_id as projectId,
 		create_time as createTime,
 		modify_time as modifyTime,
@@ -21,16 +21,16 @@
 	</sql>
 
 	<insert id="insert" parameterType="com.netease.qa.log.meta.LogSource" useGeneratedKeys="true" keyProperty="logSourceId">
-		insert into log_source(log_source_name,project_id,type, create_time, hostname, path, file_pattern, line_start_regex, 
+		insert into log_source(log_source_name,project_id,log_type, create_time, hostname, path, file_pattern, line_start_regex, 
 		line_filter_keyword, line_type_regex, creator_id, status)
 		values(#{logSourceName},#{projectId}, 0, now(), #{hostname}, #{path}, #{filePattern}, #{lineStartRegex},
 		 #{lineFilterKeyword}, #{lineTypeRegex}, #{logSourceCreatorId}, 0)
 	</insert>
 	
 	<insert id="insertAll" parameterType="com.netease.qa.log.meta.LogSource" useGeneratedKeys="true" keyProperty="logSourceId">
-	      insert into log_source(log_source_name, project_id, type, create_time, hostname, path, file_pattern, line_start_regex, 
+	      insert into log_source(log_source_name, project_id, log_type, create_time, hostname, path, file_pattern, line_start_regex, 
 	                              line_filter_keyword, line_type_regex, log_format, creator_id, status) 
-	            values(#{logSourceName},#{projectId}, #{type}, now(), #{hostname}, #{path}, #{filePattern},#{lineStartRegex},
+	            values(#{logSourceName},#{projectId}, #{logType}, now(), #{hostname}, #{path}, #{filePattern},#{lineStartRegex},
 		                 #{lineFilterKeyword}, #{lineTypeRegex}, #{logFormat}, #{logSourceCreatorId}, 0)
 	</insert>
 
@@ -52,7 +52,7 @@
 	<update id="updateAll" parameterType="com.netease.qa.log.meta.LogSource">
 	    update log_source set 
 		log_source_name=#{logSourceName},
-		type=#{type},
+		log_type=#{logType},
 		project_id=#{projectId}, 
 		hostname=#{hostname},
 		path=#{path}, 
