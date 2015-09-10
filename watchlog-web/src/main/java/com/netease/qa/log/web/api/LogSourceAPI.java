@@ -47,8 +47,7 @@ public class LogSourceAPI {
 			@RequestParam(value = "type_regex", required = false) String typeregex,
 			@RequestParam(value = "log_source_format", required = false) String logSourceFormat,
 			@RequestParam(value = "creator_id", required = false) String creatorid, Model model) {
-		if (MathUtil.isEmpty(logsourceName, projectid, type, hostname, path, filepattern, linestart, filterkeyword,
-				typeregex, logSourceFormat, creatorid)) {
+		if (MathUtil.isEmpty(logsourceName, projectid, type, hostname, path, filepattern, creatorid)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
@@ -91,11 +90,19 @@ public class LogSourceAPI {
 		logSource.setLogSourceCreatorId(Integer.parseInt(creatorid));
 		// 创建异常日志源
 		if (Integer.parseInt(type) == 0) {
+			if(MathUtil.isEmpty(linestart, filterkeyword, typeregex)){
+				NullParamException ne = new NullParamException(Const.NULL_PARAM);
+				return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+			}
 			logSource.setLineStartRegex(linestart);
 			logSource.setLineFilterKeyword(filterkeyword);
 			logSource.setLineTypeRegex(typeregex);
 			logSource.setLogFormat("");
 		} else {
+			if(MathUtil.isEmpty(logSourceFormat)){
+				NullParamException ne = new NullParamException(Const.NULL_PARAM);
+				return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+			}
 			logSource.setLineStartRegex("");
 			logSource.setLineFilterKeyword("");
 			logSource.setLineTypeRegex("");
@@ -124,8 +131,7 @@ public class LogSourceAPI {
 			@RequestParam(value = "filter_keyword", required = false) String filterkeyword,
 			@RequestParam(value = "type_regex", required = false) String typeregex, 
 			@RequestParam(value = "log_source_format", required = false) String logSourceFormat, Model model) {
-		if (MathUtil.isEmpty(log_source_id, logsourcename, type, hostname, path, filepattern, linestart, filterkeyword,
-				typeregex, logSourceFormat)) {
+		if (MathUtil.isEmpty(log_source_id, logsourcename, type, hostname, path, filepattern)) {
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
@@ -173,12 +179,20 @@ public class LogSourceAPI {
 		logSource.setFilePattern(filepattern);
 		//修改异常日志源
 		if(Integer.parseInt(type) == 0){
+			if(MathUtil.isEmpty(linestart, filterkeyword, typeregex)){
+				NullParamException ne = new NullParamException(Const.NULL_PARAM);
+				return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+			}
 			logSource.setLogType(0);
 			logSource.setLineStartRegex(linestart);
 			logSource.setLineFilterKeyword(filterkeyword);
 			logSource.setLineTypeRegex(typeregex);
 			logSource.setLogFormat("");
 		}else{
+			if(MathUtil.isEmpty(logSourceFormat)){
+				NullParamException ne = new NullParamException(Const.NULL_PARAM);
+				return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+			}
 			logSource.setLogType(1);
 			logSource.setLineStartRegex("");
 			logSource.setLineFilterKeyword("");
