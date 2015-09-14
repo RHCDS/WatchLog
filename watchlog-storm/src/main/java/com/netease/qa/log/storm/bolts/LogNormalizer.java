@@ -18,7 +18,6 @@ import backtype.storm.tuple.Values;
 import com.netease.qa.log.meta.LogSource;
 import com.netease.qa.log.storm.service.ConfigDataService;
 import com.netease.qa.log.storm.service.ConfigDataLoadTask;
-import com.netease.qbs.meta.Project;
 
 public class LogNormalizer implements IBasicBolt {
 
@@ -36,19 +35,10 @@ public class LogNormalizer implements IBasicBolt {
 			logger.warn("logsource in DB is null, logsource: " + hostname + " " + path + " " + filePattern);
 			return;
 		}
-		
-		Project project = ConfigDataService.getProject(logsource.getProjectId());
-		if(project == null) {
-			logger.warn("project in DB is null, logsource: " + hostname + " " + path + " " + filePattern);
-			return;
-		}
-		
 		logger.debug("logsource======"  + logsource);
-		logger.debug("project======"  + project);
-		
 		// 日志源启动了监控
 		if (logsource.getLogSourceStatus() == 1) {
-			collector.emit(new Values(input.getString(0), logsource.getLogSourceId(), project.getId(), input.getValue(4)));
+			collector.emit(new Values(input.getString(0), logsource.getLogSourceId(), logsource.getProjectId(), input.getValue(4)));
 		}
 
 	}
