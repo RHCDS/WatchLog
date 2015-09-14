@@ -17,7 +17,7 @@
 				<property name="driver" value="com.mysql.jdbc.Driver" />
 				<property name="url" value="jdbc:mysql://127.0.0.1:3306/log_demo" />
 				<property name="username" value="root" />
-				<property name="password" value="123" />
+				<property name="password" value="root" />
 			</dataSource>
 		</environment>
         <environment id="test">
@@ -40,10 +40,10 @@
 		</environment>
 	</environments>
 	<mappers>
-		<mapper resource="data-mapper/ProjectDao.xml" />
 		<mapper resource="data-mapper/LogSourceDao.xml" />
 		<mapper resource="data-mapper/ExceptionDao.xml" />
 		<mapper resource="data-mapper/UkExceptionDataDao.xml" />
 		<mapper resource="data-mapper/ExceptionDataDao.xml" />
+		<mapper resource="data-mapper/NginxAccessDao.xml" />
 	</mappers>
 </configuration> 
