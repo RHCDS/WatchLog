@@ -36,7 +36,7 @@ public class NginxAccessAPI {
 	@Resource
 	private NginxAccessService nginxAccessService;
 
-	@RequestMapping(value = "/nginx_charts/real_time/top_list", method = RequestMethod.POST)
+	@RequestMapping(value = "/nginx_charts/real_time/top_list", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> getRealTimeTopUrl(
 			@RequestParam(value = "log_source_id", required = false) String logsourceId,
 			@RequestParam(value = "start", required = false) String start,
@@ -81,7 +81,7 @@ public class NginxAccessAPI {
 
 	}
 	
-	@RequestMapping(value = "/nginx_charts/offline/top_list", method = RequestMethod.POST)
+	@RequestMapping(value = "/nginx_charts/offline/top_list", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> getOfflineTimeTopUrl(
 			@RequestParam(value = "log_source_id", required = false) String logsourceId,
 			@RequestParam(value = "start", required = false) String start,
@@ -126,7 +126,7 @@ public class NginxAccessAPI {
 
 	}
 	
-	@RequestMapping(value = "/nginx_statistics/offline", method = RequestMethod.POST)
+	@RequestMapping(value = "/nginx_statistics/offline", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> getTopAllData(
 			@RequestParam(value = "log_source_id", required = false) String logsourceId,
 			@RequestParam(value = "start", required = false) String start,
@@ -169,7 +169,7 @@ public class NginxAccessAPI {
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/nginx_charts/real_time/single", method = RequestMethod.POST)
+	@RequestMapping(value = "/nginx_charts/real_time/single", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> getRealTimeSingleData(
 			@RequestParam(value = "log_source_id", required = false) String logsourceId,
 			@RequestParam(value = "start", required = false) String start,
@@ -202,7 +202,7 @@ public class NginxAccessAPI {
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 	
-	@RequestMapping(value = "/nginx_charts/offline/single", method = RequestMethod.POST)
+	@RequestMapping(value = "/nginx_charts/offline/single", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> getOfflineAllData(
 			@RequestParam(value = "log_source_id", required = false) String logsourceId,
 			@RequestParam(value = "start", required = false) String start,
