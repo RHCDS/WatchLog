@@ -28,12 +28,14 @@ public class Const {
     public static final String DEFAULT = "default";
     public static final String RESPONSE_SUCCESSFUL = "response successfully";
     public static final String RESPONSE_NOTSUCCESSFUL = "response not successfully";
+    public static final String TIME_TOO_SHORT = "time range is too short";
     
     public static final String FILITER_TYPE = "type_regex";
     
     
     public static final long RT_SHOW_TIME = 30; //实时分析页面前端显示间隔，s
     public static final long RT_SHOW_NUM = 15; //实时分析页面显示记录条数
+    public static final int OFFLINE_POINT=300;//AB平台，离线曲线需要显示的点的个数
     
     public static final String ORDER_FIELD_SAMPLE_TIME = "sample_time";
     public static final String ORDER_FIELD_SAMPLETIME = "sampleTime";

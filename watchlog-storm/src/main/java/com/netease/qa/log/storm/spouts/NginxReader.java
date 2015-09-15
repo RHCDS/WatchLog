@@ -7,7 +7,6 @@ import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.netease.qa.log.storm.bolts.nginx.NginxNormalizer;
 
 import backtype.storm.spout.SpoutOutputCollector;
 import backtype.storm.task.TopologyContext;
@@ -21,7 +20,6 @@ public class NginxReader implements IRichSpout {
 
 	private FileReader fileReader;
 	private SpoutOutputCollector collector;
-	private boolean completed = false;
 	
 	private static final Logger logger = LoggerFactory.getLogger(NginxReader.class);
 	private static int count = 0;
