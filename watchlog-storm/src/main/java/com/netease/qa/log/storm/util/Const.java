@@ -1,6 +1,10 @@
 package com.netease.qa.log.storm.util;
 
 public class Const {
+	
+	//日志类型
+	public static final String NGINX_LOG = "nginx";
+	public static final String EXCEPTION_LOG = "exception";
 
 	public static final String REMOTE_ADDR = "remote_addr";
 	public static final String REMOTE_USER = "remote_user";
