@@ -7,6 +7,7 @@ import com.netease.qa.log.storm.bolts.LogFilter;
 import com.netease.qa.log.storm.bolts.LogNormalizer;
 import com.netease.qa.log.storm.bolts.ResultWriter;
 import com.netease.qa.log.storm.spouts.MQConsumer;
+import com.netease.qa.log.storm.util.ConfigReader;
 
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
@@ -46,11 +47,11 @@ public class MyLogTopology {
 		
 		// Topology definition
 		TopologyBuilder builder = new TopologyBuilder();
-		builder.setSpout("mq-consumer", new MQConsumer(), 3);
-		builder.setBolt("log-normalizer", new LogNormalizer(), 3).shuffleGrouping("mq-consumer");
-		builder.setBolt("log-filter", new LogFilter(), 3).shuffleGrouping("log-normalizer");
-		builder.setBolt("log-analyser", new LogAnalyser()).shuffleGrouping("log-filter");
-		builder.setBolt("result-writer", new ResultWriter()).shuffleGrouping("log-analyser");
+		builder.setSpout("mq-consumer", new MQConsumer(), ConfigReader.LOG_SPOUT);
+		builder.setBolt("log-normalizer", new LogNormalizer(), ConfigReader.LOG_NORMALIZER_BOLT).shuffleGrouping("mq-consumer");
+		builder.setBolt("log-filter", new LogFilter(), ConfigReader.LOG_FILTER_BOLT).shuffleGrouping("log-normalizer");
+		builder.setBolt("log-analyser", new LogAnalyser(), ConfigReader.LOG_ANALYSER_BOLT).shuffleGrouping("log-filter");
+		builder.setBolt("result-writer", new ResultWriter(), ConfigReader.RESULT_WRITER_BOLT).shuffleGrouping("log-analyser");
 
 		// Configuration
 		Config conf = new Config();

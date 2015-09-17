@@ -49,7 +49,8 @@ public class MQConsumer extends BaseRichSpout {
 	}
 
 
-	public static void main(String[] args) throws IOException, ShutdownSignalException, ConsumerCancelledException, InterruptedException {
+	public static void main(String[] args) throws IOException, ShutdownSignalException,
+	ConsumerCancelledException, InterruptedException {
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(host);
 		factory.setPort(port);

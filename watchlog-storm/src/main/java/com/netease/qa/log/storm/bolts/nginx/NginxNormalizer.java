@@ -56,18 +56,6 @@ public class NginxNormalizer implements IRichBolt {
 		}
 		String config = logsource.getLogFormat();
 		int logsourceId = logsource.getLogSourceId();
-		
-//		Record record = ns.normalizerInput(line, config);
-//		record.setLog_source_id(logsourceId);
-//		ArrayList<Tuple> a = new ArrayList<Tuple>();
-//		a.add(input);
-//		int requestTime = (int) (record.getRequest_time() * 1000);
-//		int upstream_response_time = (int) (record.getUpstream_response_time() * 1000);
-//		logger.info("first bolt:" + (++index));
-//		collector.emit(input, new Values(record.getLog_source_id(), record.getRemote_addr(), record.getTime_local(),
-//				record.getRequest(), record.getStatus(), record.getBody_bytes_sent(), requestTime,
-//				upstream_response_time));
-//		collector.ack(input);
 		logger.info("first bolt start0:" + (++count));
 		try {
 			Record record = ns.normalizerInput(line, config);
