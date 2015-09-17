@@ -4,7 +4,9 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	version="3.0">
 	<display-name>Archetype Created Web Application</display-name>
+	
 	<!-- Spring的配置文件 -->
+	<!-- 该标签会在创建web容器时，查找applicationContext.xml文件，把spring ioc容器加入web容器 -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:applicationContext.xml</param-value>
@@ -62,7 +64,7 @@
        <url-pattern>/*</url-pattern>
     </filter-mapping>
     
-	<!-- Spring监听器 -->
+	<!-- Spring监听器 ，监听是否需要加载spring 容器，必要要-->
 	<listener>
 		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
 	</listener>
