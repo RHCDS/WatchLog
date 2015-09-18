@@ -27,7 +27,11 @@ public class MybatisUtil {
         } catch (Exception e) {
         	logger.error("error", e);
         }
+        
+        //获取storm的配置文件，这个方法好像不行
         Map env = Utils.readStormConfig();
+        String env1 = env.get(Const.MYBATIS_EVN).toString();
+        
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, ConfigReader.MYBATIS_ENV);
 		logger.info("---init sqlSession factory---");
     }
