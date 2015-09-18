@@ -1,12 +1,15 @@
 package com.netease.qa.log.storm.util;
 
 import java.io.Reader;
+import java.util.Map;
 
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import backtype.storm.utils.Utils;
 
 
 
@@ -24,6 +27,7 @@ public class MybatisUtil {
         } catch (Exception e) {
         	logger.error("error", e);
         }
+        Map env = Utils.readStormConfig();
         sqlSessionFactory = new SqlSessionFactoryBuilder().build(reader, ConfigReader.MYBATIS_ENV);
 		logger.info("---init sqlSession factory---");
     }
