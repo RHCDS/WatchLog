@@ -5,7 +5,12 @@ public class Const {
 	//日志类型
 	public static final String NGINX_LOG = "nginx";
 	public static final String EXCEPTION_LOG = "exception";
-
+	//分布式常量
+	public static final String MQ_QUEUE = "queueName";
+	public static final String MQ_HOST = "mqhost";
+	public static final String MQ_PORT = "mqport";
+	public static final String MYBATIS_EVN = "mybatis";
+	
 	public static final String REMOTE_ADDR = "remote_addr";
 	public static final String REMOTE_USER = "remote_user";
 	public static final String TIME_LOCAL = "time_local";

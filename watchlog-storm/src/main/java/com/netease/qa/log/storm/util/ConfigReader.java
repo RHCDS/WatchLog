@@ -1,5 +1,8 @@
 package com.netease.qa.log.storm.util;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -19,10 +22,12 @@ public class ConfigReader {
 	public static String MQ_HOST;
 	public static int MQ_PORT;
 	public static String MQ_QUEUE;
+	//mybatis配置
 	// storm的相关配置
 	public static int TOPOLOGY_WORKERS;
 	public static int TOPOLOGY_MAX_SPOUT_PENDING;
 	public static int TOPOLOGY_ACKER_EXECUTORS;
+	public static String TOPOLOGY_NAME;
 	// 异常日志topology的配置
 	public static int LOG_SPOUT;
 	public static int LOG_NORMALIZER_BOLT;
@@ -39,16 +44,22 @@ public class ConfigReader {
 		Properties properties = new Properties();
 		InputStream is = null;
 		Reader reader = null;
-		is = ConfigReader.class.getResourceAsStream(fileName);
+		File file = new File(fileName);
 		try {
-			reader = new InputStreamReader(is, "UTF-8");
-			properties.load(reader);
-		} catch (UnsupportedEncodingException e) {
-			logger.error("error", e);
-		} catch (IOException e) {
-			logger.error("error", e);
+			is = new FileInputStream(file);
+			try {
+				reader = new InputStreamReader(is, "UTF-8");
+				properties.load(reader);
+			} catch (UnsupportedEncodingException e) {
+				logger.error("error", e);
+			} catch (IOException e) {
+				logger.error("error", e);
+			}
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			logger.error("error", e1);
 		}
-
+//		is = ConfigReader.class.getResourceAsStream(fileName);
 		LOG_TYPE = properties.getProperty("log.type");
 		MYBATIS_ENV = properties.getProperty("mybatis.env");
 		MQ_HOST = properties.getProperty("mq.host");
@@ -58,6 +69,7 @@ public class ConfigReader {
 		TOPOLOGY_WORKERS = Integer.valueOf(properties.getProperty("topology_workers"));
 		TOPOLOGY_MAX_SPOUT_PENDING = Integer.valueOf(properties.getProperty("topology_max_spout_pending"));
 		TOPOLOGY_ACKER_EXECUTORS = Integer.valueOf(properties.getProperty("topology_acker_executors"));
+		TOPOLOGY_NAME = properties.getProperty("topology.name");
 
 		LOG_SPOUT = Integer.valueOf(properties.getProperty("mq_consumer.spout"));
 		LOG_NORMALIZER_BOLT = Integer.valueOf(properties.getProperty("log_normalizer.bolt"));
