@@ -5,7 +5,8 @@ public class Const {
 	//日志统计数据的入库间隔。 
 	public static final int EXCEPTION_LOG_WRITE_DURATION = 30000; //每隔30秒聚合一次，写入数据库
 	public static final int NGINX_LOG_WRITE_DURATION = 30000;
-	
+	public static final int CONFIG_LOAD_DURATION = 15000;
+
 	//日志类型
 	public static final String NGINX_LOG = "nginx";
 	public static final String EXCEPTION_LOG = "exception";
