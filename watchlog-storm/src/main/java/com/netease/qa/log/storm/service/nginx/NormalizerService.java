@@ -1,6 +1,5 @@
 package com.netease.qa.log.storm.service.nginx;
 
-import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.Map;
 
@@ -8,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.netease.qa.log.storm.bean.Record;
-import com.netease.qa.log.storm.spouts.MQConsumer;
 import com.netease.qa.log.storm.util.Const;
 import com.netease.qa.log.storm.util.MathUtil;
 import com.netease.qa.log.storm.util.Regex;

@@ -18,15 +18,11 @@ import com.netease.qa.log.storm.service.nginx.FilterService;
 
 public class FilterUrl implements IRichBolt {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private OutputCollector collector;
 	private static final Logger logger = LoggerFactory.getLogger(FilterUrl.class);
-	private static int index = 0;
 
-	public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
+	public void prepare(@SuppressWarnings("rawtypes") Map stormConf, TopologyContext context, OutputCollector collector) {
 		this.collector = collector;
 	}
 
@@ -42,15 +38,13 @@ public class FilterUrl implements IRichBolt {
 		ArrayList<Tuple> a = new ArrayList<Tuple>();
 		a.add(input);
 		if (isFilter) {
-			
+			logger.info("get nginx log: " + input.getString(0) + " " + url);
 			collector.emit( new Values(input.getValue(0), input.getValue(1), input.getValue(2), url, input.getValue(4), input
 					.getValue(5), input.getValue(6), input.getValue(7)));
-//			logger.info("second bolt:" + (++index));
 		}
 	}
 
 	public void cleanup() {
-		// TODO Auto-generated method stub
 
 	}
 

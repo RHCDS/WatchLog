@@ -2,14 +2,18 @@ package com.netease.qa.log.storm.util;
 
 public class Const {
 	
+	//日志统计数据的入库间隔。 
+	public static final int EXCEPTION_LOG_WRITE_DURATION = 30000; //每隔30秒聚合一次，写入数据库
+	public static final int NGINX_LOG_WRITE_DURATION = 30000;
+	
 	//日志类型
 	public static final String NGINX_LOG = "nginx";
 	public static final String EXCEPTION_LOG = "exception";
 	//分布式常量
-	public static final String MQ_QUEUE = "queueName";
-	public static final String MQ_HOST = "mqhost";
-	public static final String MQ_PORT = "mqport";
-	public static final String MYBATIS_EVN = "mybatis";
+	public static final String MQ_QUEUE = "queue.Name";
+	public static final String MQ_HOST = "mq.host";
+	public static final String MQ_PORT = "mq.port";
+	public static final String MYBATIS_EVN = "mybatis.env";
 	
 	public static final String REMOTE_ADDR = "remote_addr";
 	public static final String REMOTE_USER = "remote_user";

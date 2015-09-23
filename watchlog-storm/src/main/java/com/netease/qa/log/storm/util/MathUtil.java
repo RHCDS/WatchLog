@@ -3,12 +3,9 @@ package com.netease.qa.log.storm.util;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 public class MathUtil {
 
-	private static final Logger logger = LoggerFactory.getLogger(MathUtil.class);
 	// 标准化时间，获取long型时间戳
 	public static Long parse2Long(String time) throws ParseException {
 		SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy:HH:mm:ss");

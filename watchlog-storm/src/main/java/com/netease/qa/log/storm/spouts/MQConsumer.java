@@ -13,7 +13,7 @@ import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 
-import com.netease.qa.log.storm.util.ConfigReader;
+import com.netease.qa.log.storm.util.Const;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -82,7 +82,7 @@ public class MQConsumer extends BaseRichSpout {
 			    dsTime =  headers.get("__DS_.timestamp").toString();   
 			}
 			catch(NullPointerException e){
-				logger.error("can't get header, hostname: " + hostname + ", path: " + path + ", file: " + filePattern);
+				logger.error("can't get header, hostname: " + hostname + ", path: " + path + ", file: " + filePattern + ", dsTime: " + dsTime);
 			}
 			
 			logger.debug("Consume: " + message);
@@ -153,9 +153,9 @@ public class MQConsumer extends BaseRichSpout {
 	 */
 	@SuppressWarnings("rawtypes")
 	public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
-		queueName = conf.get("queueName").toString();
-		host =  conf.get("mqhost").toString();
-		port = Integer.parseInt(conf.get("mqport").toString()) ;
+		queueName = conf.get(Const.MQ_QUEUE).toString();
+		host =  conf.get(Const.MQ_HOST).toString();
+		port = Integer.parseInt(conf.get(Const.MQ_PORT).toString()) ;
 		this.collector = collector;
 	}
 

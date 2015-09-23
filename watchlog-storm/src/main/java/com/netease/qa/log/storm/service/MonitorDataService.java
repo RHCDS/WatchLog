@@ -35,9 +35,6 @@ public class MonitorDataService {
 	private static ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>> exceptionCountCache;
 	private static ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Long>> exceptionTimeCache;
 	
-	private static int writeCount = 0;
-	private static int sum = 0;
-
 	static{
 		exceptionCache = new ConcurrentHashMap<String, Exception>();
 		exceptionIdCache = new ConcurrentHashMap<Integer, Exception>();
@@ -206,7 +203,6 @@ public class MonitorDataService {
 		try{
 			NginxAccessDao nad = sqlSession.getMapper(NginxAccessDao.class);
 			List<NginxAccess> NginxAccesses = AnalyzeService.writeResult();
-			sum += NginxAccesses.size();
 			for(NginxAccess nginxAccess : NginxAccesses){
 				nad.insert(nginxAccess);
 			}

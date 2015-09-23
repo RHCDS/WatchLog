@@ -3,11 +3,12 @@ package com.netease.qa.log.storm.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.netease.qa.log.storm.util.Const;
+
 
 
 public class MonitorDataWriteTask implements Runnable{
 
-	private static final int time_accuracy = 30000; 
 	private static final Logger logger = LoggerFactory.getLogger(MonitorDataWriteTask.class);
 
 	@Override
@@ -17,7 +18,7 @@ public class MonitorDataWriteTask implements Runnable{
 			MonitorDataService.writeExceptionData(System.currentTimeMillis()/1000); 
 			try {
 				//每30s执行一次写入操作
-				Thread.sleep(time_accuracy);
+				Thread.sleep(Const.EXCEPTION_LOG_WRITE_DURATION);
 			}
 			catch (InterruptedException e) {
 	        	logger.error("error", e);
