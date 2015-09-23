@@ -30,9 +30,9 @@ public class MQConsumer extends BaseRichSpout {
 
 	private static Channel channel;
 	private static Connection connection;
-	private static String queueName = ConfigReader.MQ_QUEUE;
-	private static String host = ConfigReader.MQ_HOST;
-	private static int port = ConfigReader.MQ_PORT;
+	private static String queueName ;
+	private static String host ;
+	private static int port ;
 
 
 	public void ack(Object msgId) {
@@ -49,7 +49,8 @@ public class MQConsumer extends BaseRichSpout {
 	}
 
 
-	public static void main(String[] args) throws IOException, ShutdownSignalException, ConsumerCancelledException, InterruptedException {
+	public static void main(String[] args) throws IOException, ShutdownSignalException,
+	ConsumerCancelledException, InterruptedException {
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(host);
 		factory.setPort(port);
@@ -152,6 +153,9 @@ public class MQConsumer extends BaseRichSpout {
 	 */
 	@SuppressWarnings("rawtypes")
 	public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
+		queueName = conf.get("queueName").toString();
+		host =  conf.get("mqhost").toString();
+		port = Integer.parseInt(conf.get("mqport").toString()) ;
 		this.collector = collector;
 	}
 

@@ -57,7 +57,8 @@ public class ProjectServiceImp implements ProjectService{
 
 	@Override
 	public Project findByProjectId(int projectId) {
-		return qbsService.getProjectById(projectId);
+		Project project = qbsService.getProjectById(projectId);
+		return project;
 	}
 
 	@Override

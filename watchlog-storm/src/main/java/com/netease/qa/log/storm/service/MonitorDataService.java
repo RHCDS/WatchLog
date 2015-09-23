@@ -1,5 +1,6 @@
 package com.netease.qa.log.storm.service;
 
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -9,10 +10,13 @@ import org.slf4j.LoggerFactory;
 
 import com.netease.qa.log.meta.Exception;
 import com.netease.qa.log.meta.ExceptionData;
+import com.netease.qa.log.meta.NginxAccess;
 import com.netease.qa.log.meta.UkExceptionData;
 import com.netease.qa.log.meta.dao.ExceptionDao;
 import com.netease.qa.log.meta.dao.ExceptionDataDao;
+import com.netease.qa.log.meta.dao.NginxAccessDao;
 import com.netease.qa.log.meta.dao.UkExceptionDataDao;
+import com.netease.qa.log.storm.service.nginx.AnalyzeService;
 import com.netease.qa.log.storm.util.MybatisUtil;
 
 
@@ -30,6 +34,9 @@ public class MonitorDataService {
 	private static ConcurrentHashMap<Integer, Exception> exceptionIdCache;
 	private static ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Integer>> exceptionCountCache;
 	private static ConcurrentHashMap<Integer, ConcurrentHashMap<Integer, Long>> exceptionTimeCache;
+	
+	private static int writeCount = 0;
+	private static int sum = 0;
 
 	static{
 		exceptionCache = new ConcurrentHashMap<String, Exception>();
@@ -191,6 +198,23 @@ public class MonitorDataService {
 			sqlSession.close();
 		}
 	}
+	
+	public static void writeNginxAccessData(){
+		logger.info("---write NginxAccess data into DB---");
+		SqlSession sqlSession = MybatisUtil.getSqlSessionFactory().openSession(true);
+		
+		try{
+			NginxAccessDao nad = sqlSession.getMapper(NginxAccessDao.class);
+			List<NginxAccess> NginxAccesses = AnalyzeService.writeResult();
+			sum += NginxAccesses.size();
+			for(NginxAccess nginxAccess : NginxAccesses){
+				nad.insert(nginxAccess);
+			}
+		}finally{
+			sqlSession.close();
+		}
+	}
+	
 
 	
 }

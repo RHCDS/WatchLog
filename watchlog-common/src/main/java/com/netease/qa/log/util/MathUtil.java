@@ -176,4 +176,11 @@ public class MathUtil {
 		}
 		return timeRange;
 	}
+	/*
+	 * 返回end - start时间区间内自适应300个小区间，的时间段
+	 */
+	public static int getTimeRangeByPoint(long start, long end, int point){
+		int  timeRange = (int) ((end - start) / point);
+		return timeRange;
+	}
 }
