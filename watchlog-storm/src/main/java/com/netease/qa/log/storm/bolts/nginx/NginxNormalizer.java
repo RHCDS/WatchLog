@@ -39,8 +39,11 @@ public class NginxNormalizer implements IRichBolt {
 		String path = input.getString(1);
 		String filePattern = input.getString(2);
 		String line = input.getString(3);
+		logger.info("line:" + line);
 		NormalizerService ns = new NormalizerService();
 		LogSource logsource = ConfigDataService.getLogSource(hostname, path, filePattern);
+		
+		logger.info("logsource: " + logsource);
 		
 		if (logsource == null) {
 			logger.warn("logsource in DB is null, logsource: " + hostname + " " + path + " " + filePattern);
@@ -48,21 +51,15 @@ public class NginxNormalizer implements IRichBolt {
 		}
 		String config = logsource.getLogFormat();
 		int logsourceId = logsource.getLogSourceId();
-		try {
-			Record record = ns.normalizerInput(line, config);
-			record.setLog_source_id(logsourceId);
-			ArrayList<Tuple> a = new ArrayList<Tuple>();
-			a.add(input);
-			int requestTime = (int) (record.getRequest_time() * 1000);
-			int upstream_response_time = (int) (record.getUpstream_response_time() * 1000);
-			collector.emit(new Values(record.getLog_source_id(), record.getRemote_addr(), record.getTime_local(),
-					record.getRequest(), record.getStatus(), record.getBody_bytes_sent(), requestTime,
-					upstream_response_time));
-			
-			logger.info("get nginx log: " + logsource.getLogSourceId() + " " + record.getRequest());
-		} catch (Exception e) {
-			return;
-		}
+		Record record = ns.normalizerInput(line, config);
+		record.setLog_source_id(logsourceId);
+		ArrayList<Tuple> a = new ArrayList<Tuple>();
+		a.add(input);
+		int requestTime = (int) (record.getRequest_time() * 1000);
+		int upstream_response_time = (int) (record.getUpstream_response_time() * 1000);
+		collector.emit(new Values(record.getLog_source_id(), record.getRemote_addr(), record.getTime_local(), record
+				.getRequest(), record.getStatus(), record.getBody_bytes_sent(), requestTime, upstream_response_time));
+		logger.info("get nginx log: " + logsource.getLogSourceId() + " " + record.getRequest());
 	}
 	
 

@@ -33,6 +33,7 @@ public class ConfigDataService {
 	public static LogSource getLogSource(String hostname, String path, String filePattern){
 		String key = hostname + "_" + path + "_" + filePattern;
 		if(logSourceCache.containsKey(key)){
+			logger.info("---get LogSource from CACHE---");
 			return logSourceCache.get(key);
 		}
 		else{

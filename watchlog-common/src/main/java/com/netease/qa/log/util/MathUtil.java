@@ -183,4 +183,9 @@ public class MathUtil {
 		int  timeRange = (int) ((end - start) / point);
 		return timeRange;
 	}
+	public static String preProcessLogFormat(String logFormat){
+		String str = logFormat.replaceAll("'", "");
+		String realFormat = str.replaceAll("\\s+", " ");
+		return realFormat;
+	}
 }

@@ -106,7 +106,7 @@ public class LogSourceAPI {
 			logSource.setLineStartRegex("");
 			logSource.setLineFilterKeyword("");
 			logSource.setLineTypeRegex("");
-			logSource.setLogFormat(logSourceFormat);
+			logSource.setLogFormat(MathUtil.preProcessLogFormat(logSourceFormat));
 		}
 		int result = logsourceService.createAllLogSource(logSource);
 		if (result == 0) {
