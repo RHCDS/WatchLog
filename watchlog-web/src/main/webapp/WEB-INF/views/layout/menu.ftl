@@ -15,18 +15,58 @@
       <ul class="nav navbar-nav" id="log_menu">
 		      <!-- 获取project.id -->
 		      <#if RequestParameters.proj?exists >
-		      	<#assign proj=RequestParameters.proj>  
-		      		<li <#if controller == "WlogHome">class="active"</#if>  ><a   class="text-menu"   href="/?proj=${proj}">首页</a></li>
-			      	<li <#if controller == "WlogManage">class="active"</#if>  ><a   class="text-menu"   href="/logsrc/manage?proj=${proj}">日志源管理</a></li>
-			        <li <#if controller == "WlogRT">class="active"</#if>  ><a    class="text-menu"   href="/logsrc/rt_analyse?proj=${proj}">实时分析</a></li>
-			  		<li <#if controller == "WlogPM">class="active"</#if>  ><a    class="text-menu"  href="/logsrc/pm_analyse?proj=${proj}">聚合分析</a></li>        
-			  		<li <#if controller == "WlogAlarm">class="active"</#if> ><a     class="text-menu"  href="/logsrc/alarm?proj=${proj}" >报警管理</a></li>              	    
+		      	<#assign proj=RequestParameters.proj>  		      	
+			      	    <#if controller == "WlogHome">
+			      			<li class="active"><a   class="text-menu"   href="/?proj=${proj}">首页</a></li>
+			      		<#else>
+			      			<li><a class="text-menu"   href="/?proj=${proj}">首页</a></li>
+			      		</#if>  
+			      	   <#if controller == "WlogManage">
+							<li class="active"><a   class="text-menu"   href="/logsrc/manage?proj=${proj}">日志源管理</a></li>		      	   
+			      		<#else>
+			      		   <li><a class="text-menu"   href="/logsrc/manage?proj=${proj}">日志源管理</a></li>
+			      		</#if>  	
+			      	   <#if controller == "WlogRT">
+			      	       <li class="active"><a    class="text-menu"   href="/logsrc/rt_analyse?proj=${proj}">实时分析</a></li>
+			      		<#else>
+			      		   <li><a class="text-menu"   href="/logsrc/rt_analyse?proj=${proj}">实时分析</a></li>
+			      		</#if>  	
+			      	   <#if controller == "WlogPM">
+			      	       <li class="active"><a    class="text-menu"  href="/logsrc/pm_analyse?proj=${proj}">聚合分析</a></li>        
+			      		<#else>
+			      			<li><a class="text-menu"  href="/logsrc/pm_analyse?proj=${proj}">聚合分析</a></li>
+			      		</#if>  	
+			      	   <#if controller == "WlogAlarm">
+			      	        <li class="active"><a     class="text-menu"  href="/logsrc/alarm?proj=${proj}" >报警管理</a></li>     
+			      		<#else>
+			      		    <li><a class="text-menu"  href="/logsrc/alarm?proj=${proj}" >报警管理</a></li>     
+			      		</#if>  		 				      		
 		      	<#else>
-		      		<li <#if controller == "WlogHome">class="active"</#if>  ><a   class="text-menu"   href="/">首页</a></li>
-			      	<li <#if controller == "WlogManage">class="active"</#if>  ><a    class="text-menu"   href="/logsrc/manage">日志源管理</a></li>
-			        <li <#if controller == "WlogRT">class="active"</#if>  ><a    class="text-menu"   href="/logsrc/rt_analyse">实时分析</a></li>
-			  		<li <#if controller == "WlogPM">class="active"</#if>  ><a    class="text-menu"   href="/logsrc/pm_analyse">聚合分析</a></li>        
-			  		<li <#if controller == "WlogAlarm">class="active"</#if> ><a     class="text-menu"  href="/logsrc/alarm" >报警管理</a></li>              	
+			      	    <#if controller == "WlogHome">
+			      			<li class="active"><a   class="text-menu"   href="/">首页</a></li>
+			      		<#else>
+			      			<li><a class="text-menu"   href="/">首页</a></li>
+			      		</#if>  
+			      	   <#if controller == "WlogManage">
+							<li class="active"><a   class="text-menu"   href="/logsrc/manage">日志源管理</a></li>		      	   
+			      		<#else>
+			      		   <li><a class="text-menu"   href="/logsrc/manage">日志源管理</a></li>
+			      		</#if>  	
+			      	   <#if controller == "WlogRT">
+			      	       <li class="active"><a    class="text-menu"   href="/logsrc/rt_analyse">实时分析</a></li>
+			      		<#else>
+			      		   <li><a class="text-menu"   href="/logsrc/rt_analyse">实时分析</a></li>
+			      		</#if>  	
+			      	   <#if controller == "WlogPM">
+			      	       <li class="active"><a    class="text-menu"  href="/logsrc/pm_analyse">聚合分析</a></li>        
+			      		<#else>
+			      			<li><a class="text-menu"  href="/logsrc/pm_analyse">聚合分析</a></li>
+			      		</#if>  	
+			      	   <#if controller == "WlogAlarm">
+			      	        <li class="active"><a     class="text-menu"  href="/logsrc/alarm" >报警管理</a></li>     
+			      		<#else>
+			      		    <li><a class="text-menu"  href="/logsrc/alarm" >报警管理</a></li>     
+			      		</#if>  		    	
 		      	</#if>
       </ul>
       
