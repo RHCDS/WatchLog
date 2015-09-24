@@ -274,5 +274,54 @@ public class ReadServiceAPI {
 		JSONObject result = readService.queryErrorRecordsGraphByMachine(hostname,startTime,endTime,logtype);
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}	
+	
+	/*
+	 * 4.6 获取机器异常日志表格：按机器聚合
+	 */
+	@RequestMapping(value = "/machine_table", method = RequestMethod.GET)
+	public ResponseEntity<JSONObject> getMachineErrorTable(
+			@RequestParam(value = "host_name", required = false) String hostname,
+			@RequestParam(value = "start", required = false) String start,
+			@RequestParam(value = "end", required = false) String end,
+			@RequestParam(value = "log_type", required = false, defaultValue="0") int logtype
+			){
+		logger.debug("--- /api/report/machine_table ---");
+		// 判断参数是否缺失
+		if (MathUtil.isEmpty(hostname, start, end)) {
+			NullParamException ne = new NullParamException(Const.NULL_PARAM);
+			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
+		}
+		logger.debug("---params--- ");
+		logger.debug("hostname" + hostname+ ";start: " + start + "; end: " + end + "; logtype: " + logtype);
+		//   目前只支持exception日志类型
+		if(logtype !=0 ){
+			String message = "log_type must be exception file!";
+			InvalidRequestException ie = new InvalidRequestException(message);
+			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ie), HttpStatus.BAD_REQUEST);				
+		}
+		// 开始和结束时间转换为长整型
+		Long startTime = null;
+		Long endTime = null;
+		try {
+			startTime = MathUtil.parse2Long(start);
+			endTime = MathUtil.parse2Long(end);
+		} catch (ParseException e) {
+			logger.error("error", e);
+			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_TIME_FORMAT);
+			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
+		}
+		// 时间差合法性，起始时间大小和长度
+		if(endTime <= startTime){
+			String message = "end time must greater than start time!";
+			InvalidRequestException ie = new InvalidRequestException(message);
+			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ie), HttpStatus.BAD_REQUEST);			
+		}
+		if((endTime - startTime)/Const.MACHINE_ERROR_POINT == 0){
+			InvalidRequestException ex = new InvalidRequestException(Const.TIME_TOO_SHORT);
+			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
+		}
+		JSONObject result = readService.queryErrorRecordsTableByMachine(hostname,startTime,endTime,logtype);
+		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+	}		
 
 }
