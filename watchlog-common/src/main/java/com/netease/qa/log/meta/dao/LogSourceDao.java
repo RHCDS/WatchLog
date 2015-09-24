@@ -32,4 +32,8 @@ public interface LogSourceDao {
     public List<LogSource> findByProjectId(int projectId, int limit, int offset);
     
     public List<LogSource> getSortedByProjectId(int projectId, String field, String order, int limit, int offset);
+    
+    // 获取机器所有的日志源ids，不包含nginx日志源
+    public String findIdsByHostname(String hostname, int log_type);
+    
 }
