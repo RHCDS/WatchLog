@@ -7,7 +7,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.netease.qa.log.meta.NginxAccess;
+import com.netease.qa.log.storm.bolts.nginx.NginxNormalizer;
 
 /**
  * 分析记录，得到tps,requestTimeTotal,requestTimeMax,upstreamResponseTimeTotal,
@@ -17,6 +21,7 @@ import com.netease.qa.log.meta.NginxAccess;
  *
  */
 public class AnalyzeService {
+	private static final Logger logger = LoggerFactory.getLogger(AnalyzeService.class);
 
 	// <log_source_id,<url,<time,count>>>
 	private static ConcurrentHashMap<Integer, ConcurrentHashMap<String, ConcurrentHashMap<Long, Integer>>> urlTpsCache;
@@ -70,10 +75,14 @@ public class AnalyzeService {
 					url_count.put(url, time_count);
 					urlTpsCache.put(logSourceId, url_count);
 				} else {
-					// startTime 在第三层
-					time_count.put(startTime, time_count.get(startTime) + 1);
-					url_count.put(url, time_count);
-					urlTpsCache.put(logSourceId, url_count);
+					try {
+						// startTime 在第三层
+						time_count.put(startTime, time_count.get(startTime) + 1);
+						url_count.put(url, time_count);
+						urlTpsCache.put(logSourceId, url_count);
+					} catch (Exception e) {
+						logger.info("putUrlTps.NullPointerException");
+					}
 				}
 			}
 		}
@@ -104,10 +113,14 @@ public class AnalyzeService {
 					url_count.put(url, time_count);
 					requestTimeTotalCache.put(logSourceId, url_count);
 				} else {
-					// startTime 在第三层
-					time_count.put(startTime, time_count.get(startTime) + requestTime);
-					url_count.put(url, time_count);
-					requestTimeTotalCache.put(logSourceId, url_count);
+					try {
+						// startTime 在第三层
+						time_count.put(startTime, time_count.get(startTime) + requestTime);
+						url_count.put(url, time_count);
+						requestTimeTotalCache.put(logSourceId, url_count);
+					} catch (Exception e) {
+						logger.info("putTotalRequestTime.NullPointerException");
+					}
 				}
 			}
 		}
@@ -138,10 +151,14 @@ public class AnalyzeService {
 					url_count.put(url, time_count);
 					requestTimeMaxCache.put(logSourceId, url_count);
 				} else {
-					// startTime 在第三层
-					time_count.put(startTime, Math.max(time_count.get(startTime), requestTime));
-					url_count.put(url, time_count);
-					requestTimeMaxCache.put(logSourceId, url_count);
+					try {
+						// startTime 在第三层
+						time_count.put(startTime, Math.max(time_count.get(startTime), requestTime));
+						url_count.put(url, time_count);
+						requestTimeMaxCache.put(logSourceId, url_count);
+					} catch (Exception e) {
+						logger.info("putMaxRequestTime.NullPointerException");
+					}
 				}
 			}
 		}
@@ -173,10 +190,14 @@ public class AnalyzeService {
 					url_count.put(url, time_count);
 					upstreamResponseTimeTotalCache.put(logSourceId, url_count);
 				} else {
-					// startTime 在第三层
-					time_count.put(startTime, time_count.get(startTime) + upstreamResponseTime);
-					url_count.put(url, time_count);
-					upstreamResponseTimeTotalCache.put(logSourceId, url_count);
+					try {
+						// startTime 在第三层
+						time_count.put(startTime, time_count.get(startTime) + upstreamResponseTime);
+						url_count.put(url, time_count);
+						upstreamResponseTimeTotalCache.put(logSourceId, url_count);
+					} catch (Exception e) {
+						logger.info("putTotalUpstreamResponseTime.NullPointerException");
+					}
 				}
 			}
 		}
@@ -207,10 +228,14 @@ public class AnalyzeService {
 					url_count.put(url, time_count);
 					upstreamResponseTimeMaxCache.put(logSourceId, url_count);
 				} else {
-					// startTime 在第三层
-					time_count.put(startTime, Math.max(time_count.get(startTime), upstreamResponseTime));
-					url_count.put(url, time_count);
-					upstreamResponseTimeMaxCache.put(logSourceId, url_count);
+					try {
+						// startTime 在第三层
+						time_count.put(startTime, Math.max(time_count.get(startTime), upstreamResponseTime));
+						url_count.put(url, time_count);
+						upstreamResponseTimeMaxCache.put(logSourceId, url_count);
+					} catch (Exception e) {
+						logger.info("putMaxUpstreamResponseTime.NullPointerException");
+					}
 				}
 			}
 		}
@@ -246,10 +271,14 @@ public class AnalyzeService {
 					url_count.put(url, time_count);
 					okCountCache.put(logSourceId, url_count);
 				} else {
-					// startTime 在第三层
-					time_count.put(startTime, time_count.get(startTime) + 1);
-					url_count.put(url, time_count);
-					okCountCache.put(logSourceId, url_count);
+					try {
+						// startTime 在第三层
+						time_count.put(startTime, time_count.get(startTime) + 1);
+						url_count.put(url, time_count);
+						okCountCache.put(logSourceId, url_count);
+					} catch (Exception e) {
+						logger.info("putOkCount.NullPointerException");
+					}
 				}
 			}
 		}
@@ -285,10 +314,14 @@ public class AnalyzeService {
 					url_count.put(url, time_count);
 					error4CountCache.put(logSourceId, url_count);
 				} else {
-					// startTime 在第三层
-					time_count.put(startTime, time_count.get(startTime) + 1);
-					url_count.put(url, time_count);
-					error4CountCache.put(logSourceId, url_count);
+					try {
+						// startTime 在第三层
+						time_count.put(startTime, time_count.get(startTime) + 1);
+						url_count.put(url, time_count);
+						error4CountCache.put(logSourceId, url_count);
+					} catch (Exception e) {
+						logger.info("putError4Count.NullPointerException");
+					}
 				}
 			}
 		}
@@ -324,10 +357,14 @@ public class AnalyzeService {
 					url_count.put(url, time_count);
 					error5CountCache.put(logSourceId, url_count);
 				} else {
-					// startTime 在第三层
-					time_count.put(startTime, time_count.get(startTime) + 1);
-					url_count.put(url, time_count);
-					error5CountCache.put(logSourceId, url_count);
+					try {
+						// startTime 在第三层
+						time_count.put(startTime, time_count.get(startTime) + 1);
+						url_count.put(url, time_count);
+						error5CountCache.put(logSourceId, url_count);
+					} catch (Exception e) {
+						logger.info("putError5Count.NullPointerException");
+					}
 				}
 			}
 		}
@@ -359,9 +396,13 @@ public class AnalyzeService {
 					byteTotalCache.put(logSourceId, url_count);
 				} else {
 					// startTime 在第三层
-					time_count.put(startTime, time_count.get(startTime) + byteLength);
-					url_count.put(url, time_count);
-					byteTotalCache.put(logSourceId, url_count);
+					try {
+						time_count.put(startTime, time_count.get(startTime) + byteLength);
+						url_count.put(url, time_count);
+						byteTotalCache.put(logSourceId, url_count);
+					} catch (Exception e) {
+						logger.info("putTotalByte.NullpointException");
+					}
 				}
 			}
 		}
@@ -399,12 +440,16 @@ public class AnalyzeService {
 					url_count.put(url, time_count);
 					allRequestTimeCache.put(logSourceId, url_count);
 				} else {
-					// startTime 在第三层
-					requestTimeArray = time_count.get(startTime);
-					requestTimeArray.add(requestTime);
-					time_count.put(startTime, requestTimeArray);
-					url_count.put(url, time_count);
-					allRequestTimeCache.put(logSourceId, url_count);
+					try {
+						// startTime 在第三层
+						requestTimeArray = time_count.get(startTime);
+						requestTimeArray.add(requestTime);
+						time_count.put(startTime, requestTimeArray);
+						url_count.put(url, time_count);
+						allRequestTimeCache.put(logSourceId, url_count);
+					} catch (Exception e) {
+						logger.info("putAllRequestTime.NullPointerException");
+					}
 				}
 			}
 		}
@@ -442,12 +487,16 @@ public class AnalyzeService {
 					url_count.put(url, time_count);
 					allUpstreamResponseTimeCache.put(logSourceId, url_count);
 				} else {
-					// startTime 在第三层
-					upstreamResponseTimeArray = time_count.get(startTime);
-					upstreamResponseTimeArray.add(upstreamResponseTime);
-					time_count.put(startTime, upstreamResponseTimeArray);
-					url_count.put(url, time_count);
-					allUpstreamResponseTimeCache.put(logSourceId, url_count);
+					try {
+						// startTime 在第三层
+						upstreamResponseTimeArray = time_count.get(startTime);
+						upstreamResponseTimeArray.add(upstreamResponseTime);
+						time_count.put(startTime, upstreamResponseTimeArray);
+						url_count.put(url, time_count);
+						allUpstreamResponseTimeCache.put(logSourceId, url_count);
+					} catch (Exception e) {
+						logger.info("putAllUpstreamResponseTime.NullPointerException");
+					}
 				}
 			}
 		}
@@ -481,7 +530,7 @@ public class AnalyzeService {
 					NginxAccess.setTotalCount(tpsCount);
 					results.put(key, NginxAccess);
 				}
-				// 只要clear 第三层嵌套即可
+				// 只要clear 第三层嵌套即可,time_count.size()=0;
 				time_count.clear();
 			}
 		}

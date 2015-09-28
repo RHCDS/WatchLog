@@ -54,7 +54,7 @@ public class MathUtil {
 		long firstTime = 0L;
 		firstTime = 1436238525L;//time=07/7/2015:11:08:45
 		long div = time - firstTime;
-		int time_interval = Const.TIME_INTERVAL;
+		int time_interval = Const.STORM_TIME_INTERVAL;
 		long startTime = firstTime + (div / time_interval) * time_interval;
 		return startTime;
 	}

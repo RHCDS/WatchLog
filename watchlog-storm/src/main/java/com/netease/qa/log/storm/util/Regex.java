@@ -5,12 +5,19 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.netease.qa.log.storm.bolts.nginx.NginxNormalizer;
+
 /*
  * 思路：对format格式，进行空格分割，生成响应的属性数组。循环属性数组中每一个属性，不包含$值，表示该属性无效。
  * 包含$值的属性，计算出$的位置。如果$的位置不在第一位，表示$前面有其他字符(并且默认这些其他字符是成对出现，即[$remote_addr]),
  * 去掉该属性的首尾。produceRegex根据属性数组，生成每一个属性的匹配表达式，并拼接。到此根据format，自适应生成的正则表达式完成。
  */
 public class Regex {
+	private static final Logger logger = LoggerFactory.getLogger(Regex.class);
+	
 	public static void main(String[] avgs) {
 		// sample1，xiaowu
 		String pro = "$remote_addr - $remote_user [$time_local] \"$request\" "
@@ -33,7 +40,7 @@ public class Regex {
 		}
 		String regexStr = Regex.produceRegex(pros);
 		System.out.println("regexStr:" + regexStr);
-		String[] groups = Regex.split(str2, regexStr);
+		String[] groups = Regex.split(str2, regexStr, pro2);
 		for (int i = 0; i < groups.length; i++) {
 			System.out.println("groups[" + i + "]:" + groups[i]);
 		}
@@ -102,7 +109,7 @@ public class Regex {
 		return endMark;
 	}
 
-	public static String[] split(String input, String regex) {
+	public static String[] split(String input, String regex, String config) {
 		Pattern pattern = Pattern.compile(regex);
 		Matcher m = pattern.matcher(input);
 		int num = m.groupCount();
@@ -118,6 +125,12 @@ public class Regex {
 					j++;
 				}
 			}
+		}
+		else{
+			logger.info("cant match!!!!!!!!!!!!!!!");
+			logger.info("log_format:" + config);
+			logger.info("input: " + input);
+			logger.info("regex: " + regex);
 		}
 		return groups;
 	}
@@ -142,4 +155,11 @@ public class Regex {
 		}
 		return record;
 	}
+	
+	public static String initMQinput(String input){
+		String str = input.substring(1, input.length() - 1);
+		//匹配反斜杠，替换为空串
+		String realStr = str.replaceAll("\\\\", "");
+		return realStr;
+	} 
 }

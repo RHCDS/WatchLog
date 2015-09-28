@@ -14,6 +14,7 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 
 import com.netease.qa.log.storm.util.Const;
+import com.netease.qa.log.storm.util.Regex;
 import com.rabbitmq.client.Channel;
 import com.rabbitmq.client.Connection;
 import com.rabbitmq.client.ConnectionFactory;
@@ -64,8 +65,8 @@ public class NginxReader implements IRichSpout {
 						hostname = headers.get("__DS_.fields.hostname").toString();  
 					    path =  headers.get("__DS_.fields._ds_target_dir").toString();  
 					    filePattern =  headers.get("__DS_.fields._ds_file_pattern").toString();  
-					    
-					    this.collector.emit(new Values(hostname, path, filePattern, message), message);
+					    String initMessage = Regex.initMQinput(message);
+					    this.collector.emit(new Values(hostname, path, filePattern, initMessage), initMessage);
 						logger.debug("Consume: " + message);
 						logger.info("hostname: " + hostname + ", path: " + path + ", filePattern: " + filePattern);
 					}

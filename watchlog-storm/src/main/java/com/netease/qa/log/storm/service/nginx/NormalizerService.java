@@ -19,7 +19,7 @@ public class NormalizerService {
 	public Record normalizerInput(String input, String configuration) {
 		String[] pros = Regex.getProperty(configuration);
 		String regex = Regex.produceRegex(pros);
-		String[] groups = Regex.split(input, regex);
+		String[] groups = Regex.split(input, regex, configuration);
 		Map<String, String> recordMap = Regex.produceRecord(pros, groups);
 		Record record = new Record();
 		for (Map.Entry<String, String> entry : recordMap.entrySet()) {
@@ -78,7 +78,7 @@ public class NormalizerService {
 				record.setUpstream_status(Integer.parseInt(value));
 			}catch(Exception e){
 				logger.error("Exception", e);
-				record.setUpstream_status(Integer.parseInt("0"));
+				record.setUpstream_status(Integer.parseInt("200"));
 			}
 			return record;
 		} else if (temp.contains("status")) {
@@ -116,8 +116,16 @@ public class NormalizerService {
 			String[] times = value.trim().split(",");
 			if(times.length > 1){
 				int tempTime = 0;
+				double tmp = 0;
 				for(int i=0;i<times.length;i++){
-					tempTime += (Double.parseDouble(times[i]) * 1000);
+					try{
+						tmp = Double.parseDouble(times[i]);
+					}catch(Exception e){
+						logger.info("upstream_response_time:" + value);
+						logger.error("NumberFormatException", e);
+						tmp = 0;
+					}
+					tempTime += (tmp * 1000);
 				}
 				double n1 = (double)(Math.round(tempTime)/1000.0);
 				value = String.valueOf(n1);

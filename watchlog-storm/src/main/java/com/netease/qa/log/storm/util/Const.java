@@ -6,6 +6,7 @@ public class Const {
 	public static final int EXCEPTION_LOG_WRITE_DURATION = 30000; //每隔30秒聚合一次，写入数据库
 	public static final int NGINX_LOG_WRITE_DURATION = 30000;
 	public static final int CONFIG_LOAD_DURATION = 15000;
+	public static final int STORM_TIME_INTERVAL = 30;//nginx 日志storm处理的聚合时间,30s
 
 	//日志类型
 	public static final String NGINX_LOG = "nginx";
@@ -36,5 +37,5 @@ public class Const {
 	//upstream_status，可能出现"504,200",upstream_reponse_time可能出现"0.32,0.06"
 	public static final String REPLACE_MESSAGE = "-";
 	
-	public static final int TIME_INTERVAL = 10;
+	
 }

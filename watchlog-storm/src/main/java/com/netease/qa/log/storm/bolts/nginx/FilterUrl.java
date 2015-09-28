@@ -38,7 +38,6 @@ public class FilterUrl implements IRichBolt {
 		ArrayList<Tuple> a = new ArrayList<Tuple>();
 		a.add(input);
 		if (isFilter) {
-			logger.info("get nginx log: " + input.getString(0) + " " + url);
 			collector.emit( new Values(input.getValue(0), input.getValue(1), input.getValue(2), url, input.getValue(4), input
 					.getValue(5), input.getValue(6), input.getValue(7)));
 		}
