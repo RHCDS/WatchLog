@@ -2,12 +2,15 @@ package com.netease.qa.log.storm.bolts.nginx;
 
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.netease.qa.log.meta.LogSource;
 import com.netease.qa.log.storm.bean.Record;
+import com.netease.qa.log.storm.service.ConfigDataLoadTask;
 import com.netease.qa.log.storm.service.ConfigDataService;
 import com.netease.qa.log.storm.service.nginx.NormalizerService;
 import com.netease.qa.log.storm.util.Const;
@@ -31,6 +34,8 @@ public class NginxNormalizer implements IRichBolt {
 	public void prepare(@SuppressWarnings("rawtypes") Map stormConf, TopologyContext context, OutputCollector collector) {
 		MybatisUtil.init(stormConf.get(Const.MYBATIS_EVN).toString());
 		this.collector = collector;
+		ExecutorService POOL = Executors.newFixedThreadPool(1);
+		POOL.submit(new ConfigDataLoadTask());
 	}
 
 	public void execute(Tuple input) {
@@ -47,10 +52,12 @@ public class NginxNormalizer implements IRichBolt {
 			logger.warn("logsource in DB is null, logsource: " + hostname + " " + path + " " + filePattern);
 			return;
 		}
-		String config = logsource.getLogFormat();
 		int logsourceId = logsource.getLogSourceId();
+		String config = logsource.getLogFormat();
+		String[] pros = ConfigDataService.getLogFormatProperties(logsourceId);
+		String regex = ConfigDataService.getLogFormatRegex(logsourceId);
 		try {
-			Record record = ns.normalizerInput(line, config);
+			Record record = ns.normalizerInput(line, config, pros, regex);
 			record.setLog_source_id(logsourceId);
 			ArrayList<Tuple> a = new ArrayList<Tuple>();
 			a.add(input);

@@ -18,12 +18,20 @@ import backtype.storm.tuple.Values;
 import com.netease.qa.log.meta.LogSource;
 import com.netease.qa.log.storm.service.ConfigDataService;
 import com.netease.qa.log.storm.service.ConfigDataLoadTask;
+import com.netease.qa.log.storm.util.Const;
+import com.netease.qa.log.storm.util.MybatisUtil;
 
 public class LogNormalizer implements IBasicBolt {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LoggerFactory.getLogger(LogNormalizer.class);
-
+	
+	@Override
+	public void prepare(@SuppressWarnings("rawtypes") Map stormConf, TopologyContext paramTopologyContext) {
+		MybatisUtil.init(stormConf.get(Const.MYBATIS_EVN).toString());
+		ExecutorService POOL = Executors.newFixedThreadPool(1);
+		POOL.submit(new ConfigDataLoadTask());
+	}
 
 	@Override
 	public void execute(Tuple input, BasicOutputCollector collector) {
@@ -40,27 +48,16 @@ public class LogNormalizer implements IBasicBolt {
 		if (logsource.getLogSourceStatus() == 1) {
 			collector.emit(new Values(input.getString(0), logsource.getLogSourceId(), logsource.getProjectId(), input.getValue(4)));
 		}
-
 	}
-	
 	
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
 		declarer.declare(new Fields("line", "logsource", "project", "dsTime"));
 	}
 
-
 	@Override
 	public Map<String, Object> getComponentConfiguration() {
 		return null;
 	}
-
-
-	@Override
-	public void prepare(@SuppressWarnings("rawtypes") Map paramMap, TopologyContext paramTopologyContext) {
-		ExecutorService POOL = Executors.newFixedThreadPool(1);
-		POOL.submit(new ConfigDataLoadTask());
-	}
-
  
 	@Override
 	public void cleanup() {

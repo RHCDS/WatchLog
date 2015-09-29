@@ -16,9 +16,9 @@ public class NormalizerService {
 	private static final Logger logger = LoggerFactory.getLogger(NormalizerService.class);
 	
 	// 根据key-value的hashmap自适应生成record
-	public Record normalizerInput(String input, String configuration) {
-		String[] pros = Regex.getProperty(configuration);
-		String regex = Regex.produceRegex(pros);
+	public Record normalizerInput(String input, String configuration, String[] pros, String regex) {
+//		String[] pros = Regex.getProperty(configuration);
+//		String regex = Regex.produceRegex(pros);
 		String[] groups = Regex.split(input, regex, configuration);
 		Map<String, String> recordMap = Regex.produceRecord(pros, groups);
 		Record record = new Record();
