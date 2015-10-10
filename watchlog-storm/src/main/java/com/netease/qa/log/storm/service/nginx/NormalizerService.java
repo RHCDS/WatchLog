@@ -60,7 +60,7 @@ public class NormalizerService {
 			try{
 				record.setRequest_time(Double.parseDouble(value));
 			}catch(Exception e){
-				logger.error("Exception", e);
+				logger.error("ParseException", e);
 				record.setRequest_time(Double.parseDouble("0"));
 			}
 			return record;
@@ -77,7 +77,7 @@ public class NormalizerService {
 			try{
 				record.setUpstream_status(Integer.parseInt(value));
 			}catch(Exception e){
-				logger.error("Exception", e);
+				logger.error("ParseException", e);
 				record.setUpstream_status(Integer.parseInt("200"));
 			}
 			return record;
@@ -85,7 +85,7 @@ public class NormalizerService {
 			try{
 				record.setStatus(Integer.parseInt(value));
 			}catch(Exception e){
-				logger.error("Exception", e);
+				logger.error("ParseException", e);
 				record.setStatus(Integer.parseInt("0"));
 			}
 			return record;
@@ -93,7 +93,7 @@ public class NormalizerService {
 			try{
 				record.setBody_bytes_sent(Integer.parseInt(value));
 			}catch(Exception e){
-				logger.error("Exception", e);
+				logger.error("ParseException", e);
 				record.setBody_bytes_sent(Integer.parseInt("0"));
 			}
 			return record;
@@ -121,7 +121,7 @@ public class NormalizerService {
 					try{
 						tmp = Double.parseDouble(times[i]);
 					}catch(Exception e){
-						logger.info("upstream_response_time:" + value);
+						logger.error("upstream_response_time:" + value);
 						logger.error("NumberFormatException", e);
 						tmp = 0;
 					}
@@ -133,7 +133,7 @@ public class NormalizerService {
 			try{
 				record.setUpstream_response_time(Double.parseDouble(value));
 			}catch(Exception e){
-				logger.error("Exception", e);
+				logger.error("ParseException", e);
 				record.setUpstream_response_time(0);
 			}
 			return record;

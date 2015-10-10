@@ -81,7 +81,7 @@ public class AnalyzeService {
 						url_count.put(url, time_count);
 						urlTpsCache.put(logSourceId, url_count);
 					} catch (Exception e) {
-						logger.info("putUrlTps.NullPointerException");
+						logger.error("putUrlTps:", e);
 					}
 				}
 			}
@@ -119,7 +119,7 @@ public class AnalyzeService {
 						url_count.put(url, time_count);
 						requestTimeTotalCache.put(logSourceId, url_count);
 					} catch (Exception e) {
-						logger.info("putTotalRequestTime.NullPointerException");
+						logger.error("putTotalRequestTime:", e);
 					}
 				}
 			}
@@ -157,7 +157,7 @@ public class AnalyzeService {
 						url_count.put(url, time_count);
 						requestTimeMaxCache.put(logSourceId, url_count);
 					} catch (Exception e) {
-						logger.info("putMaxRequestTime.NullPointerException");
+						logger.error("putMaxRequestTime:", e);
 					}
 				}
 			}
@@ -196,7 +196,7 @@ public class AnalyzeService {
 						url_count.put(url, time_count);
 						upstreamResponseTimeTotalCache.put(logSourceId, url_count);
 					} catch (Exception e) {
-						logger.info("putTotalUpstreamResponseTime.NullPointerException");
+						logger.error("putTotalUpstreamResponseTime:", e);
 					}
 				}
 			}
@@ -234,7 +234,7 @@ public class AnalyzeService {
 						url_count.put(url, time_count);
 						upstreamResponseTimeMaxCache.put(logSourceId, url_count);
 					} catch (Exception e) {
-						logger.info("putMaxUpstreamResponseTime.NullPointerException");
+						logger.error("putMaxUpstreamResponseTime:", e);
 					}
 				}
 			}
@@ -277,7 +277,7 @@ public class AnalyzeService {
 						url_count.put(url, time_count);
 						okCountCache.put(logSourceId, url_count);
 					} catch (Exception e) {
-						logger.info("putOkCount.NullPointerException");
+						logger.error("putOkCount:", e);
 					}
 				}
 			}
@@ -320,7 +320,7 @@ public class AnalyzeService {
 						url_count.put(url, time_count);
 						error4CountCache.put(logSourceId, url_count);
 					} catch (Exception e) {
-						logger.info("putError4Count.NullPointerException");
+						logger.error("putError4Count:", e);
 					}
 				}
 			}
@@ -363,7 +363,7 @@ public class AnalyzeService {
 						url_count.put(url, time_count);
 						error5CountCache.put(logSourceId, url_count);
 					} catch (Exception e) {
-						logger.info("putError5Count.NullPointerException");
+						logger.error("putError5Count", e);
 					}
 				}
 			}
@@ -401,7 +401,7 @@ public class AnalyzeService {
 						url_count.put(url, time_count);
 						byteTotalCache.put(logSourceId, url_count);
 					} catch (Exception e) {
-						logger.info("putTotalByte.NullpointException");
+						logger.error("putTotalByte:", e);
 					}
 				}
 			}
@@ -448,7 +448,7 @@ public class AnalyzeService {
 						url_count.put(url, time_count);
 						allRequestTimeCache.put(logSourceId, url_count);
 					} catch (Exception e) {
-						logger.info("putAllRequestTime.NullPointerException");
+						logger.error("putAllRequestTime:", e);
 					}
 				}
 			}
@@ -495,7 +495,7 @@ public class AnalyzeService {
 						url_count.put(url, time_count);
 						allUpstreamResponseTimeCache.put(logSourceId, url_count);
 					} catch (Exception e) {
-						logger.info("putAllUpstreamResponseTime.NullPointerException");
+						logger.error("putAllUpstreamResponseTime:", e);
 					}
 				}
 			}

@@ -22,6 +22,7 @@ public class AnalyzeNginx implements IRichBolt {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LoggerFactory.getLogger(AnalyzeNginx.class);
+	private int count = 0;
 
 	@SuppressWarnings("rawtypes")
 	public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
@@ -45,8 +46,7 @@ public class AnalyzeNginx implements IRichBolt {
 		int requestTime = (Integer) input.getValue(6);
 		int upstreamResponseTime = (Integer)input.getValue(7);
 		long startTime = MathUtil.getStartTime(time);
-		
-		logger.info("get nginx log: :" + logSourceId + ", url:" + url);
+		logger.debug("get nginx log: :" + logSourceId + ", url:" + url);
 		AnalyzeService.putUrlTps(logSourceId, url, startTime);
 		AnalyzeService.putTotalRequestTime(logSourceId, url, startTime, requestTime);
 		AnalyzeService.putMaxRequestTime(logSourceId, url, startTime, requestTime);
@@ -58,7 +58,11 @@ public class AnalyzeNginx implements IRichBolt {
 		AnalyzeService.putTotalByte(logSourceId, url, startTime, byteLength);
 		AnalyzeService.putAllRequestTime(logSourceId, url, startTime, requestTime);
 		AnalyzeService.putAllUpstreamResponseTime(logSourceId, url, startTime, upstreamResponseTime);
-		
+		count++;
+		if(count >100){
+			logger.info("analyze bolt execute 100 msg");
+			count = 0;
+		}
 	}
 
 	public void cleanup() {

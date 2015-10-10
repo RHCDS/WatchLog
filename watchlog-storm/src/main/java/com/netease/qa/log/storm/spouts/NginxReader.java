@@ -2,6 +2,11 @@ package com.netease.qa.log.storm.spouts;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +18,9 @@ import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 
+import com.netease.qa.log.storm.service.MonitorDataService;
+import com.netease.qa.log.storm.service.MonitorDataWriteNginxTask;
+import com.netease.qa.log.storm.service.MonitorDataWriteTask;
 import com.netease.qa.log.storm.util.Const;
 import com.netease.qa.log.storm.util.Regex;
 import com.rabbitmq.client.Channel;
@@ -24,21 +32,32 @@ import com.rabbitmq.client.QueueingConsumer;
 public class NginxReader implements IRichSpout {
 
 	private SpoutOutputCollector collector;
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(NginxReader.class);
 	private static Channel channel;
 	private static Connection connection;
-	private static String queueName ;
+	private static String queueName;
 	private static String host;
 	private static int port;
+	private static AtomicLong count;
 
-	
 	@SuppressWarnings("rawtypes")
 	public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
 		queueName = conf.get(Const.MQ_QUEUE).toString();
-		host =  conf.get(Const.MQ_HOST).toString();
-		port = Integer.parseInt(conf.get(Const.MQ_PORT).toString()) ;
+		host = conf.get(Const.MQ_HOST).toString();
+		port = Integer.parseInt(conf.get(Const.MQ_PORT).toString());
 		this.collector = collector;
+		count = new AtomicLong();
+		ScheduledExecutorService POOL = Executors.newScheduledThreadPool(1);
+		POOL.scheduleWithFixedDelay(new SumTask(), 1, 1, TimeUnit.SECONDS);
+	}
+
+	class SumTask implements Runnable {
+		@Override
+		public void run() {
+			logger.info("NginxReader read and emit msg: " + count.get());
+			count.getAndSet(0);
+		}
 	}
 
 	public void close() {
@@ -53,41 +72,52 @@ public class NginxReader implements IRichSpout {
 				QueueingConsumer consumer = new QueueingConsumer(channel);
 				channel.basicConsume(queueName, true, consumer);
 				channel.basicQos(1);
+				// readCount表示读了多少行
+				int readCount = 0;
 				while (true) {
 					QueueingConsumer.Delivery delivery = consumer.nextDelivery();
 					String message = new String(delivery.getBody());
-
 					Map<String, Object> headers = delivery.getProperties().getHeaders();
-					String hostname = "";  
-				    String path =  "";  
-				    String filePattern =  "";
-					try{
-						hostname = headers.get("__DS_.fields.hostname").toString();  
-					    path =  headers.get("__DS_.fields._ds_target_dir").toString();  
-					    filePattern =  headers.get("__DS_.fields._ds_file_pattern").toString();  
-					    String initMessage = Regex.initMQinput(message);
-					    this.collector.emit(new Values(hostname, path, filePattern, initMessage), initMessage);
+					String hostname = "";
+					String path = "";
+					String filePattern = "";
+					try {
+						hostname = headers.get("__DS_.fields.hostname").toString();
+						path = headers.get("__DS_.fields._ds_target_dir").toString();
+						filePattern = headers.get("__DS_.fields._ds_file_pattern").toString();
+						String initMessage = Regex.initMQinput(message);
+						this.collector.emit(new Values(hostname, path, filePattern, initMessage));
+						readCount++;
+						count.getAndIncrement();
 						logger.debug("Consume: " + message);
-						logger.info("hostname: " + hostname + ", path: " + path + ", filePattern: " + filePattern);
+						logger.debug("hostname: " + hostname + ", path: " + path + ", filePattern: " + filePattern);
+					} catch (NullPointerException e) {
+						logger.error("can't get header, hostname: " + hostname + ", path: " + path + ", file: "
+								+ filePattern, e);
 					}
-					catch(NullPointerException e){
-						logger.error("can't get header, hostname: " + hostname + ", path: " + path + ", file: " + filePattern, e);
+					if (readCount >= 100) {
+						try {
+							logger.info("---------read 100 msg, reader sleep 50ms-----");
+							Thread.sleep(50);
+						} catch (InterruptedException e) {
+							logger.error("error", e); 
+						}finally{
+							readCount = 0;
+						}
 					}
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				logger.error("consume error, close connction", e);
 				if (channel != null) {
 					try {
 						channel.close();
-					}
-					catch (IOException e1) {
+					} catch (IOException e1) {
 						channel = null;
 					}
 				}
 			}
 		}
-		
+
 	}
 
 	public void ack(Object msgId) {
@@ -117,7 +147,7 @@ public class NginxReader implements IRichSpout {
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	private Connection getConnection() throws IOException {
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(host);
@@ -125,7 +155,7 @@ public class NginxReader implements IRichSpout {
 		connection = factory.newConnection();
 		return connection;
 	}
-	
+
 	private Channel getChannel() {
 		int count = 3;
 		while (count-- > 0) {
@@ -134,21 +164,18 @@ public class NginxReader implements IRichSpout {
 					connection = getConnection();
 				}
 				return connection.createChannel();
-			}
-			catch (Exception e) {
-				logger.error("get channel error, try left: " + count, e); 
+			} catch (Exception e) {
+				logger.error("get channel error, try left: " + count, e);
 				if (connection != null) {
 					try {
 						connection.close();
-					}
-					catch (Exception e1) {
+					} catch (Exception e1) {
 					}
 				}
 				connection = null;
 				try {
 					Thread.sleep(1000);
-				}
-				catch (InterruptedException e2) {
+				} catch (InterruptedException e2) {
 				}
 			}
 		}

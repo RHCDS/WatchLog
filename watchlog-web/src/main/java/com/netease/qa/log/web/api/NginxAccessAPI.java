@@ -126,6 +126,9 @@ public class NginxAccessAPI {
 
 	}
 	
+	/*
+	 * 获取离线统计数据
+	 */
 	@RequestMapping(value = "/nginx_statistics/offline", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> getTopAllData(
 			@RequestParam(value = "log_source_id", required = false) String logsourceId,

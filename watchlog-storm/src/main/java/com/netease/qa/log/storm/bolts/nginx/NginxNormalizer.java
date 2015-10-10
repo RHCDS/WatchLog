@@ -28,6 +28,7 @@ public class NginxNormalizer implements IRichBolt {
 
 	private static final long serialVersionUID = 1L;
 	private OutputCollector collector;
+	private int readCount = 0;
 
 	private static final Logger logger = LoggerFactory.getLogger(NginxNormalizer.class);
 
@@ -46,7 +47,7 @@ public class NginxNormalizer implements IRichBolt {
 		String line = input.getString(3);
 		NormalizerService ns = new NormalizerService();
 		LogSource logsource = ConfigDataService.getLogSource(hostname, path, filePattern);
-		logger.info("logsource: " + logsource);
+		logger.debug("logsource: " + logsource);
 
 		if (logsource == null) {
 			logger.warn("logsource in DB is null, logsource: " + hostname + " " + path + " " + filePattern);
@@ -66,7 +67,12 @@ public class NginxNormalizer implements IRichBolt {
 			collector.emit(new Values(record.getLog_source_id(), record.getRemote_addr(), record.getTime_local(),
 					record.getRequest(), record.getStatus(), record.getBody_bytes_sent(), requestTime,
 					upstream_response_time));
-			logger.info("get nginx log: " + logsource.getLogSourceId() + " " + record.getRequest());
+			readCount ++;
+			if(readCount > 100){
+				logger.info("NginxNormalizer emit 100 msg");
+				readCount = 0;
+			}
+			logger.debug("get nginx log: " + logsource.getLogSourceId() + " " + record.getRequest());
 		} catch (Exception e) {
 			logger.info("exception:" + e);
 			logger.info("line" + line);

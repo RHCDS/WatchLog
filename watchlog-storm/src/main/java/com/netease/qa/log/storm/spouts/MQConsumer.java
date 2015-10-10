@@ -30,34 +30,30 @@ public class MQConsumer extends BaseRichSpout {
 
 	private static Channel channel;
 	private static Connection connection;
-	private static String queueName ;
-	private static String host ;
-	private static int port ;
-
+	private static String queueName;
+	private static String host;
+	private static int port;
 
 	public void ack(Object msgId) {
 		// logger.info("OK:" + msgId);
 	}
 
-
 	public void close() {
 	}
-
 
 	public void fail(Object msgId) {
 		logger.error("FAIL:" + msgId);
 	}
 
-
-	public static void main(String[] args) throws IOException, ShutdownSignalException,
-	ConsumerCancelledException, InterruptedException {
+	public static void main(String[] args) throws IOException, ShutdownSignalException, ConsumerCancelledException,
+			InterruptedException {
 		ConnectionFactory factory = new ConnectionFactory();
 		factory.setHost(host);
 		factory.setPort(port);
 
 		connection = factory.newConnection();
 		channel = connection.createChannel();
-//		channel.queueDeclare(queueName, false, false, false, null);
+		// channel.queueDeclare(queueName, false, false, false, null);
 
 		QueueingConsumer consumer = new QueueingConsumer(channel);
 		// channel.basicConsume(queueName, true, consumer);
@@ -71,28 +67,27 @@ public class MQConsumer extends BaseRichSpout {
 			delivery = consumer.nextDelivery();
 			message = new String(delivery.getBody());
 			Map<String, Object> headers = delivery.getProperties().getHeaders();
-			String hostname = "";  
-		    String path =  "";  
-		    String filePattern =  "";
-		    String dsTime = "";
-			try{
-				hostname = headers.get("__DS_.fields.hostname").toString();  
-			    path =  headers.get("__DS_.fields._ds_target_dir").toString();  
-			    filePattern =  headers.get("__DS_.fields._ds_file_pattern").toString();  
-			    dsTime =  headers.get("__DS_.timestamp").toString();   
+			String hostname = "";
+			String path = "";
+			String filePattern = "";
+			String dsTime = "";
+			try {
+				hostname = headers.get("__DS_.fields.hostname").toString();
+				path = headers.get("__DS_.fields._ds_target_dir").toString();
+				filePattern = headers.get("__DS_.fields._ds_file_pattern").toString();
+				dsTime = headers.get("__DS_.timestamp").toString();
+			} catch (NullPointerException e) {
+				logger.error("can't get header, hostname: " + hostname + ", path: " + path + ", file: " + filePattern
+						+ ", dsTime: " + dsTime);
 			}
-			catch(NullPointerException e){
-				logger.error("can't get header, hostname: " + hostname + ", path: " + path + ", file: " + filePattern + ", dsTime: " + dsTime);
-			}
-			
+
 			logger.debug("Consume: " + message);
 			logger.debug("hostname: " + hostname + ", path: " + path + ", filePattern: " + filePattern);
-			logger.info(""+ ++i);
-//			channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
+			logger.info("" + ++i);
+			// channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
 		}
 
 	}
-
 
 	/**
 	 * The only thing that the methods will do It is emit each file line
@@ -112,34 +107,31 @@ public class MQConsumer extends BaseRichSpout {
 				while (true) {
 					QueueingConsumer.Delivery delivery = consumer.nextDelivery();
 					String message = new String(delivery.getBody());
-
 					Map<String, Object> headers = delivery.getProperties().getHeaders();
-					String hostname = "";  
-				    String path =  "";  
-				    String filePattern =  "";
-				    String dsTime = "";
-					try{
-						hostname = headers.get("__DS_.fields.hostname").toString();  
-					    path =  headers.get("__DS_.fields._ds_target_dir").toString();  
-					    filePattern =  headers.get("__DS_.fields._ds_file_pattern").toString();  
-					    dsTime =  headers.get("__DS_.timestamp").toString();   
-					    
-					    this.collector.emit(new Values(message, hostname, path, filePattern, dsTime), message);
+					String hostname = "";
+					String path = "";
+					String filePattern = "";
+					String dsTime = "";
+					try {
+						hostname = headers.get("__DS_.fields.hostname").toString();
+						path = headers.get("__DS_.fields._ds_target_dir").toString();
+						filePattern = headers.get("__DS_.fields._ds_file_pattern").toString();
+						dsTime = headers.get("__DS_.timestamp").toString();
+						this.collector.emit(new Values(message, hostname, path, filePattern, dsTime), message);
 						logger.debug("Consume: " + message);
 						logger.info("hostname: " + hostname + ", path: " + path + ", filePattern: " + filePattern);
+					} catch (NullPointerException e) {
+						logger.error("can't get header, hostname: " + hostname + ", path: " + path + ", file: "
+								+ filePattern, e);
 					}
-					catch(NullPointerException e){
-						logger.error("can't get header, hostname: " + hostname + ", path: " + path + ", file: " + filePattern, e);
-					}
+					
 				}
-			}
-			catch (Exception e) {
+			} catch (Exception e) {
 				logger.error("consume error, close connction", e);
 				if (channel != null) {
 					try {
 						channel.close();
-					}
-					catch (IOException e1) {
+					} catch (IOException e1) {
 						channel = null;
 					}
 				}
@@ -147,18 +139,16 @@ public class MQConsumer extends BaseRichSpout {
 		}
 	}
 
-
 	/**
 	 * We will create the file and get the collector object
 	 */
 	@SuppressWarnings("rawtypes")
 	public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
 		queueName = conf.get(Const.MQ_QUEUE).toString();
-		host =  conf.get(Const.MQ_HOST).toString();
-		port = Integer.parseInt(conf.get(Const.MQ_PORT).toString()) ;
+		host = conf.get(Const.MQ_HOST).toString();
+		port = Integer.parseInt(conf.get(Const.MQ_PORT).toString());
 		this.collector = collector;
 	}
-
 
 	/**
 	 * Declare the output field "word"
@@ -166,7 +156,6 @@ public class MQConsumer extends BaseRichSpout {
 	public void declareOutputFields(OutputFieldsDeclarer declarer) {
 		declarer.declare(new Fields("line", "hostname", "path", "filePattern", "dsTime"));
 	}
-
 
 	private Connection getConnection() throws IOException {
 		ConnectionFactory factory = new ConnectionFactory();
@@ -176,7 +165,6 @@ public class MQConsumer extends BaseRichSpout {
 		return connection;
 	}
 
-
 	private Channel getChannel() {
 		int count = 3;
 		while (count-- > 0) {
@@ -185,21 +173,18 @@ public class MQConsumer extends BaseRichSpout {
 					connection = getConnection();
 				}
 				return connection.createChannel();
-			}
-			catch (Exception e) {
-				logger.error("get channel error, try left: " + count, e); 
+			} catch (Exception e) {
+				logger.error("get channel error, try left: " + count, e);
 				if (connection != null) {
 					try {
 						connection.close();
-					}
-					catch (Exception e1) {
+					} catch (Exception e1) {
 					}
 				}
 				connection = null;
 				try {
 					Thread.sleep(1000);
-				}
-				catch (InterruptedException e2) {
+				} catch (InterruptedException e2) {
 				}
 			}
 		}

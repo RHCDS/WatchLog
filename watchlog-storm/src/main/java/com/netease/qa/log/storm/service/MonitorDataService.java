@@ -211,6 +211,4 @@ public class MonitorDataService {
 		}
 	}
 	
-
-	
 }

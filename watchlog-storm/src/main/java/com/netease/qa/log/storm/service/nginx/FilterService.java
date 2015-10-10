@@ -11,13 +11,4 @@ public class FilterService {
 		boolean isTrue = url.matches(a);
 		return !isTrue;
 	}
-	public static void main(String avgs[]){
-		FilterService fs = new FilterService();
-		String url = "/services/userlogin.jsp";
-		boolean b = fs.filterStaticUrl(url);
-		if(b)
-			System.out.println("true");
-		else
-			System.out.println("false");
-	}
 }

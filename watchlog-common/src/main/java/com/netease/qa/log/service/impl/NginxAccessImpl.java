@@ -73,11 +73,11 @@ public class NginxAccessImpl implements NginxAccessService {
 			// 4**_rate
 			BigDecimal error4Sum = new BigDecimal(String.valueOf(nginxAccess.getError4Count()));
 			double error4_rate = error4Sum.divide(totalSum, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
-			data.put("rate_4xx", error4_rate);
+			data.put("rate_client_error", error4_rate);
 			// 5**_rate
 			BigDecimal error5Sum = new BigDecimal(String.valueOf(nginxAccess.getError5Count()));
 			double error5_rate = error5Sum.divide(totalSum, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
-			data.put("rate_5xx", error5_rate);
+			data.put("rate_server_error", error5_rate);
 			// msize
 			BigDecimal bytesSum = new BigDecimal(String.valueOf(nginxAccess.getByteTotal()));
 			double msize = bytesSum.divide(totalSum, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -93,11 +93,11 @@ public class NginxAccessImpl implements NginxAccessService {
 			int count = nginxAccessDao.getTotalNumByUrl(logSourceId, url, start, end);
 			int count90 = count * 90 / 100;
 			int value90 = nginxAccessDao.getValue("request_time_90", logSourceId, url, start, end, count90 - 1);
-			data.put("rt_90", value90);
+			data.put("rt_ninety", value90);
 			// 99_rt
 			int count99 = count * 99 / 100;
 			int value99 = nginxAccessDao.getValue("request_time_99", logSourceId, url, start, end, count99 - 1);
-			data.put("rt_99", value99);
+			data.put("rt_ninety_nine", value99);
 			datas.add(data);
 		}
 		results.put("data", datas);
