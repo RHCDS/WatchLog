@@ -197,4 +197,21 @@
        WHERE a.exception_id = e.exception_id;
     </select>
     
+           
+      
+    <select id="findErrorTotalByMachineAndTimeByAB" resultType="java.lang.Integer">
+           select IFNULL( sum(exception_count), 0 ) as total
+           from exception_data 
+           where log_source_id in ( ${param1} ) and sample_time between #{param2} and #{param3}
+    </select>
+          
+      
+    <select id="findErrorRecordsByMachineAndTimeByAB" resultType="com.netease.qa.log.meta.ExceptionData">
+            select e.exception_id as exceptionId, e.exception_type as exceptionType, e.exception_demo as exceptionDemo, a.count as exceptionCount 
+            from 
+                (select  exception_id, sum(exception_count) as count from exception_data where log_source_id in ( ${param1} ) and sample_time between #{param2} and #{param3} group by exception_id) a, 
+                exception e 
+            where a.exception_id = e.exception_id;
+    </select>
+    
 </mapper>

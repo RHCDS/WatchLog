@@ -95,5 +95,11 @@ public interface ExceptionDataDao {
     public Integer getLogSourceExceptionTotalCountByTime(int logSourceId, long startTime, long endTime);
     
     public List<ExceptionData> findErrorRecordsByLogSourceIdAndTimeByAB(int logSourceId, long startTime, long endTime);
+    
+    //获取所有日志源在所有时间内的所有异常个数total
+    public int findErrorTotalByMachineAndTimeByAB(String logSourceIds, long startTime, long endTime);
+    
+    //获取所有日志源在某一小段时间内的所有异常type和count
+    public List<ExceptionData> findErrorRecordsByMachineAndTimeByAB(String logSourceIds, long startTime, long endTime);
 
 }

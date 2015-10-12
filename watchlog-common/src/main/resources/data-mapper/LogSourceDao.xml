@@ -121,6 +121,12 @@
 	      <include refid="allColumn" />
 	      from log_source where  <![CDATA[status<>3]]> and project_id=${param1} order by ${param2} ${param3} limit ${param4} offset ${param5}
 	</select>
+	
+    <select id="findIdsByHostname"  resultType="java.lang.String">
+		select group_concat(log_source_id) from log_source where hostname=#{0}  and log_type=#{1}
+	</select>
+	
+	
 </mapper>
 
 

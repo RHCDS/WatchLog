@@ -8,6 +8,7 @@ public class ExceptionData {
 	private Long sampleTime;
 	private int exceptionId;
 	private String exceptionType;
+	private String exceptionDemo;
 	private int exceptionCount;
 	
 	public String getExceptionType() {
@@ -57,6 +58,14 @@ public class ExceptionData {
 	public void setExceptionCount(int exceptionCount) {
 		this.exceptionCount = exceptionCount;
 	}
+	
+	public String getExceptionDemo() {
+		return exceptionDemo;
+	}
+
+	public void setExceptionDemo(String exceptionDemo) {
+		this.exceptionDemo = exceptionDemo;
+	}	
 	
 
 	public String toString(){

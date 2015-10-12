@@ -37,6 +37,8 @@ public class Const {
     public static final long RT_SHOW_NUM = 15; //实时分析页面显示记录条数
     public static final int OFFLINE_POINT=300;//AB平台，离线曲线需要显示的点的个数
     
+    public static final int MACHINE_ERROR_POINT=300;//AB平台，按机器聚合异常点数
+    
     public static final String ORDER_FIELD_SAMPLE_TIME = "sample_time";
     public static final String ORDER_FIELD_SAMPLETIME = "sampleTime";
     public static final String ORDER_FIELD_TOTALCOUNT = "totalCount";

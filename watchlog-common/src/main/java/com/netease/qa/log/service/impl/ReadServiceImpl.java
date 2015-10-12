@@ -381,7 +381,7 @@ public class ReadServiceImpl implements ReadService {
 		//map用来临时
 		Map<String, JSONArray> temp = new HashMap<String, JSONArray>();
 		for (int i = 0; i < logSourceIds.size(); i++) {
-			JSONObject detail = new JSONObject(); // detail
+			JSONObject detail = new JSONObject(); // detail : 一条日志源的基本信息和error_tc数组
 			int logsourceId = logSourceIds.get(i);
 			LogSource logSource = logSourceDao.findByLogSourceId(logsourceId);
 			detail.put("log_source_id", logSource.getLogSourceId());
@@ -434,5 +434,107 @@ public class ReadServiceImpl implements ReadService {
 		}
 		result.put("record", records);
 		return result;
+	}
+	
+	
+	/*
+	 * AB平台 按机器聚合所有日志源的异常信息-曲线数据
+	 */
+	@Override
+	public JSONObject queryErrorRecordsGraphByMachine(String host_name,long start, long end, int log_type) {
+		logger.debug(" --- queryErrorRecordsGraphByMachine ---" );
+		// 自适应时间间隔
+		int pointNum = Const.MACHINE_ERROR_POINT;
+		int timeRange = MathUtil.getTimeRangeByPoint(start, end, pointNum);
+		JSONArray data = new JSONArray();
+		// 汇总机器的所有日志源，如果机器上没有日志源，则不需要分析了
+		// select group_concat(log_source_id) from log_source  where hostname="app-52.photo.163.org" and log_type=0;
+		String log_source_ids_str = logSourceDao.findIdsByHostname(host_name, log_type);
+		logger.debug(" --- log_source_ids_str---" + log_source_ids_str);
+		if (log_source_ids_str != null) {
+			// 对每一小段时间进行分析，对应data内部一个元素
+			long startTime, endTime;
+			for (int i = 0; i < pointNum; i++) {
+				startTime = start + i * timeRange;
+				endTime = startTime + timeRange;
+				logger.debug(" --- startTime---" + startTime);
+				logger.debug(" --- endTime---" + endTime);
+				// total: 获取所有日志源在某一小段时间内的所有total个数
+				// select IFNULL( sum(exception_count), 0 ) as total  from exception_data where log_source_id in ( 40,41,37,21,30,32,33,35,36,39 ) and sample_time between 1433833990 and 1433834014; 
+				int total = exceptionDataDao	.findErrorTotalByMachineAndTimeByAB(log_source_ids_str,startTime, endTime);
+				logger.debug(" --- total---" + total);
+				// 如果不存在异常，则不需要查询具体信息了
+				if (total > 0) {
+					JSONObject dataObj = new JSONObject();
+					dataObj.put("total", total);
+					 // time: 聚合时间，开始和结束时间的中间时间
+					long avgTime = (endTime + startTime) / 2;
+					dataObj.put("time", avgTime);
+					 // error_tc : 获取所有日志源在某一小段时间内的异常具体type和count
+					JSONArray error_tc = new JSONArray();
+					List<ExceptionData> exceptionDatas = exceptionDataDao.findErrorRecordsByMachineAndTimeByAB(log_source_ids_str, startTime, endTime);
+					for (ExceptionData exceptionData : exceptionDatas) {
+						JSONObject errobj = new JSONObject();
+						errobj.put("type", exceptionData.getExceptionType());
+						errobj.put("count", exceptionData.getExceptionCount());
+						error_tc.add(errobj);
+					}
+					dataObj.put("error_tc", error_tc);
+					data.add(dataObj);
+				}
+			}
+		}
+		// 封装results结果
+		JSONObject results = new JSONObject();
+		results.put("host_name", host_name);
+		results.put("data", data);
+		// 封装最后结果
+		JSONObject record = new JSONObject();
+		record.put("code", 200);
+		record.put("results", results);
+		return record;
+	}
+	
+	/*
+	 * 按机器聚合所有日志源的异常信息-表格数据
+	 */
+	@Override
+	public JSONObject queryErrorRecordsTableByMachine(String host_name, long start, long end , int log_type){
+		logger.debug(" --- queryErrorRecordsTableByMachine ---" );
+		JSONArray error_tc = new JSONArray();
+		int total = 0; 
+		// 汇总机器的所有日志源，如果机器上没有日志源，则不需要分析了
+		// select group_concat(log_source_id) from log_source  where hostname="app-52.photo.163.org" and log_type=0;
+		String log_source_ids_str = logSourceDao.findIdsByHostname(host_name, log_type);
+		logger.debug(" --- log_source_ids_str---" + log_source_ids_str);
+		if (log_source_ids_str != null) {
+			// 对整个时间范围内进行查询
+				total = exceptionDataDao	.findErrorTotalByMachineAndTimeByAB(log_source_ids_str,start, end);
+				logger.debug(" --- total---" + total);
+				// 如果不存在异常，则不需要查询具体信息了
+				if (total > 0) {
+					 // error_tc : 获取所有日志源在某一小段时间内的异常具体type和count
+					List<ExceptionData> exceptionDatas = exceptionDataDao.findErrorRecordsByMachineAndTimeByAB(log_source_ids_str, start, end);
+					for (ExceptionData exceptionData : exceptionDatas) {
+						JSONObject errobj = new JSONObject();
+						errobj.put("type", exceptionData.getExceptionType());
+						errobj.put("count", exceptionData.getExceptionCount());
+						errobj.put("sample", exceptionData.getExceptionDemo());
+						error_tc.add(errobj);
+					}
+			}
+		}
+		// 封装results结果
+		JSONObject results = new JSONObject();
+		results.put("host_name", host_name);
+		results.put("total", total);
+		results.put("error_tc", error_tc);
+		
+		// 封装最后结果
+		JSONObject record = new JSONObject();
+		record.put("code", 200);
+		record.put("results", results);
+		return record;
+		
 	}
 }

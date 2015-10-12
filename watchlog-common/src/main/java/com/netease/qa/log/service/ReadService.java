@@ -35,4 +35,10 @@ public interface ReadService {
 	public JSONArray queryRecordsByTime(int projectid, long start_time, long end_time);
 	
 	public JSONObject queryErrorRecordsByLogSourceIds(List<Integer> logSourceIds, long start_time, long end_time);
+
+	// 按机器聚合所有日志源的异常信息-曲线数据
+	public JSONObject queryErrorRecordsGraphByMachine(String host_name, long start, long end , int log_type);
+	
+	// 按机器聚合所有日志源的异常信息-表格数据
+	public JSONObject queryErrorRecordsTableByMachine(String host_name, long start, long end , int log_type);	
 }
