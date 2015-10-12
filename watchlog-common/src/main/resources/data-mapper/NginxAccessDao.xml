@@ -87,6 +87,13 @@
 		       FROM nginx_access WHERE log_source_id=#{0} AND 
                      url=#{1} AND start_time &gt;= #{2} AND start_time &lt; #{3}
 	</select>
+	
+	<select id="getAllRealTimeData" resultType="com.netease.qa.log.meta.NginxAccess">
+		SELECT   log_source_id AS logSourceId, AVG(start_time) AS startTime, SUM(total_count) AS totalCount,
+		SUM(ok_count) AS okCount, SUM(request_time_total) AS requestTimeTotal,
+		MAX(request_time_max) AS requestTimeMax FROM nginx_access 
+		   WHERE log_source_id=#{0} AND start_time&gt;= #{1} AND start_time &lt; #{2}
+	</select>
 
 </mapper>
 	

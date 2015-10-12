@@ -75,6 +75,7 @@ public class MyLogTopology {
 		readConfig(fileName);
 		TopologyBuilder builder = new TopologyBuilder();
 		if (LOG_TYPE.equals(Const.EXCEPTION_LOG)) {
+			logger.info("type:" + LOG_TYPE);
 			builder.setSpout("mq-consumer", new MQConsumer(), LOG_SPOUT);
 			builder.setBolt("log-normalizer", new LogNormalizer(), LOG_NORMALIZER_BOLT).shuffleGrouping("mq-consumer");
 			builder.setBolt("log-filter", new LogFilter(), LOG_FILTER_BOLT).shuffleGrouping("log-normalizer");
@@ -82,6 +83,11 @@ public class MyLogTopology {
 			builder.setBolt("result-writer", new ResultWriter(), RESULT_WRITER_BOLT).shuffleGrouping("log-analyser");
 		} 
 		else if (LOG_TYPE.equals(Const.NGINX_LOG)) {
+			logger.info("type:" + LOG_TYPE);
+			logger.info("nginx-reader:" + NGINX_READER_SPOUT);
+			logger.info("nginx-normalizer:" + NGINX_NORMALIZER_BOLT);
+			logger.info("nginx-filter:" + NGINX_FILTER_BOLT);
+			logger.info("nginx-analyze:" + NGINX_ANALYSER_BOLT);
 			builder.setSpout("nginx-reader", new NginxReader(), NGINX_READER_SPOUT);
 			builder.setBolt("nginx-normalizer", new NginxNormalizer(), NGINX_NORMALIZER_BOLT).shuffleGrouping("nginx-reader");
 			builder.setBolt("nginx-filter", new FilterUrl(), NGINX_FILTER_BOLT).shuffleGrouping("nginx-normalizer");

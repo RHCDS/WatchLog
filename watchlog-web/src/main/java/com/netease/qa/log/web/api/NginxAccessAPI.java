@@ -66,21 +66,21 @@ public class NginxAccessAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_TIME_FORMAT);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		//默认已total_count降序排序，就是tps
+		// 默认已total_count降序排序，就是tps
 		String realSort = sort;
-		if(sort.trim().equals("tps") || sort.trim().equals("total_count")){
-			 realSort = "total_count";
-		}else{
+		if (sort.trim().equals("tps") || sort.trim().equals("total_count")) {
+			realSort = "total_count";
+		} else {
 			InvalidRequestException ex = new InvalidRequestException("sort field is wrong!");
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		
+
 		JSONObject result = nginxAccessService.getTopNUrl(Integer.parseInt(logsourceId), startTime, endTime,
 				Integer.parseInt(top), realSort);
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 
 	}
-	
+
 	@RequestMapping(value = "/nginx_charts/offline/top_list", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> getOfflineTimeTopUrl(
 			@RequestParam(value = "log_source_id", required = false) String logsourceId,
@@ -111,21 +111,21 @@ public class NginxAccessAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_TIME_FORMAT);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		//默认已total_count降序排序，就是tps
+		// 默认已total_count降序排序，就是tps
 		String realSort = sort;
-		if(sort.trim().equals("tps") || sort.trim().equals("total_count")){
-			 realSort = "total_count";
-		}else{
+		if (sort.trim().equals("tps") || sort.trim().equals("total_count")) {
+			realSort = "total_count";
+		} else {
 			InvalidRequestException ex = new InvalidRequestException("sort field is wrong!");
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		
+
 		JSONObject result = nginxAccessService.getTopNUrl(Integer.parseInt(logsourceId), startTime, endTime,
 				Integer.parseInt(top), realSort);
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 
 	}
-	
+
 	/*
 	 * 获取离线统计数据
 	 */
@@ -159,11 +159,11 @@ public class NginxAccessAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_TIME_FORMAT);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		//默认已total_count降序排序，就是tps
+		// 默认已total_count降序排序，就是tps
 		String realSort = sort;
-		if(sort.trim().equals("tps") || sort.trim().equals("total_count")){
-			 realSort = "total_count";
-		}else{
+		if (sort.trim().equals("tps") || sort.trim().equals("total_count")) {
+			realSort = "total_count";
+		} else {
 			InvalidRequestException ex = new InvalidRequestException("sort field is wrong!");
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
@@ -171,14 +171,15 @@ public class NginxAccessAPI {
 				Integer.parseInt(top), realSort);
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/nginx_charts/real_time/single", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> getRealTimeSingleData(
 			@RequestParam(value = "log_source_id", required = false) String logsourceId,
 			@RequestParam(value = "start", required = false) String start,
 			@RequestParam(value = "end", required = false) String end,
 			@RequestParam(value = "url", required = false) String url, Model model) {
-		if (MathUtil.isEmpty(logsourceId, start, end, url)) {
+		if (MathUtil.isEmpty(logsourceId, start, end)) {
+			// url 如果为空，则表示总体，否则为单独url
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
@@ -200,18 +201,23 @@ public class NginxAccessAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_TIME_FORMAT);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		System.out.println("startTime:" + startTime + ";endTime:" + endTime);
-		JSONObject result = nginxAccessService.getRealSingleData(Integer.parseInt(logsourceId), url, startTime, endTime);
+		JSONObject result;
+		if (MathUtil.isEmpty(url)) {
+			result = nginxAccessService.getAllRealSingleData(Integer.parseInt(logsourceId), startTime, endTime);
+		} else {
+			result = nginxAccessService.getRealSingleData(Integer.parseInt(logsourceId), url, startTime, endTime);
+		}
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
-	
+
 	@RequestMapping(value = "/nginx_charts/offline/single", method = RequestMethod.GET)
 	public ResponseEntity<JSONObject> getOfflineAllData(
 			@RequestParam(value = "log_source_id", required = false) String logsourceId,
 			@RequestParam(value = "start", required = false) String start,
 			@RequestParam(value = "end", required = false) String end,
 			@RequestParam(value = "url", required = false) String url, Model model) {
-		if (MathUtil.isEmpty(logsourceId, start, end, url)) {
+		if (MathUtil.isEmpty(logsourceId, start, end)) {
+			// 如果url为空，返回全部数据（所有tps，error之和）
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
 		}
@@ -233,13 +239,17 @@ public class NginxAccessAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_TIME_FORMAT);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		if((endTime - startTime)/Const.OFFLINE_POINT == 0){
+		if ((endTime - startTime) / Const.OFFLINE_POINT == 0) {
 			InvalidRequestException ex = new InvalidRequestException(Const.TIME_TOO_SHORT);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		System.out.println("startTime:" + startTime + ";endTime:" + endTime);
-		JSONObject result = nginxAccessService.getOfflineAllData(Integer.parseInt(logsourceId), url, startTime, endTime);
+		JSONObject result;
+		if (MathUtil.isEmpty(url)) {
+			result = nginxAccessService.getOfflineAllDataWithoutUrl(Integer.parseInt(logsourceId), startTime, endTime);
+		} else {
+			result = nginxAccessService.getOfflineAllData(Integer.parseInt(logsourceId), url, startTime, endTime);
+		}
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
-	
+
 }
