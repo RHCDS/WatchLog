@@ -179,6 +179,82 @@ public class NginxAccessImpl implements NginxAccessService {
 		result.put("results", results);
 		return result;
 	}
+	
+	/*
+	 * 返回没有url情况下的全部数据（全部tps,error等）
+	 */
+	@Override
+	public JSONObject getAllRealSingleData(int logSourceId, long start, long end) {
+		NginxAccess nginxAccess = nginxAccessDao.getAllRealTimeData(logSourceId, start, end);
+		LogSource logSource = logSourceDao.findByLogSourceId(logSourceId);
+		JSONObject results = new JSONObject();
+		results.put("project_id", logSource.getProjectId());
+		results.put("log_source_id", logSource.getLogSourceId());
+		results.put("log_source_name", logSource.getLogSourceName());
+		// end - start 这段时间没有，数据赋0
+		if (nginxAccess == null) {
+			JSONObject result = new JSONObject();
+			JSONObject data = new JSONObject();
+			long avgTime = (end - start) / 2;
+			// tps
+			JSONObject tps = new JSONObject();
+			tps.put("time", avgTime);
+			tps.put("value", 0);
+			data.put("tps", tps);
+			// error
+			JSONObject error = new JSONObject();
+			error.put("time", avgTime);
+			error.put("value", 0);
+			data.put("error", error);
+			// avg_rt
+			JSONObject avg_rt = new JSONObject();
+			avg_rt.put("time", avgTime);
+			avg_rt.put("value", 0);
+			data.put("avg_rt", avg_rt);
+			// max_rt
+			JSONObject max_rt = new JSONObject();
+			max_rt.put("time", avgTime);
+			max_rt.put("value", 0);
+			data.put("max_rt", max_rt);
+
+			results.put("data", data);
+			result.put("code", 200);
+			result.put("results", results);
+			return result;
+		}
+		JSONObject data = new JSONObject();
+		JSONObject tps = new JSONObject();
+		// tps
+		tps.put("time", nginxAccess.getStartTime());
+		BigDecimal totalCount = new BigDecimal(String.valueOf(nginxAccess.getTotalCount()));
+		BigDecimal totalTime = new BigDecimal(String.valueOf(end - start));
+		double tpsValue = totalCount.divide(totalTime, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
+		tps.put("value", tpsValue);
+		data.put("tps", tps);
+		// error
+		JSONObject error = new JSONObject();
+		error.put("time", nginxAccess.getStartTime());
+		error.put("value", nginxAccess.getTotalCount() - nginxAccess.getOkCount());
+		data.put("error", error);
+		// avg_rt
+		JSONObject avg_rt = new JSONObject();
+		avg_rt.put("time", nginxAccess.getStartTime());
+		BigDecimal totalRequestTime = new BigDecimal(String.valueOf(nginxAccess.getRequestTimeTotal()));
+		double avg_rtValue = totalRequestTime.divide(totalCount, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
+		avg_rt.put("value", avg_rtValue);
+		data.put("avg_rt", avg_rt);
+		// max_rt
+		JSONObject max_rt = new JSONObject();
+		max_rt.put("time", nginxAccess.getStartTime());
+		max_rt.put("value", nginxAccess.getRequestTimeMax());
+		data.put("max_rt", max_rt);
+
+		results.put("data", data);
+		JSONObject result = new JSONObject();
+		result.put("code", 200);
+		result.put("results", results);
+		return result;
+	}
 
 	@Override
 	public JSONObject getOfflineAllData(int logSourceId, String url, long start, long end) {
@@ -201,6 +277,82 @@ public class NginxAccessImpl implements NginxAccessService {
 			startTime = start + i * timeRange;
 			endTime = startTime + timeRange;
 			nginxAccess = nginxAccessDao.getRealTimeData(logSourceId, url, startTime, endTime);
+			tps = new JSONObject();
+			error = new JSONObject();
+			avg_rt = new JSONObject();
+			max_rt = new JSONObject();
+			if (nginxAccess == null) {
+				long avgTime = (endTime + startTime) / 2;
+				// tps
+				tps.put("time", avgTime);
+				tps.put("value", 0);
+				tpses.add(tps);
+				// error
+				error.put("time", avgTime);
+				error.put("value", 0);
+				errors.add(error);
+				// avg_rt
+				avg_rt.put("time", avgTime);
+				avg_rt.put("value", 0);
+				avg_rts.add(error);
+				// max_rt
+				max_rt.put("time", avgTime);
+				max_rt.put("value", 0);
+				max_rts.add(error);
+			} else {
+				// tps
+				tps.put("time", nginxAccess.getStartTime());
+				BigDecimal totalCount = new BigDecimal(String.valueOf(nginxAccess.getTotalCount()));
+				BigDecimal totalTime = new BigDecimal(String.valueOf(end - start));
+				double tpsValue = totalCount.divide(totalTime, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
+				tps.put("value", tpsValue);
+				tpses.add(tps);
+				// error
+				error.put("time", nginxAccess.getStartTime());
+				error.put("value", nginxAccess.getTotalCount() - nginxAccess.getOkCount());
+				errors.add(error);
+				// avg_rt
+				avg_rt.put("time", nginxAccess.getStartTime());
+				BigDecimal totalRequestTime = new BigDecimal(String.valueOf(nginxAccess.getRequestTimeTotal()));
+				double avg_rtValue = totalRequestTime.divide(totalCount, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
+				avg_rt.put("value", avg_rtValue);
+				avg_rts.add(avg_rt);
+				// max_rt
+				max_rt.put("time", nginxAccess.getStartTime());
+				max_rt.put("value", nginxAccess.getRequestTimeMax());
+				max_rts.add(max_rt);
+			}
+		}
+		results.put("tps", tpses);
+		results.put("error", errors);
+		results.put("avg_rt", avg_rts);
+		results.put("max_rt", max_rts);
+		JSONObject result = new JSONObject();
+		result.put("code", 200);
+		result.put("results", results);
+		return result;
+	}
+
+	@Override
+	public JSONObject getOfflineAllDataWithoutUrl(int logSourceId, long start, long end) {
+		int pointNum = Const.OFFLINE_POINT;
+		int timeRange = MathUtil.getTimeRangeByPoint(start, end, pointNum);
+		long startTime, endTime;
+		LogSource logSource = logSourceDao.findByLogSourceId(logSourceId);
+		JSONObject results = new JSONObject();
+		results.put("project_id", logSource.getProjectId());
+		results.put("log_source_id", logSource.getLogSourceId());
+		results.put("log_source_name", logSource.getLogSourceName());
+		JSONArray tpses = new JSONArray();
+		JSONArray errors = new JSONArray();
+		JSONArray avg_rts = new JSONArray();
+		JSONArray max_rts = new JSONArray();
+		NginxAccess nginxAccess;
+		JSONObject tps, error, avg_rt, max_rt;
+		for (int i = 0; i < pointNum; i++) {
+			startTime = start + i * timeRange;
+			endTime = startTime + timeRange;
+			nginxAccess = nginxAccessDao.getAllRealTimeData(logSourceId, startTime, endTime);
 			tps = new JSONObject();
 			error = new JSONObject();
 			avg_rt = new JSONObject();

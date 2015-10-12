@@ -32,5 +32,9 @@ public interface NginxAccessDao {
 	 * 多记录之和
 	 */
 	public NginxAccess getRealTimeData(int logSourceId, String url, long start, long end);
+	/*
+	 * 获取没有url情况下的实时曲线数据，用户每30s发一次请求，只会返回一条数据,没有url返回的是所有该时间段内所有url的tps等之和
+	 */
+	public NginxAccess getAllRealTimeData(int logSourceId, long start, long end);
 	
 }
