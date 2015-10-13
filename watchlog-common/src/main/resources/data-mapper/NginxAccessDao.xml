@@ -6,7 +6,7 @@
 		nid as nid,
 		log_source_id as logSourceId,
 		url as url,
-		start_time as startTime,
+		start_time * 1000 as startTime,
 		total_count as totalCount,
 		request_time_total as requestTimeTotal,
 		request_time_max as requestTimeMax,
@@ -36,7 +36,7 @@
 	<sql id="SumDataColumn">
 		log_source_id as logSourceId,
 		url as url,
-		AVG(start_time) as startTime,
+		AVG(start_time) * 1000 as startTime,
 		SUM(total_count) as totalCount,
 		SUM(ok_count) as okCount,
 		SUM(request_time_total) as requestTimeTotal,
@@ -89,7 +89,7 @@
 	</select>
 	
 	<select id="getAllRealTimeData" resultType="com.netease.qa.log.meta.NginxAccess">
-		SELECT   log_source_id AS logSourceId, AVG(start_time) AS startTime, SUM(total_count) AS totalCount,
+		SELECT   log_source_id AS logSourceId, AVG(start_time) * 1000 AS startTime, SUM(total_count) AS totalCount,
 		SUM(ok_count) AS okCount, SUM(request_time_total) AS requestTimeTotal,
 		MAX(request_time_max) AS requestTimeMax FROM nginx_access 
 		   WHERE log_source_id=#{0} AND start_time&gt;= #{1} AND start_time &lt; #{2}
