@@ -98,12 +98,20 @@ public class NginxAccessImpl implements NginxAccessService {
 			String url = nginxAccess.getUrl();
 			int count = nginxAccessDao.getTotalNumByUrl(logSourceId, url, start, end);
 			int count90 = count * 90 / 100;
-			int value90 = nginxAccessDao.getValue("request_time_90", logSourceId, url, start, end, count90 - 1);
-			data.put("rt_ninety", value90);
+			if(count90 == 0){
+				data.put("rt_ninety", 0);
+			}else{
+				int value90 = nginxAccessDao.getValue("request_time_90", logSourceId, url, start, end, count90 - 1);
+				data.put("rt_ninety", value90);
+			}
 			// 99_rt
 			int count99 = count * 99 / 100;
-			int value99 = nginxAccessDao.getValue("request_time_99", logSourceId, url, start, end, count99 - 1);
-			data.put("rt_ninety_nine", value99);
+			if(count99 == 0){
+				data.put("rt_ninety_nine", 0);
+			}else{
+				int value99 = nginxAccessDao.getValue("request_time_99", logSourceId, url, start, end, count99 - 1);
+				data.put("rt_ninety_nine", value99);
+			}
 			datas.add(data);
 		}
 		results.put("data", datas);
