@@ -119,7 +119,8 @@ public class NginxAccessImpl implements NginxAccessService {
 		if (nginxAccess == null) {
 			JSONObject result = new JSONObject();
 			JSONObject data = new JSONObject();
-			long avgTime = (end - start) / 2;
+			long avgTime = (end + start) / 2;
+			avgTime = avgTime * 1000;
 			// tps
 			JSONObject tps = new JSONObject();
 			tps.put("time", avgTime);
@@ -149,7 +150,7 @@ public class NginxAccessImpl implements NginxAccessService {
 		JSONObject data = new JSONObject();
 		JSONObject tps = new JSONObject();
 		// tps
-		tps.put("time", nginxAccess.getStartTime());
+		tps.put("time", nginxAccess.getStartTimeStamp());
 		BigDecimal totalCount = new BigDecimal(String.valueOf(nginxAccess.getTotalCount()));
 		BigDecimal totalTime = new BigDecimal(String.valueOf(end - start));
 		double tpsValue = totalCount.divide(totalTime, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -157,19 +158,19 @@ public class NginxAccessImpl implements NginxAccessService {
 		data.put("tps", tps);
 		// error
 		JSONObject error = new JSONObject();
-		error.put("time", nginxAccess.getStartTime());
+		error.put("time", nginxAccess.getStartTimeStamp());
 		error.put("value", nginxAccess.getTotalCount() - nginxAccess.getOkCount());
 		data.put("error", error);
 		// avg_rt
 		JSONObject avg_rt = new JSONObject();
-		avg_rt.put("time", nginxAccess.getStartTime());
+		avg_rt.put("time", nginxAccess.getStartTimeStamp());
 		BigDecimal totalRequestTime = new BigDecimal(String.valueOf(nginxAccess.getRequestTimeTotal()));
 		double avg_rtValue = totalRequestTime.divide(totalCount, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
 		avg_rt.put("value", avg_rtValue);
 		data.put("avg_rt", avg_rt);
 		// max_rt
 		JSONObject max_rt = new JSONObject();
-		max_rt.put("time", nginxAccess.getStartTime());
+		max_rt.put("time", nginxAccess.getStartTimeStamp());
 		max_rt.put("value", nginxAccess.getRequestTimeMax());
 		data.put("max_rt", max_rt);
 
@@ -195,7 +196,8 @@ public class NginxAccessImpl implements NginxAccessService {
 		if (nginxAccess == null) {
 			JSONObject result = new JSONObject();
 			JSONObject data = new JSONObject();
-			long avgTime = (end - start) / 2;
+			long avgTime = (end + start) / 2;
+			avgTime = avgTime * 1000;
 			// tps
 			JSONObject tps = new JSONObject();
 			tps.put("time", avgTime);
@@ -225,7 +227,7 @@ public class NginxAccessImpl implements NginxAccessService {
 		JSONObject data = new JSONObject();
 		JSONObject tps = new JSONObject();
 		// tps
-		tps.put("time", nginxAccess.getStartTime());
+		tps.put("time", nginxAccess.getStartTimeStamp());
 		BigDecimal totalCount = new BigDecimal(String.valueOf(nginxAccess.getTotalCount()));
 		BigDecimal totalTime = new BigDecimal(String.valueOf(end - start));
 		double tpsValue = totalCount.divide(totalTime, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
@@ -233,19 +235,19 @@ public class NginxAccessImpl implements NginxAccessService {
 		data.put("tps", tps);
 		// error
 		JSONObject error = new JSONObject();
-		error.put("time", nginxAccess.getStartTime());
+		error.put("time", nginxAccess.getStartTimeStamp());
 		error.put("value", nginxAccess.getTotalCount() - nginxAccess.getOkCount());
 		data.put("error", error);
 		// avg_rt
 		JSONObject avg_rt = new JSONObject();
-		avg_rt.put("time", nginxAccess.getStartTime());
+		avg_rt.put("time", nginxAccess.getStartTimeStamp());
 		BigDecimal totalRequestTime = new BigDecimal(String.valueOf(nginxAccess.getRequestTimeTotal()));
 		double avg_rtValue = totalRequestTime.divide(totalCount, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
 		avg_rt.put("value", avg_rtValue);
 		data.put("avg_rt", avg_rt);
 		// max_rt
 		JSONObject max_rt = new JSONObject();
-		max_rt.put("time", nginxAccess.getStartTime());
+		max_rt.put("time", nginxAccess.getStartTimeStamp());
 		max_rt.put("value", nginxAccess.getRequestTimeMax());
 		data.put("max_rt", max_rt);
 
@@ -283,6 +285,7 @@ public class NginxAccessImpl implements NginxAccessService {
 			max_rt = new JSONObject();
 			if (nginxAccess == null) {
 				long avgTime = (endTime + startTime) / 2;
+				avgTime = avgTime * 1000;
 				// tps
 				tps.put("time", avgTime);
 				tps.put("value", 0);
@@ -301,24 +304,24 @@ public class NginxAccessImpl implements NginxAccessService {
 				max_rts.add(error);
 			} else {
 				// tps
-				tps.put("time", nginxAccess.getStartTime());
+				tps.put("time", nginxAccess.getStartTimeStamp());
 				BigDecimal totalCount = new BigDecimal(String.valueOf(nginxAccess.getTotalCount()));
 				BigDecimal totalTime = new BigDecimal(String.valueOf(end - start));
 				double tpsValue = totalCount.divide(totalTime, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
 				tps.put("value", tpsValue);
 				tpses.add(tps);
 				// error
-				error.put("time", nginxAccess.getStartTime());
+				error.put("time", nginxAccess.getStartTimeStamp());
 				error.put("value", nginxAccess.getTotalCount() - nginxAccess.getOkCount());
 				errors.add(error);
 				// avg_rt
-				avg_rt.put("time", nginxAccess.getStartTime());
+				avg_rt.put("time", nginxAccess.getStartTimeStamp());
 				BigDecimal totalRequestTime = new BigDecimal(String.valueOf(nginxAccess.getRequestTimeTotal()));
 				double avg_rtValue = totalRequestTime.divide(totalCount, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
 				avg_rt.put("value", avg_rtValue);
 				avg_rts.add(avg_rt);
 				// max_rt
-				max_rt.put("time", nginxAccess.getStartTime());
+				max_rt.put("time", nginxAccess.getStartTimeStamp());
 				max_rt.put("value", nginxAccess.getRequestTimeMax());
 				max_rts.add(max_rt);
 			}
@@ -359,6 +362,7 @@ public class NginxAccessImpl implements NginxAccessService {
 			max_rt = new JSONObject();
 			if (nginxAccess == null) {
 				long avgTime = (endTime + startTime) / 2;
+				avgTime = avgTime * 1000;
 				// tps
 				tps.put("time", avgTime);
 				tps.put("value", 0);
@@ -377,24 +381,24 @@ public class NginxAccessImpl implements NginxAccessService {
 				max_rts.add(error);
 			} else {
 				// tps
-				tps.put("time", nginxAccess.getStartTime());
+				tps.put("time", nginxAccess.getStartTimeStamp());
 				BigDecimal totalCount = new BigDecimal(String.valueOf(nginxAccess.getTotalCount()));
 				BigDecimal totalTime = new BigDecimal(String.valueOf(end - start));
 				double tpsValue = totalCount.divide(totalTime, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
 				tps.put("value", tpsValue);
 				tpses.add(tps);
 				// error
-				error.put("time", nginxAccess.getStartTime());
+				error.put("time", nginxAccess.getStartTimeStamp());
 				error.put("value", nginxAccess.getTotalCount() - nginxAccess.getOkCount());
 				errors.add(error);
 				// avg_rt
-				avg_rt.put("time", nginxAccess.getStartTime());
+				avg_rt.put("time", nginxAccess.getStartTimeStamp());
 				BigDecimal totalRequestTime = new BigDecimal(String.valueOf(nginxAccess.getRequestTimeTotal()));
 				double avg_rtValue = totalRequestTime.divide(totalCount, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
 				avg_rt.put("value", avg_rtValue);
 				avg_rts.add(avg_rt);
 				// max_rt
-				max_rt.put("time", nginxAccess.getStartTime());
+				max_rt.put("time", nginxAccess.getStartTimeStamp());
 				max_rt.put("value", nginxAccess.getRequestTimeMax());
 				max_rts.add(max_rt);
 			}

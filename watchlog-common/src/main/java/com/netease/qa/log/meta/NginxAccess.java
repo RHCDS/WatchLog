@@ -5,6 +5,7 @@ public class NginxAccess {
 	private int nid;
 	private int logSourceId;
 	private String url;
+	//startTime以s为单位
 	private long startTime;
 	private int totalCount;
 	private int requestTimeTotal;
@@ -20,6 +21,13 @@ public class NginxAccess {
 	private int upstreamResponseTime90;
 	private int upstreamResponseTime99;
 	
+	/**
+	 * 返回ms单位的时间
+	 * @return
+	 */
+	public long getStartTimeStamp(){
+		return startTime * 1000;
+	}
 	public int getNid() {
 		return nid;
 	}
