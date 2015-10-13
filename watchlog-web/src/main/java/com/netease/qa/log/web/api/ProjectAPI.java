@@ -37,10 +37,11 @@ public class ProjectAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.ID_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		if(!projectService.checkProjectExsit(Integer.parseInt(project_id))){
-			NotFoundRequestException nr = new NotFoundRequestException(Const.PROJECT_NOT_EXSIT);
-			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
-		}
+		// 去除api对qbs的依赖
+//		if(!projectService.checkProjectExsit(Integer.parseInt(project_id))){
+//			NotFoundRequestException nr = new NotFoundRequestException(Const.PROJECT_NOT_EXSIT);
+//			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
+//		}
 		JSONObject result = projectService.findAllLogSourcesByProjectId(Integer.parseInt(project_id));
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}

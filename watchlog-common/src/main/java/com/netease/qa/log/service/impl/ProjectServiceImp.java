@@ -64,7 +64,7 @@ public class ProjectServiceImp implements ProjectService{
 	@Override
 	public JSONObject findAllLogSourcesByProjectId(int projectId) {
 		List<LogSource> logSources = logSourceDao.selectAllByProjectId(projectId);
-		Project project = qbsService.getProjectById(projectId);
+		//Project project = qbsService.getProjectById(projectId);
 		JSONObject result = new JSONObject();
 		JSONArray logsources = new JSONArray();
 		JSONObject logsource = new JSONObject();
@@ -88,8 +88,8 @@ public class ProjectServiceImp implements ProjectService{
 			logsources.add(logsource);
 		}
 		
-		result.put("project_id", project.getId());
-		result.put("name", project.getName());
+		result.put("project_id", projectId);
+		//result.put("name", project.getName());
 		result.put("log_sources", logsources);
 		return result;
 	}

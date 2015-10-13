@@ -67,10 +67,10 @@ public class LogSourceAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.TYPE_MUST_BE_NUM);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		if (!projectService.checkProjectExsit(Integer.parseInt(projectid))) {
-			NotFoundRequestException nr = new NotFoundRequestException(Const.PROJECT_NOT_EXSIT);
-			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
-		}
+//		if (!projectService.checkProjectExsit(Integer.parseInt(projectid))) {
+//			NotFoundRequestException nr = new NotFoundRequestException(Const.PROJECT_NOT_EXSIT);
+//			return new ResponseEntity<JSONObject>(apiException.handleNotFoundRequestException(nr), HttpStatus.NOT_FOUND);
+//		}
 		if (logsourceService.checkLogSourceExist(logsourceName)) {
 			ConflictRequestException cr = new ConflictRequestException(Const.LOG_NAME_ALREADY_EXSIT);
 			return new ResponseEntity<JSONObject>(apiException.handleConflictRequestException(cr), HttpStatus.CONFLICT);
