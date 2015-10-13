@@ -5,7 +5,11 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+
+
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
@@ -20,10 +24,12 @@ import com.netease.qa.log.util.MathUtil;
 @Service
 public class NginxAccessImpl implements NginxAccessService {
 
+	private static final Logger logger = LoggerFactory.getLogger(NginxAccessImpl.class);
 	@Resource
 	private NginxAccessDao nginxAccessDao;
 	@Resource
 	private LogSourceDao logSourceDao;
+	
 
 	@Override
 	public JSONObject getTopNUrl(int logSourceId, long start, long end, int topN, String sort) {
@@ -55,7 +61,7 @@ public class NginxAccessImpl implements NginxAccessService {
 		for (NginxAccess nginxAccess : nginxAccesses) {
 			data = new JSONObject();
 			data.put("url", nginxAccess.getUrl());
-			int totalCount = nginxAccess.getTotalCount();
+			long totalCount = nginxAccess.getTotalCount();
 			data.put("total", totalCount);
 			// tps = 总数量/总时间
 			BigDecimal tb1 = new BigDecimal(String.valueOf(totalCount));
@@ -63,7 +69,7 @@ public class NginxAccessImpl implements NginxAccessService {
 			double tps = tb1.divide(tb2, 3, BigDecimal.ROUND_HALF_UP).doubleValue();
 			data.put("tps", tps);
 			// error
-			int okCount = nginxAccess.getOkCount();
+			long okCount = nginxAccess.getOkCount();
 			data.put("error", totalCount - okCount);
 			// ok_rate
 			BigDecimal okSum = new BigDecimal(String.valueOf(okCount));
@@ -265,6 +271,7 @@ public class NginxAccessImpl implements NginxAccessService {
 		long startTime, endTime;
 		LogSource logSource = logSourceDao.findByLogSourceId(logSourceId);
 		JSONObject results = new JSONObject();
+		JSONObject data = new JSONObject();
 		results.put("project_id", logSource.getProjectId());
 		results.put("log_source_id", logSource.getLogSourceId());
 		results.put("log_source_name", logSource.getLogSourceName());
@@ -326,10 +333,11 @@ public class NginxAccessImpl implements NginxAccessService {
 				max_rts.add(max_rt);
 			}
 		}
-		results.put("tps", tpses);
-		results.put("error", errors);
-		results.put("avg_rt", avg_rts);
-		results.put("max_rt", max_rts);
+		data.put("tps", tpses);
+		data.put("error", errors);
+		data.put("avg_rt", avg_rts);
+		data.put("max_rt", max_rts);
+		results.put("data", data);
 		JSONObject result = new JSONObject();
 		result.put("code", 200);
 		result.put("results", results);
@@ -343,6 +351,7 @@ public class NginxAccessImpl implements NginxAccessService {
 		long startTime, endTime;
 		LogSource logSource = logSourceDao.findByLogSourceId(logSourceId);
 		JSONObject results = new JSONObject();
+		JSONObject data = new JSONObject();
 		results.put("project_id", logSource.getProjectId());
 		results.put("log_source_id", logSource.getLogSourceId());
 		results.put("log_source_name", logSource.getLogSourceName());
@@ -403,10 +412,11 @@ public class NginxAccessImpl implements NginxAccessService {
 				max_rts.add(max_rt);
 			}
 		}
-		results.put("tps", tpses);
-		results.put("error", errors);
-		results.put("avg_rt", avg_rts);
-		results.put("max_rt", max_rts);
+		data.put("tps", tpses);
+		data.put("error", errors);
+		data.put("avg_rt", avg_rts);
+		data.put("max_rt", max_rts);
+		results.put("data", data);
 		JSONObject result = new JSONObject();
 		result.put("code", 200);
 		result.put("results", results);

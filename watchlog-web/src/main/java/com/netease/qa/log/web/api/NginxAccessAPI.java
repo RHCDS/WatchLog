@@ -167,9 +167,15 @@ public class NginxAccessAPI {
 			InvalidRequestException ex = new InvalidRequestException("sort field is wrong!");
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		JSONObject result = nginxAccessService.getTopAllData(Integer.parseInt(logsourceId), startTime, endTime,
-				Integer.parseInt(top), realSort);
-		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+		try{
+			JSONObject result = nginxAccessService.getTopAllData(Integer.parseInt(logsourceId), startTime, endTime,
+					Integer.parseInt(top), realSort);
+			return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
+		}catch(Exception e){
+			e.printStackTrace();
+			return new ResponseEntity<JSONObject>(new JSONObject(), HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		
 	}
 
 	@RequestMapping(value = "/nginx_charts/real_time/single", method = RequestMethod.GET)
