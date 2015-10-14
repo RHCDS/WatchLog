@@ -16,6 +16,7 @@ import backtype.storm.tuple.Values;
 
 import com.netease.qa.log.meta.LogSource;
 import com.netease.qa.log.storm.service.ConfigDataService;
+import com.netease.qa.log.storm.util.MybatisUtil;
 import com.netease.qa.log.util.Const;
 
 public class LogFilter implements IBasicBolt {
@@ -23,7 +24,11 @@ public class LogFilter implements IBasicBolt {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LoggerFactory.getLogger(LogFilter.class);
-
+	
+	@Override
+	public void prepare(@SuppressWarnings("rawtypes") Map stormConf, TopologyContext paramTopologyContext) {
+		MybatisUtil.init(stormConf.get(com.netease.qa.log.storm.util.Const.MYBATIS_EVN).toString());
+	}
 
 	@Override
 	public void execute(Tuple input, BasicOutputCollector collector) {
@@ -76,13 +81,6 @@ public class LogFilter implements IBasicBolt {
 	public Map<String, Object> getComponentConfiguration() {
 		return null;
 	}
-
-
-	@Override
-	public void prepare(@SuppressWarnings("rawtypes") Map paramMap, TopologyContext paramTopologyContext) {
-		
-	}
-
 
 	@Override
 	public void cleanup() {

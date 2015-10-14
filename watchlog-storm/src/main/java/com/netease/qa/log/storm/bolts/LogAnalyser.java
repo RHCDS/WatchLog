@@ -24,6 +24,7 @@ import com.netease.qa.log.meta.LogSource;
 import com.netease.qa.log.storm.service.ConfigDataService;
 import com.netease.qa.log.storm.service.MonitorDataService;
 import com.netease.qa.log.storm.service.MonitorDataWriteTask;
+import com.netease.qa.log.storm.util.MybatisUtil;
 import com.netease.qa.log.util.Const;
 import com.netease.qa.log.util.MD5Utils;
 
@@ -105,7 +106,8 @@ public class LogAnalyser implements IBasicBolt {
 
 
 	@Override
-	public void prepare(@SuppressWarnings("rawtypes") Map paramMap, TopologyContext paramTopologyContext) {
+	public void prepare(@SuppressWarnings("rawtypes") Map stormConf, TopologyContext paramTopologyContext) {
+		MybatisUtil.init(stormConf.get(com.netease.qa.log.storm.util.Const.MYBATIS_EVN).toString());
 		try {
 			Thread.sleep(1000);
 		}

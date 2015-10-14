@@ -85,6 +85,7 @@ public class NginxReader implements IRichSpout {
 						hostname = headers.get("__DS_.fields.hostname").toString();
 						path = headers.get("__DS_.fields._ds_target_dir").toString();
 						filePattern = headers.get("__DS_.fields._ds_file_pattern").toString();
+						//预处理input,因为MQ会转义input，这里需要我们在转义回去。
 						String initMessage = Regex.initMQinput(message);
 						this.collector.emit(new Values(hostname, path, filePattern, initMessage));
 						readCount++;

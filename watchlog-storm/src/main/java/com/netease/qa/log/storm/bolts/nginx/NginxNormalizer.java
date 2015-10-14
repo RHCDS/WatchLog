@@ -24,6 +24,11 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
 
+/**
+ * normalizer 不做qbs验证（效率上考虑）
+ * @author hzquguoqing
+ *
+ */
 public class NginxNormalizer implements IRichBolt {
 
 	private static final long serialVersionUID = 1L;
