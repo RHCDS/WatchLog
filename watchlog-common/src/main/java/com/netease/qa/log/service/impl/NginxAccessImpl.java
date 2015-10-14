@@ -377,7 +377,9 @@ public class NginxAccessImpl implements NginxAccessService {
 			nginxAccess = nginxAccessDao.getAllRealTimeData(logSourceId, startTime, endTime);
 			long TestInterEnd = System.currentTimeMillis();
 			
+			logger.info("第" + i + "个点");
 			logger.info("内部返回的总时间：" + (TestInterEnd - TestInterStart));
+			
 //			System.out.println("内部返回的总时间：" + (TestInterEnd - TestInterStart));
 			tps = new JSONObject();
 			error = new JSONObject();
