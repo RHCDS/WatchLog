@@ -369,10 +369,16 @@ public class NginxAccessImpl implements NginxAccessService {
 		JSONArray max_rts = new JSONArray();
 		NginxAccess nginxAccess;
 		JSONObject tps, error, avg_rt, max_rt;
+		long TestStart = System.currentTimeMillis();
 		for (int i = 0; i < pointNum; i++) {
 			startTime = start + i * timeRange;
 			endTime = startTime + timeRange;
+			long TestInterStart = System.currentTimeMillis();
 			nginxAccess = nginxAccessDao.getAllRealTimeData(logSourceId, startTime, endTime);
+			long TestInterEnd = System.currentTimeMillis();
+			
+			logger.info("内部返回的总时间：" + (TestInterEnd - TestInterStart));
+//			System.out.println("内部返回的总时间：" + (TestInterEnd - TestInterStart));
 			tps = new JSONObject();
 			error = new JSONObject();
 			avg_rt = new JSONObject();
@@ -420,6 +426,9 @@ public class NginxAccessImpl implements NginxAccessService {
 				max_rts.add(max_rt);
 			}
 		}
+		long TestEnd = System.currentTimeMillis();
+		logger.info("返回的总时间：" + (TestEnd - TestStart));
+//		System.out.println("返回的总时间：" + (TestEnd - TestStart));
 		data.put("tps", tpses);
 		data.put("error", errors);
 		data.put("avg_rt", avg_rts);
