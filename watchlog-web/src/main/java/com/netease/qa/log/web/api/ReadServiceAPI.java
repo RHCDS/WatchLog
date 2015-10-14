@@ -182,33 +182,22 @@ public class ReadServiceAPI {
 		}
 		return new ResponseEntity<JSONObject>(jsonObject, HttpStatus.OK);
 	}
-
+	/**
+	 * 4.4 批量获取日志源异常统计信息，按照机器聚合区分日志源（AB平台）
+	 * @param logSourceIds
+	 * @param start
+	 * @param end
+	 * @return
+	 */
 	@RequestMapping(value = "/batch", method = RequestMethod.POST)
 	@ResponseBody
-	public ResponseEntity<JSONObject> findErrorBylogSourceIds(
-			@RequestParam(value = "log_source_list", required = false) List<Integer> logSourceIds,
+	public ResponseEntity<JSONObject> findErrorByHostname(
+			@RequestParam(value = "hostname", required = false) String hostname,
 			@RequestParam(value = "start", required = false) String start,
 			@RequestParam(value = "end", required = false) String end) {
-		if(logSourceIds == null || logSourceIds.size() == 0){
+		if(MathUtil.isEmpty(hostname, start, end)){
 			NullParamException ne = new NullParamException(Const.NULL_PARAM);
 			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
-		}
-		if(MathUtil.isEmpty(start, end)){
-			NullParamException ne = new NullParamException(Const.NULL_PARAM);
-			return new ResponseEntity<JSONObject>(apiException.handleNullParamException(ne), HttpStatus.BAD_REQUEST);
-		}
-		//判断list中，是否有不存在日志源id
-		String nums = "";
-		for(int i=0;i<logSourceIds.size();i++){
-			if(!logsourceService.checkLogSourceExist(logSourceIds.get(i))){
-				nums += logSourceIds.get(i) + ",";
-			}
-		}
-		//存在一个日志源id不在数据库中的情况
-		if(!nums.equals("")){
-			nums = nums + " are not exist in database!";
-			InvalidRequestException ie = new InvalidRequestException(nums);
-			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ie), HttpStatus.BAD_REQUEST);
 		}
 		Long startTime = null;
 		Long endTime = null;
@@ -220,9 +209,7 @@ public class ReadServiceAPI {
 			InvalidRequestException ex = new InvalidRequestException(Const.INVALID_TIME_FORMAT);
 			return new ResponseEntity<JSONObject>(apiException.handleInvalidRequestError(ex), HttpStatus.BAD_REQUEST);
 		}
-		JSONObject result = readService.queryErrorRecordsByLogSourceIds(logSourceIds, startTime, endTime);
-//		JSONObject result = new JSONObject();
-//		result.put("logsourceIds.size()=", logSourceIds.size());
+		JSONObject result = readService.queryErrorRecordsByHostname(hostname, startTime, endTime);
 		return new ResponseEntity<JSONObject>(result, HttpStatus.OK);
 	}
 	

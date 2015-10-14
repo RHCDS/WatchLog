@@ -123,7 +123,11 @@
 	</select>
 	
     <select id="findIdsByHostname"  resultType="java.lang.String">
-		select group_concat(log_source_id) from log_source where hostname=#{0}  and log_type=#{1}
+		select group_concat(log_source_id) from log_source where <![CDATA[status<>3]]> and hostname=#{0}  and log_type=#{1}
+	</select>
+	
+	<select id="getLogSourcesByHostname" resultType="com.netease.qa.log.meta.LogSource">
+		select <include refid="allColumn" /> from log_source where <![CDATA[status<>3]]> and hostname=#{0}
 	</select>
 	
 	

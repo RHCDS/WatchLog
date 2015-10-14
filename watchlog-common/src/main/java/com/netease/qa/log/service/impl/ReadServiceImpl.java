@@ -373,7 +373,7 @@ public class ReadServiceImpl implements ReadService {
 	}
 
 	/**
-	 * AB平台
+	 * 根据日志源列表，按照机器聚合，AB平台
 	 */
 	@Override
 	public JSONObject queryErrorRecordsByLogSourceIds(List<Integer> logSourceIds, long start_time, long end_time) {
@@ -435,7 +435,52 @@ public class ReadServiceImpl implements ReadService {
 		result.put("record", records);
 		return result;
 	}
-	
+	/**
+	 * 4.4 批量获取日志源异常统计信息，按照机器聚合 区分日志源 （ AB 平台）
+	 */
+	@Override
+	public JSONObject queryErrorRecordsByHostname(String hostname, long start_time, long end_time) {
+		JSONObject result = new JSONObject();
+		JSONObject record = new JSONObject();
+		record.put("hostname", hostname);
+		JSONArray details = new JSONArray();
+		List<LogSource> logSources = logSourceDao.getLogSourcesByHostname(hostname);
+		if(logSources == null || logSources.isEmpty()){
+			record.put("detail", details);
+			result.put("record", record);
+			return result;
+		}
+		for(LogSource logSource : logSources){
+			int logsourceId = logSource.getLogSourceId();
+			JSONObject detail = new JSONObject();
+			detail.put("log_source_id", logSource.getLogSourceId());
+			detail.put("log_source_name", logSource.getLogSourceName());
+			Integer total_count = exceptionDataDao.getLogSourceExceptionTotalCountByTime(logsourceId, start_time,
+					end_time);
+			if (total_count == null) {
+				total_count = 0;
+			}
+			detail.put("total_count", total_count);
+			// 获取error_tc数组
+			JSONArray error_tcs = new JSONArray();
+			JSONObject error_tc;
+			List<ExceptionData> exceptionDatas = exceptionDataDao.findErrorRecordsByLogSourceIdAndTimeByAB(logsourceId,
+					start_time, end_time);
+			if (exceptionDatas != null && exceptionDatas.size() > 0) {
+				for (ExceptionData exceptionData : exceptionDatas) {
+					error_tc = new JSONObject();
+					error_tc.put("type", exceptionData.getExceptionType());
+					error_tc.put("count", exceptionData.getExceptionCount());
+					error_tcs.add(error_tc);
+				}
+			}
+			detail.put("error_tc", error_tcs);
+			details.add(detail);
+		}
+		record.put("detail", details);
+		result.put("record", record);
+		return result;
+	}
 	
 	/*
 	 * AB平台 按机器聚合所有日志源的异常信息-曲线数据
@@ -537,4 +582,5 @@ public class ReadServiceImpl implements ReadService {
 		return record;
 		
 	}
+
 }

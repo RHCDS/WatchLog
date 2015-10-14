@@ -33,6 +33,13 @@ public interface LogSourceDao {
     
     public List<LogSource> getSortedByProjectId(int projectId, String field, String order, int limit, int offset);
     
+    /**
+     * 获取hostname下所有的日志源
+     * @param hostname
+     * @return
+     */
+    public List<LogSource> getLogSourcesByHostname(String hostname);
+    
     // 获取机器所有的日志源ids，不包含nginx日志源
     public String findIdsByHostname(String hostname, int log_type);
     
