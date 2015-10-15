@@ -70,7 +70,7 @@ public class NginxAccessImpl implements NginxAccessService {
 			data.put("tps", tps);
 			// error
 			long okCount = nginxAccess.getOkCount();
-			data.put("error", totalCount - okCount);
+			data.put("error", nginxAccess.getError4Count() + nginxAccess.getError5Count());
 			// ok_rate
 			BigDecimal okSum = new BigDecimal(String.valueOf(okCount));
 			BigDecimal totalSum = new BigDecimal(String.valueOf(totalCount));
