@@ -10,6 +10,12 @@
 
 	<profiles>
 		<profile>
+            <id>bjonline</id>
+            <properties>
+                <env>bjonline</env>
+            </properties>
+        </profile>
+		<profile>
 			<id>develop</id>
 			<activation>
 				<activeByDefault>true</activeByDefault>
@@ -30,6 +36,7 @@
                 <env>online</env>
             </properties>
         </profile>
+        
 	</profiles>
 
 	<build>
