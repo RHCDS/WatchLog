@@ -38,6 +38,15 @@
 				<property name="password" value="AWIpshzJFGJp" />
 			</dataSource>
 		</environment>
+		<environment id="bjonline">
+			<transactionManager type="jdbc" />
+			<dataSource type="POOLED">
+				<property name="driver" value="com.mysql.jdbc.Driver" />
+				<property name="url" value="jdbc:mysql://10.102.129.6:3306/watchlog" />
+				<property name="username" value="watchlogbj" />
+				<property name="password" value="qatest_123456-bj" />
+			</dataSource>
+		</environment>
 	</environments>
 	<mappers>
 		<mapper resource="data-mapper/LogSourceDao.xml" />
