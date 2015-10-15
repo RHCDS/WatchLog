@@ -156,6 +156,8 @@ public class MonitorDataService {
 			}
 			else{
 				tmp.put(exceptionId, tmp.get(exceptionId) + dsTime);
+				int count = exceptionCountCache.get(logSourceId).get(exceptionId);
+				logger.debug("logSourceId: " + logSourceId + ", exceptionid: " + exceptionId + ", count: " + count + ", dsTime: " + tmp.get(exceptionId)/count); 
 			}
 		}
 	}
@@ -185,7 +187,7 @@ public class MonitorDataService {
 					exceptionData.setSampleTime(dsTime); //改成dsTime的平均值
 					exceptionData.setExceptionCount(count);
 					exceptionDataDao.insert(exceptionData);
-					logger.info(exceptionData.toString());
+					logger.debug(exceptionData.toString());
 				}
 			}
 			exceptionCountCache.clear();

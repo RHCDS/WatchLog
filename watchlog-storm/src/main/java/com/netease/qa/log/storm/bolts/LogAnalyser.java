@@ -51,7 +51,7 @@ public class LogAnalyser implements IBasicBolt {
 				Pattern p = Pattern.compile(lineTypeRegex); 
 				Matcher m = p.matcher(line);  
 				if(m.find()){
-					logger.info("match! " + m.group() + ", logSource: " + logSource.getLogSourceName());
+					logger.debug("match! " + m.group() + ", logSource: " + logSource.getLogSourceName());
 					exceptionTypes.add(m.group());
 				}
 			}
@@ -62,7 +62,7 @@ public class LogAnalyser implements IBasicBolt {
 		//日志没有匹配到任何异常类型，设置为unknown类型
 		if(exceptionTypes.size() == 0){
 			exceptionTypes.add(Const.UNKNOWN_TYPE);
-			logger.info("cant match! set as unknown, logSource: " + logSource.getLogSourceName() + ", line: " + line);
+			logger.debug("cant match! set as unknown, logSource: " + logSource.getLogSourceName() + ", line: " + line);
 		}
 			
 		// 查询exception缓存，如果不存在则插入exception表

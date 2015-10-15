@@ -119,7 +119,7 @@ public class MQConsumer extends BaseRichSpout {
 						dsTime = headers.get("__DS_.timestamp").toString();
 						this.collector.emit(new Values(message, hostname, path, filePattern, dsTime), message);
 						logger.debug("Consume: " + message);
-						logger.info("hostname: " + hostname + ", path: " + path + ", filePattern: " + filePattern);
+						logger.debug("hostname: " + hostname + ", path: " + path + ", filePattern: " + filePattern + ", dstime: " + dsTime);
 					} catch (NullPointerException e) {
 						logger.error("can't get header, hostname: " + hostname + ", path: " + path + ", file: "
 								+ filePattern, e);

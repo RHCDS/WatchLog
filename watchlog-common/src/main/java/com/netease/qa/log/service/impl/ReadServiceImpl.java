@@ -563,7 +563,7 @@ public class ReadServiceImpl implements ReadService {
 		logger.debug(" --- log_source_ids_str---" + log_source_ids_str);
 		if (log_source_ids_str != null) {
 			// 对整个时间范围内进行查询
-				total = exceptionDataDao	.findErrorTotalByMachineAndTimeByAB(log_source_ids_str,start, end);
+				total = exceptionDataDao.findErrorTotalByMachineAndTimeByAB(log_source_ids_str,start, end);
 				logger.debug(" --- total---" + total);
 				// 如果不存在异常，则不需要查询具体信息了
 				if (total > 0) {
