@@ -506,7 +506,7 @@ public class ReadServiceImpl implements ReadService {
 				logger.debug(" --- endTime---" + endTime);
 				// total: 获取所有日志源在某一小段时间内的所有total个数
 				// select IFNULL( sum(exception_count), 0 ) as total  from exception_data where log_source_id in ( 40,41,37,21,30,32,33,35,36,39 ) and sample_time between 1433833990 and 1433834014; 
-				int total = exceptionDataDao	.findErrorTotalByMachineAndTimeByAB(log_source_ids_str,startTime, endTime);
+				int total = exceptionDataDao.findErrorTotalByMachineAndTimeByAB(log_source_ids_str,startTime, endTime);
 				logger.debug(" --- total---" + total);
 				// 如果不存在异常，则不需要查询具体信息了
 				if (total > 0) {
@@ -514,7 +514,7 @@ public class ReadServiceImpl implements ReadService {
 					dataObj.put("total", total);
 					 // time: 聚合时间，开始和结束时间的中间时间
 					long avgTime = (endTime + startTime) / 2;
-					dataObj.put("time", avgTime);
+					dataObj.put("time", avgTime * 1000);
 					 // error_tc : 获取所有日志源在某一小段时间内的异常具体type和count
 					JSONArray error_tc = new JSONArray();
 					List<ExceptionData> exceptionDatas = exceptionDataDao.findErrorRecordsByMachineAndTimeByAB(log_source_ids_str, startTime, endTime);
@@ -524,6 +524,15 @@ public class ReadServiceImpl implements ReadService {
 						errobj.put("count", exceptionData.getExceptionCount());
 						error_tc.add(errobj);
 					}
+					dataObj.put("error_tc", error_tc);
+					data.add(dataObj);
+				}else{
+					JSONObject dataObj = new JSONObject();
+					dataObj.put("total", 0);
+					// time: 聚合时间，开始和结束时间的中间时间
+					long avgTime = (endTime + startTime) / 2;
+					dataObj.put("time", avgTime * 1000);
+					JSONArray error_tc = new JSONArray();
 					dataObj.put("error_tc", error_tc);
 					data.add(dataObj);
 				}
