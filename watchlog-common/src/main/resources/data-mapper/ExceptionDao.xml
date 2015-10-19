@@ -32,7 +32,7 @@
     <select id="findByTwoKey" resultType="com.netease.qa.log.meta.Exception">
         select
         <include refid="allColumn" />
-        from exception where log_source_id=#{0} and exception_type_md5=#{1}
+        from exception where log_source_id=#{0} and exception_type_md5=#{1} limit 1
     </select>
 </mapper>
 
