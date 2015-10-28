@@ -37,5 +37,9 @@ public class Const {
 	//upstream_status，可能出现"504,200",upstream_reponse_time可能出现"0.32,0.06"
 	public static final String REPLACE_MESSAGE = "-";
 	
+	//每隔50ms，发送的数量，作为限流标准
+	public static final int  NGINX_LIMIT_NUM = 100;
+	public static final int  EXCEPTION_LIMIT_NUM = 100;
+	
 	
 }

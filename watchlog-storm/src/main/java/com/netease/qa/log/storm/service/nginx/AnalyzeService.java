@@ -350,7 +350,12 @@ public class AnalyzeService {
 				url_count.put(url, time_count);
 				error5CountCache.put(logSourceId, url_count);
 			} else {
+				// 如果time_count被clear，url_count.get(url)不会是null，而是size()=0
 				time_count = url_count.get(url);
+				/*
+				 * 下面的if-else语句应该是个原子操作，它在操作cache时，是不能被打断去执行clear操作的。
+				 * 如果cpu被写线程抢占，执行了writeDB操作，那么这条记录就会无端损失掉，导致数据库查询时少1(被丢弃掉)
+				 */
 				if (!time_count.containsKey(startTime)) {
 					// startTime 不在第三层
 					time_count.put(startTime, 1);
@@ -359,6 +364,7 @@ public class AnalyzeService {
 				} else {
 					try {
 						// startTime 在第三层
+						// time_count被clear后，本身不会是null，time_count.get()是null
 						time_count.put(startTime, time_count.get(startTime) + 1);
 						url_count.put(url, time_count);
 						error5CountCache.put(logSourceId, url_count);

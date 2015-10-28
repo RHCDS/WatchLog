@@ -96,9 +96,9 @@ public class NginxReader implements IRichSpout {
 						logger.error("can't get header, hostname: " + hostname + ", path: " + path + ", file: "
 								+ filePattern, e);
 					}
-					if (readCount >= 100) {
+					if (readCount >= Const.NGINX_LIMIT_NUM) {
 						try {
-							logger.info("---------read 100 msg, reader sleep 50ms-----");
+							logger.info("---------read " + Const.NGINX_LIMIT_NUM + " msg, reader sleep 50ms-----");
 							Thread.sleep(50);
 						} catch (InterruptedException e) {
 							logger.error("error", e); 

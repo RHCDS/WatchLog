@@ -83,7 +83,7 @@ public class MQConsumer extends BaseRichSpout {
 
 			logger.debug("Consume: " + message);
 			logger.debug("hostname: " + hostname + ", path: " + path + ", filePattern: " + filePattern);
-			logger.info("" + ++i);
+			logger.debug("" + ++i);
 			// channel.basicAck(delivery.getEnvelope().getDeliveryTag(), false);
 		}
 
@@ -104,6 +104,8 @@ public class MQConsumer extends BaseRichSpout {
 				QueueingConsumer consumer = new QueueingConsumer(channel);
 				channel.basicConsume(queueName, true, consumer);
 				channel.basicQos(1);
+				// readCount表示读了多少行
+				int readCount = 0;
 				while (true) {
 					QueueingConsumer.Delivery delivery = consumer.nextDelivery();
 					String message = new String(delivery.getBody());
@@ -118,13 +120,24 @@ public class MQConsumer extends BaseRichSpout {
 						filePattern = headers.get("__DS_.fields._ds_file_pattern").toString();
 						dsTime = headers.get("__DS_.timestamp").toString();
 						this.collector.emit(new Values(message, hostname, path, filePattern, dsTime), message);
+						readCount++;
 						logger.debug("Consume: " + message);
-						logger.debug("hostname: " + hostname + ", path: " + path + ", filePattern: " + filePattern + ", dstime: " + dsTime);
+						logger.debug("hostname: " + hostname + ", path: " + path + ", filePattern: " + filePattern
+								+ ", dstime: " + dsTime);
 					} catch (NullPointerException e) {
 						logger.error("can't get header, hostname: " + hostname + ", path: " + path + ", file: "
 								+ filePattern, e);
 					}
-					
+					if (readCount >= Const.EXCEPTION_LIMIT_NUM) {
+						try {
+							logger.info("---------read " + Const.EXCEPTION_LIMIT_NUM + " msg, reader sleep 50ms-----");
+							Thread.sleep(50);
+						} catch (InterruptedException e) {
+							logger.error("error", e);
+						} finally {
+							readCount = 0;
+						}
+					}
 				}
 			} catch (Exception e) {
 				logger.error("consume error, close connction", e);
