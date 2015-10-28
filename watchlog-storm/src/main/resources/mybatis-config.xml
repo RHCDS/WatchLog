@@ -18,19 +18,10 @@
 				<property name="url" value="jdbc:mysql://127.0.0.1:3306/log_demo" />
 				<property name="username" value="root" />
 				<property name="password" value="root" />
-				<!-- 初始化连接大小 -->
-				<property name="initialSize" value="5" />
-				<!-- 连接池最大数量 -->
-				<property name="maxActive" value="20" />
-				<!-- 连接池最大空闲 -->
-				<property name="maxIdle" value="5" />
-				<!-- 连接池最小空闲 -->
-				<property name="minIdle" value="2" />
-				<!-- 获取连接最大等待时间 -->
-				<property name="maxWait" value="60000" />
 				<!-- 8小时问题，获取连接时检查有效性 -->
-				<property name="validationQuery" value="SELECT 1" />
-				<property name="testOnBorrow" value="true" />
+				<property name="poolPingEnabled" value="true" />
+				<property name="poolPingQuery" value="select 1" />
+				<property name="poolPingConnectionsNotUsedFor" value="3600000" /><!-- 单位ms -->
 			</dataSource>
 		</environment>
 		<environment id="test">
@@ -40,19 +31,10 @@
 				<property name="url"    value="jdbc:mysql://10.120.153.127:3306/loganalystic" />
 				<property name="username" value="test" />
 				<property name="password" value="xTZtJBS0cCZnJZeu" />
-				<!-- 初始化连接大小 -->
-				<property name="initialSize" value="5" />
-				<!-- 连接池最大数量 -->
-				<property name="maxActive" value="20" />
-				<!-- 连接池最大空闲 -->
-				<property name="maxIdle" value="5" />
-				<!-- 连接池最小空闲 -->
-				<property name="minIdle" value="2" />
-				<!-- 获取连接最大等待时间 -->
-				<property name="maxWait" value="60000" />
 				<!-- 8小时问题，获取连接时检查有效性 -->
-				<property name="validationQuery" value="SELECT 1" />
-				<property name="testOnBorrow" value="true" />
+				<property name="poolPingEnabled" value="true" />
+				<property name="poolPingQuery" value="select 1" />
+				<property name="poolPingConnectionsNotUsedFor" value="3600000" /><!-- 单位ms -->
 			</dataSource>
 		</environment>
 		<environment id="online">
@@ -62,19 +44,10 @@
 				<property name="url" value="jdbc:mysql://10.164.160.77:3306/ptponline" />
 				<property name="username" value="ptponline" />
 				<property name="password" value="AWIpshzJFGJp" />
-				<!-- 初始化连接大小 -->
-				<property name="initialSize" value="5" />
-				<!-- 连接池最大数量 -->
-				<property name="maxActive" value="20" />
-				<!-- 连接池最大空闲 -->
-				<property name="maxIdle" value="5" />
-				<!-- 连接池最小空闲 -->
-				<property name="minIdle" value="2" />
-				<!-- 获取连接最大等待时间 -->
-				<property name="maxWait" value="60000" />
 				<!-- 8小时问题，获取连接时检查有效性 -->
-				<property name="validationQuery" value="SELECT 1" />
-				<property name="testOnBorrow" value="true" />
+				<property name="poolPingEnabled" value="true" />
+				<property name="poolPingQuery" value="select 1" />
+				<property name="poolPingConnectionsNotUsedFor" value="3600000" /><!-- 单位ms -->
 			</dataSource>
 		</environment>
 		<environment id="bjonline">
@@ -84,19 +57,10 @@
 				<property name="url" value="jdbc:mysql://10.102.129.6:3306/watchlog" />
 				<property name="username" value="watchlogbj" />
 				<property name="password" value="qatest_123456-bj" />
-				<!-- 初始化连接大小 -->
-				<property name="initialSize" value="5" />
-				<!-- 连接池最大数量 -->
-				<property name="maxActive" value="20" />
-				<!-- 连接池最大空闲 -->
-				<property name="maxIdle" value="5" />
-				<!-- 连接池最小空闲 -->
-				<property name="minIdle" value="2" />
-				<!-- 获取连接最大等待时间 -->
-				<property name="maxWait" value="60000" />
 				<!-- 8小时问题，获取连接时检查有效性 -->
-				<property name="validationQuery" value="SELECT 1" />
-				<property name="testOnBorrow" value="true" />
+				<property name="poolPingEnabled" value="true" />
+				<property name="poolPingQuery" value="select 1" />
+				<property name="poolPingConnectionsNotUsedFor" value="3600000" /><!-- 单位ms -->
 			</dataSource>
 		</environment>
 	</environments>
