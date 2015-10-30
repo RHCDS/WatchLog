@@ -40,12 +40,16 @@ public class NginxReader implements IRichSpout {
 	private static String host;
 	private static int port;
 	private static AtomicLong count;
+	private static int nginxLimitNum;
+	private static int nginxSleepTime;
 
 	@SuppressWarnings("rawtypes")
 	public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
 		queueName = conf.get(Const.MQ_QUEUE).toString();
 		host = conf.get(Const.MQ_HOST).toString();
 		port = Integer.parseInt(conf.get(Const.MQ_PORT).toString());
+		nginxLimitNum = Integer.parseInt(conf.get(Const.NGINX_LIMIT_NUM).toString());
+		nginxSleepTime = Integer.parseInt(conf.get(Const.NGINX_SLEEP_TIME).toString());
 		this.collector = collector;
 		count = new AtomicLong();
 		ScheduledExecutorService POOL = Executors.newScheduledThreadPool(1);
@@ -96,10 +100,10 @@ public class NginxReader implements IRichSpout {
 						logger.error("can't get header, hostname: " + hostname + ", path: " + path + ", file: "
 								+ filePattern, e);
 					}
-					if (readCount >= Const.NGINX_LIMIT_NUM) {
+					if (readCount >= nginxLimitNum) {
 						try {
-							logger.info("---------read " + Const.NGINX_LIMIT_NUM + " msg, reader sleep 50ms-----");
-							Thread.sleep(50);
+							logger.info("---------read " + nginxLimitNum + " msg, reader sleep 50ms-----");
+							Thread.sleep(nginxSleepTime);
 						} catch (InterruptedException e) {
 							logger.error("error", e); 
 						}finally{

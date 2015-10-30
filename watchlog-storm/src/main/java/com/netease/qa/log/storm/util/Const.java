@@ -38,8 +38,10 @@ public class Const {
 	public static final String REPLACE_MESSAGE = "-";
 	
 	//每隔50ms，发送的数量，作为限流标准
-	public static final int  NGINX_LIMIT_NUM = 100;
-	public static final int  EXCEPTION_LIMIT_NUM = 100;
+	public static final String  NGINX_LIMIT_NUM = "nginx_limit_num";
+	public static final String NGINX_SLEEP_TIME = "nginx_sleep_time";
+	public static final String  EXCEPTION_LIMIT_NUM = "exception_limit_num";
+	public static final String  EXCEPTION_SLEEP_TIME = "exception_sleep_time";
 	
 	
 }

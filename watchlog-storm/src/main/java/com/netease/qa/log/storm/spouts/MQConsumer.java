@@ -33,6 +33,8 @@ public class MQConsumer extends BaseRichSpout {
 	private static String queueName;
 	private static String host;
 	private static int port;
+	private static int exceptionLimitNum;
+	private static int exceptionSleepTime;
 
 	public void ack(Object msgId) {
 		// logger.info("OK:" + msgId);
@@ -128,10 +130,10 @@ public class MQConsumer extends BaseRichSpout {
 						logger.error("can't get header, hostname: " + hostname + ", path: " + path + ", file: "
 								+ filePattern, e);
 					}
-					if (readCount >= Const.EXCEPTION_LIMIT_NUM) {
+					if (readCount >= exceptionLimitNum) {
 						try {
-							logger.info("---------read " + Const.EXCEPTION_LIMIT_NUM + " msg, reader sleep 50ms-----");
-							Thread.sleep(50);
+							logger.info("---------read " + exceptionLimitNum + " msg, reader sleep 50ms-----");
+							Thread.sleep(exceptionSleepTime);
 						} catch (InterruptedException e) {
 							logger.error("error", e);
 						} finally {
@@ -160,6 +162,8 @@ public class MQConsumer extends BaseRichSpout {
 		queueName = conf.get(Const.MQ_QUEUE).toString();
 		host = conf.get(Const.MQ_HOST).toString();
 		port = Integer.parseInt(conf.get(Const.MQ_PORT).toString());
+		exceptionLimitNum = Integer.parseInt(conf.get(Const.EXCEPTION_LIMIT_NUM).toString());
+		exceptionSleepTime = Integer.parseInt(conf.get(Const.EXCEPTION_SLEEP_TIME).toString());
 		this.collector = collector;
 	}
 

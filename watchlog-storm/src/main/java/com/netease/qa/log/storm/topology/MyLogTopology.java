@@ -61,7 +61,12 @@ public class MyLogTopology {
 	public static int NGINX_NORMALIZER_BOLT;
 	public static int NGINX_FILTER_BOLT;
 	public static int NGINX_ANALYSER_BOLT;
-
+	//限流参数
+	public static int NGINX_LIMIT_NUM;
+	public static int NGINX_SLEEP_TIME;
+	public static int EXCEPTION_LIMIT_NUM;
+	public static int EXCEPTION_SLEEP_TIME;
+	
 	
 	public static void main(String[] args) throws InterruptedException, AlreadyAliveException,
 			InvalidTopologyException, TException, DRPCExecutionException {
@@ -75,7 +80,6 @@ public class MyLogTopology {
 		readConfig(fileName);
 		TopologyBuilder builder = new TopologyBuilder();
 		if (LOG_TYPE.equals(Const.EXCEPTION_LOG)) {
-			logger.info("type:" + LOG_TYPE);
 			builder.setSpout("mq-consumer", new MQConsumer(), LOG_SPOUT);
 			builder.setBolt("log-normalizer", new LogNormalizer(), LOG_NORMALIZER_BOLT).shuffleGrouping("mq-consumer");
 			builder.setBolt("log-filter", new LogFilter(), LOG_FILTER_BOLT).shuffleGrouping("log-normalizer");
@@ -83,11 +87,6 @@ public class MyLogTopology {
 			builder.setBolt("result-writer", new ResultWriter(), RESULT_WRITER_BOLT).shuffleGrouping("log-analyser");
 		} 
 		else if (LOG_TYPE.equals(Const.NGINX_LOG)) {
-			logger.info("type:" + LOG_TYPE);
-			logger.info("nginx-reader:" + NGINX_READER_SPOUT);
-			logger.info("nginx-normalizer:" + NGINX_NORMALIZER_BOLT);
-			logger.info("nginx-filter:" + NGINX_FILTER_BOLT);
-			logger.info("nginx-analyze:" + NGINX_ANALYSER_BOLT);
 			builder.setSpout("nginx-reader", new NginxReader(), NGINX_READER_SPOUT);
 			builder.setBolt("nginx-normalizer", new NginxNormalizer(), NGINX_NORMALIZER_BOLT).shuffleGrouping("nginx-reader");
 			builder.setBolt("nginx-filter", new FilterUrl(), NGINX_FILTER_BOLT).shuffleGrouping("nginx-normalizer");
@@ -108,6 +107,11 @@ public class MyLogTopology {
 		conf.put(Config.TOPOLOGY_WORKERS, TOPOLOGY_WORKERS);
 		conf.put(Config.TOPOLOGY_MAX_SPOUT_PENDING, TOPOLOGY_MAX_SPOUT_PENDING);
 		conf.put(Config.TOPOLOGY_ACKER_EXECUTORS, TOPOLOGY_ACKER_EXECUTORS);
+		
+		conf.put(Const.NGINX_LIMIT_NUM, NGINX_LIMIT_NUM);
+		conf.put(Const.NGINX_SLEEP_TIME, NGINX_SLEEP_TIME);
+		conf.put(Const.EXCEPTION_LIMIT_NUM, EXCEPTION_LIMIT_NUM);
+		conf.put(Const.EXCEPTION_SLEEP_TIME, EXCEPTION_SLEEP_TIME);
 		
 		StormSubmitter.submitTopology(TOPOLOGY_NAME, conf, builder.createTopology());
 		
@@ -156,6 +160,11 @@ public class MyLogTopology {
 		NGINX_NORMALIZER_BOLT = Integer.valueOf(properties.getProperty("nginx_normalizer.bolt"));
 		NGINX_FILTER_BOLT = Integer.valueOf(properties.getProperty("nginx_filter.bolt"));
 		NGINX_ANALYSER_BOLT = Integer.valueOf(properties.getProperty("nginx_analyze.bolt"));
+		
+		NGINX_LIMIT_NUM = Integer.valueOf(properties.getProperty("nginx_limit_num"));
+		NGINX_SLEEP_TIME = Integer.valueOf(properties.getProperty("nginx_sleep_time"));
+		EXCEPTION_LIMIT_NUM = Integer.valueOf(properties.getProperty("exception_limit_num"));
+		EXCEPTION_SLEEP_TIME = Integer.valueOf(properties.getProperty("exception_sleep_time"));
 	}
 	
 }
