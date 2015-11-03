@@ -58,6 +58,10 @@ public class NginxNormalizer implements IRichBolt {
 			logger.warn("logsource in DB is null, logsource: " + hostname + " " + path + " " + filePattern);
 			return;
 		}
+		if(logsource.getLogSourceStatus() == 0){
+			logger.warn("logsource is not  monitored, logsource: " + hostname + " " + path + " " + filePattern);
+			return;
+		}
 		int logsourceId = logsource.getLogSourceId();
 		String config = logsource.getLogFormat();
 		String[] pros = ConfigDataService.getLogFormatProperties(logsourceId);

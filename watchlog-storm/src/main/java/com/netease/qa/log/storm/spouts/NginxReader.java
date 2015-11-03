@@ -102,7 +102,7 @@ public class NginxReader implements IRichSpout {
 					}
 					if (readCount >= nginxLimitNum) {
 						try {
-							logger.info("---------read " + nginxLimitNum + " msg, reader sleep 50ms-----");
+							logger.debug("---------read " + nginxLimitNum + " msg, reader sleep " + nginxSleepTime + "ms-----");
 							Thread.sleep(nginxSleepTime);
 						} catch (InterruptedException e) {
 							logger.error("error", e); 
