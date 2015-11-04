@@ -3,6 +3,9 @@ package com.netease.qa.log.storm.bolts.nginx;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +16,7 @@ import backtype.storm.topology.IRichBolt;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Tuple;
 
+import com.netease.qa.log.storm.bolts.nginx.FilterUrl.SumTask;
 import com.netease.qa.log.storm.service.MonitorDataWriteNginxTask;
 import com.netease.qa.log.storm.service.nginx.AnalyzeService;
 import com.netease.qa.log.storm.util.MathUtil;
@@ -22,7 +26,7 @@ public class AnalyzeNginx implements IRichBolt {
 
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LoggerFactory.getLogger(AnalyzeNginx.class);
-	private int count = 0;
+	private static AtomicLong count;
 
 	@SuppressWarnings("rawtypes")
 	public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
@@ -35,6 +39,17 @@ public class AnalyzeNginx implements IRichBolt {
 		MybatisUtil.init(stormConf.get(com.netease.qa.log.storm.util.Const.MYBATIS_EVN).toString());
 		ExecutorService POOL = Executors.newFixedThreadPool(1);
 		POOL.submit(new MonitorDataWriteNginxTask());
+		count = new AtomicLong();
+		ScheduledExecutorService POOL1 = Executors.newScheduledThreadPool(1);
+		POOL1.scheduleWithFixedDelay(new SumTask(), 1, 1, TimeUnit.SECONDS);
+	}
+	
+	class SumTask implements Runnable {
+		@Override
+		public void run() {
+			logger.info("NginxReader read and emit msg: " + count.get());
+			count.getAndSet(0);
+		}
 	}
 
 	public void execute(Tuple input) {
@@ -58,11 +73,7 @@ public class AnalyzeNginx implements IRichBolt {
 		AnalyzeService.putTotalByte(logSourceId, url, startTime, byteLength);
 		AnalyzeService.putAllRequestTime(logSourceId, url, startTime, requestTime);
 		AnalyzeService.putAllUpstreamResponseTime(logSourceId, url, startTime, upstreamResponseTime);
-		count++;
-		if(count >100){
-			logger.info("analyze bolt execute 100 msg");
-			count = 0;
-		}
+		count.getAndIncrement();
 	}
 
 	public void cleanup() {
