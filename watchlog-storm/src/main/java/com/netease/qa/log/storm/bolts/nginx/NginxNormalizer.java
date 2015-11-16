@@ -53,7 +53,7 @@ public class NginxNormalizer implements IRichBolt {
 	class SumTask implements Runnable {
 		@Override
 		public void run() {
-			logger.info("NginxReader read and emit msg: " + count.get());
+			logger.info("NginxNormalizer execute and emit msg: " + count.get());
 			count.getAndSet(0);
 		}
 	}

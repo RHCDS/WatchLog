@@ -47,7 +47,7 @@ public class AnalyzeNginx implements IRichBolt {
 	class SumTask implements Runnable {
 		@Override
 		public void run() {
-			logger.info("NginxReader read and emit msg: " + count.get());
+			logger.info("AnalyzeNginx execute and emit msg: " + count.get());
 			count.getAndSet(0);
 		}
 	}
