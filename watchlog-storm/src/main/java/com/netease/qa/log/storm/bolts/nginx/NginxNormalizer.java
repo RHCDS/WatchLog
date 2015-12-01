@@ -90,6 +90,7 @@ public class NginxNormalizer implements IRichBolt {
 			collector.emit(new Values(record.getLog_source_id(), record.getRemote_addr(), record.getTime_local(),
 					record.getRequest(), record.getStatus(), record.getBody_bytes_sent(), requestTime,
 					upstream_response_time));
+			collector.ack(input);
 			count.getAndIncrement();
 //			readCount ++;
 //			if(readCount > 100){
@@ -98,6 +99,7 @@ public class NginxNormalizer implements IRichBolt {
 //			}
 			logger.debug("get nginx log: " + logsource.getLogSourceId() + " " + record.getRequest());
 		} catch (Exception e) {
+			collector.fail(input);
 			logger.info("exception:" + e);
 			logger.info("line" + line);
 			logger.info("logFormat:" + config);

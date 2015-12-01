@@ -16,7 +16,6 @@ import backtype.storm.topology.IRichBolt;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Tuple;
 
-import com.netease.qa.log.storm.bolts.nginx.FilterUrl.SumTask;
 import com.netease.qa.log.storm.service.MonitorDataWriteNginxTask;
 import com.netease.qa.log.storm.service.nginx.AnalyzeService;
 import com.netease.qa.log.storm.util.MathUtil;
@@ -27,9 +26,11 @@ public class AnalyzeNginx implements IRichBolt {
 	private static final long serialVersionUID = 1L;
 	private static final Logger logger = LoggerFactory.getLogger(AnalyzeNginx.class);
 	private static AtomicLong count;
+	private OutputCollector collector;
 
 	@SuppressWarnings("rawtypes")
 	public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
+		this.collector = collector;
 		try {
 			Thread.sleep(100);
 		}
@@ -74,6 +75,7 @@ public class AnalyzeNginx implements IRichBolt {
 		AnalyzeService.putAllRequestTime(logSourceId, url, startTime, requestTime);
 		AnalyzeService.putAllUpstreamResponseTime(logSourceId, url, startTime, upstreamResponseTime);
 		count.getAndIncrement();
+//		collector.ack(input);
 	}
 
 	public void cleanup() {

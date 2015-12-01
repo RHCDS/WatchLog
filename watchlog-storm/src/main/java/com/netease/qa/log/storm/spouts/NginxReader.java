@@ -2,7 +2,6 @@ package com.netease.qa.log.storm.spouts;
 
 import java.io.IOException;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -18,9 +17,6 @@ import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Values;
 
-import com.netease.qa.log.storm.service.MonitorDataService;
-import com.netease.qa.log.storm.service.MonitorDataWriteNginxTask;
-import com.netease.qa.log.storm.service.MonitorDataWriteTask;
 import com.netease.qa.log.storm.util.Const;
 import com.netease.qa.log.storm.util.Regex;
 import com.rabbitmq.client.Channel;
@@ -59,27 +55,34 @@ public class NginxReader implements IRichSpout {
 	class SumTask implements Runnable {
 		@Override
 		public void run() {
-			logger.info("NginxReader read and emit msg: " + count.get());
+			logger.info("NginxReader read and emit msg = " + count.get());
 			count.getAndSet(0);
 		}
 	}
 
 	public void close() {
-
+		Channel channel = getChannel();
+		
 	}
 
+	public void writeMQ(){
+		
+	}
+	
 	public void nextTuple() {
 		while (true) {
 			try {
 				logger.info("=====get a new channel======");
 				Channel channel = getChannel();
+//				channel.queueDeclare(queueName, false, false, false, null);
 				QueueingConsumer consumer = new QueueingConsumer(channel);
-				channel.basicConsume(queueName, true, consumer);
+				channel.basicConsume(queueName, false, consumer);
 				channel.basicQos(1);
 				// readCount表示读了多少行
 				int readCount = 0;
 				while (true) {
 					QueueingConsumer.Delivery delivery = consumer.nextDelivery();
+					consumer.getChannel().basicAck(delivery.getEnvelope().getDeliveryTag(), false);
 					String message = new String(delivery.getBody());
 					Map<String, Object> headers = delivery.getProperties().getHeaders();
 					String hostname = "";
@@ -91,7 +94,8 @@ public class NginxReader implements IRichSpout {
 						filePattern = headers.get("__DS_.fields._ds_file_pattern").toString();
 						//预处理input,因为MQ会转义input，这里需要我们在转义回去。
 						String initMessage = Regex.initMQinput(message);
-						this.collector.emit(new Values(hostname, path, filePattern, initMessage));
+						
+						this.collector.emit(new Values(hostname, path, filePattern, initMessage), initMessage);
 						readCount++;
 						count.getAndIncrement();
 						logger.debug("Consume: " + message);
