@@ -157,7 +157,7 @@ public class Regex {
 	}
 	
 	public static String initMQinput(String input){
-		String str = input.substring(1, input.length() - 1);
+		String str = input.substring(1, input.length() - 1) + "";
 		//匹配反斜杠，替换为空串
 		String realStr = str.replaceAll("\\\\", "");
 		return realStr;

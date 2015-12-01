@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicLong;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +37,7 @@ public class NginxNormalizer implements IRichBolt {
 	private static final long serialVersionUID = 1L;
 	private OutputCollector collector;
 	private int readCount = 0;
+	private static AtomicLong count;
 
 	private static final Logger logger = LoggerFactory.getLogger(NginxNormalizer.class);
 
@@ -42,6 +46,16 @@ public class NginxNormalizer implements IRichBolt {
 		this.collector = collector;
 		ExecutorService POOL = Executors.newFixedThreadPool(1);
 		POOL.submit(new ConfigDataLoadTask());
+		count = new AtomicLong();
+		ScheduledExecutorService POOL1 = Executors.newScheduledThreadPool(1);
+		POOL1.scheduleWithFixedDelay(new SumTask(), 1, 1, TimeUnit.SECONDS);
+	}
+	class SumTask implements Runnable {
+		@Override
+		public void run() {
+			logger.info("NginxNormalizer execute and emit msg: " + count.get());
+			count.getAndSet(0);
+		}
 	}
 
 	public void execute(Tuple input) {
@@ -58,6 +72,10 @@ public class NginxNormalizer implements IRichBolt {
 			logger.warn("logsource in DB is null, logsource: " + hostname + " " + path + " " + filePattern);
 			return;
 		}
+		if(logsource.getLogSourceStatus() == 0){
+			logger.warn("logsource is not  monitored, logsource: " + hostname + " " + path + " " + filePattern);
+			return;
+		}
 		int logsourceId = logsource.getLogSourceId();
 		String config = logsource.getLogFormat();
 		String[] pros = ConfigDataService.getLogFormatProperties(logsourceId);
@@ -72,13 +90,16 @@ public class NginxNormalizer implements IRichBolt {
 			collector.emit(new Values(record.getLog_source_id(), record.getRemote_addr(), record.getTime_local(),
 					record.getRequest(), record.getStatus(), record.getBody_bytes_sent(), requestTime,
 					upstream_response_time));
-			readCount ++;
-			if(readCount > 100){
-				logger.info("NginxNormalizer emit 100 msg");
-				readCount = 0;
-			}
+			collector.ack(input);
+			count.getAndIncrement();
+//			readCount ++;
+//			if(readCount > 100){
+//				logger.info("NginxNormalizer emit 100 msg");
+//				readCount = 0;
+//			}
 			logger.debug("get nginx log: " + logsource.getLogSourceId() + " " + record.getRequest());
 		} catch (Exception e) {
+			collector.fail(input);
 			logger.info("exception:" + e);
 			logger.info("line" + line);
 			logger.info("logFormat:" + config);
